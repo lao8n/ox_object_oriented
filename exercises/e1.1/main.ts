@@ -11,4 +11,4 @@ function largestSquare(x: number): number {
 }
 
 console.log(largestSquare(17)) // 16
-// console.log(largestSquare(-5)) // range error
+console.log(largestSquare(-5)) // range error
