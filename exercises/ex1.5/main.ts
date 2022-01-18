@@ -30,4 +30,4 @@ function fibRec(n: bigint): bigint {
     return fibRecWithDepth(n, 0n);
 }
 
-console.log(fibRec(3n)); // 0
+console.log(fibRec(3n)); 

@@ -16,3 +16,6 @@ function isEven(a) {
 }
 console.log(filter([5, 3, 4], isEven)); // [4]
 console.log(filter([-2, 3, 0], isEven)); // [-2, 0]
+console.log(filter([5, 3, 4], (x) => { if (x % 2 == 0) {
+    return true;
+} return false; }));

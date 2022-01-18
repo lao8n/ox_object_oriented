@@ -1,5 +1,6 @@
 "use strict";
 function map(a, f) {
+    // in-place
     for (let i = 0; i < a.length; i++) {
         a[i] = f(a[i]);
     }
@@ -8,5 +9,7 @@ function map(a, f) {
 function multiplyBy2(x) {
     return x * 2;
 }
-console.log(map([5, 3, 4], multiplyBy2));
-console.log(map([-2, 3, 0], multiplyBy2));
+console.log(map([5, 3, 4], multiplyBy2)); // [10, 6, 8]
+console.log(map([-2, 3, 0], multiplyBy2)); // [-4, 6, 0]
+console.log(map([5, 3, 4], x => x * 2)); // [10, 6, 8]
+console.log(map([-2, 3, 0], x => x * 2)); // [-4, 6, 0]
