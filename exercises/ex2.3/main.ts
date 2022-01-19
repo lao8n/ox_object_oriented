@@ -1,5 +1,5 @@
 function filter(a: number[], f: (x: number) => boolean): number[] {
-    let result = [];
+    const result = [];
     for(const num of a){
         if(f(num)){
             result.push(num);

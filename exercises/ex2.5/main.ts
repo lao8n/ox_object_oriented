@@ -13,4 +13,3 @@ function max(...nums: number[]): number {
 
 console.log(max(5, 3, 4)); // 5
 console.log(max(-2, -3, -1)); // -1 
-console.log(max());
