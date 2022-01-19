@@ -1,5 +1,6 @@
 // Questions
 // 1. should private things always be initialized with setters?
+export {};
 
 /**
 * Class for a bag of strings.

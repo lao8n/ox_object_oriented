@@ -1,3 +1,5 @@
+export {};
+
 class Frac{
     num: bigint;
     private _den!: bigint; // have to initialize private _den: bigint = 0n; or use !
