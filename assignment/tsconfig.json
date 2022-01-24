@@ -8,7 +8,8 @@
         "esModuleInterop": true, // more import/export stuff 
         "noUncheckedIndexedAccess": true, // dictionary/array checks 
         "exactOptionalPropertyTypes": true, // strict optional properties 
+        "outDir": "dist", // we want source files separate from distributable files https://github.com/microsoft/TypeScript-Node-Starter/blob/master/README.md
     }, 
-    "files": [ "main.ts" ], // list of main files to compile 
+    "files": [ "src/types/index.ts" ], // list of main files to compile 
 } 
     
