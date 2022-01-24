@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2021",
+        "skipLibCheck": false,
+        "strict": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "strictFunctionTypes": false,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+    },
+    "files": [
+        "main.ts"
+    ],
+}
