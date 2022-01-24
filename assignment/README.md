@@ -1,3 +1,12 @@
+*How to compile code*
+```
+cd assignment
+tsc
+```
+
+Questions about submission
+* should we add node_modules folder?
+
 Low-level data
 * Static type-checking
 * Data validation
