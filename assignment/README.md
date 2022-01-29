@@ -3,6 +3,10 @@
 cd assignment
 tsc
 ```
+tests
+```
+https://medium.com/swlh/how-to-setting-up-unit-tests-with-typescript-871c0f4f1609
+```
 
 Questions about submission
 * should we add node_modules folder?
@@ -34,6 +38,12 @@ OOP Design patterns
 * Flyweight
 * Facade
 * Global Object
+
+Error handling
+* null
+* throw exceptions
+* return exceptions
+* Option
 
 Reusable generic data structures
 * Trees, graphs, queues/stacks: 
