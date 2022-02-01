@@ -5,7 +5,7 @@ tsc
 ```
 tests
 ```
-https://medium.com/swlh/how-to-setting-up-unit-tests-with-typescript-871c0f4f1609
+npm run test
 ```
 
 Questions about submission

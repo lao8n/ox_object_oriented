@@ -10,6 +10,11 @@
         "exactOptionalPropertyTypes": true, // strict optional properties 
         "outDir": "dist", // we want source files separate from distributable files https://github.com/microsoft/TypeScript-Node-Starter/blob/master/README.md
     }, 
-    "files": [ "src/types/index.ts" ], // list of main files to compile 
+    "exclude": [
+        "./test/",
+        "./node_modules/",
+        "./dist/"
+    ],
+    "files": [ "src/index.ts" ], // list of main files to compile 
 } 
     
