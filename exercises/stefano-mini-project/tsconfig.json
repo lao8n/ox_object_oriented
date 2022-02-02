@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2021",
+        "skipLibCheck": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "strictFunctionTypes": false,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+    },
+    "files": [
+        "test.ts",
+        "marketplace/index.ts"
+    ],
+}
