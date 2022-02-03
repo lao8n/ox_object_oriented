@@ -1,5 +1,5 @@
 import * as _chai from 'chai';
-import { hello } from '../src/index';
+import { hello } from '../../src/index';
 
 describe('Hello', () => {
     it('can be called', () => {
