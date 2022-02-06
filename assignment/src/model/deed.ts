@@ -8,13 +8,13 @@ import { Money } from "./money"
  *   all prices to the same currency
  * - Type = model underlying data with lightweight immutable type not a class 
  *   which can be exposed much like  */
-export type Deed<T extends Money> = {
+export type Deed<M extends Money> = {
     readonly name: string, // TODO enforce uniqueness
-    readonly deedPrice: T,
-    readonly rentNoHouse: T,
-    readonly rentOneHouse: T,
-    readonly rentTwoHouse: T,
-    readonly rentThreeHouse: T,
-    readonly rentFourHouse: T,
-    readonly rentHotel: T
+    readonly deedPrice: M,
+    readonly rentNoHouse: M,
+    readonly rentOneHouse: M,
+    readonly rentTwoHouse: M,
+    readonly rentThreeHouse: M,
+    readonly rentFourHouse: M,
+    readonly rentHotel: M
 }

@@ -41,6 +41,13 @@ Player
     4. go to jail
     5. go bankrupt
 
+
+Community chest and Chance cards
+* get money
+* pay money
+* move to location
+* special card -> Get out of jail card
+
 Properties
 * map of position -> deed -> has an owner
 
