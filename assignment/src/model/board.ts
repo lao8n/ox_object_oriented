@@ -11,15 +11,39 @@ import { Utility } from './utility';
 
 /**
  * Assignment notes
- * - We use the keyof operator  to get all the types of space on the monopoly 
- *   board which will automatically update with change in MonopolyBoard
+ * - We use a nested Readonly implementation to make board read-only
+ */
+ export type MonopolyBoard<M extends Money> = {
+    readonly [S in keyof WritableMonopolyBoard<M>] : {
+        readonly [P in keyof WritableMonopolyBoard<M>[S]] : 
+            WritableMonopolyBoard<M>[S][P]
+    }
+}
+
+/**
+ * Assignment notes
+ * - We use the keyof operator to get all the types of space on the monopoly 
+ *   board which will automatically update with inline with MonopolyBoard type
  */
 export type Space<M extends Money> = 
-    MonopolyBoard<M>[
-        keyof MonopolyBoard<M>
+    WritableMonopolyBoard<M>[
+        keyof WritableMonopolyBoard<M> // 1, 2, 3, 4
     ][
-        keyof MonopolyBoard<M>[keyof MonopolyBoard<M>]
+        keyof WritableMonopolyBoard<M>[ // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+            keyof WritableMonopolyBoard<M>
+        ] 
     ]
+
+/**
+ * Assignment notes
+ * - We make a minimal version of MonopolyBoard where all spaces are optional
+ */
+export type MinimalBoard<M extends Money> = {
+    readonly [S in keyof WritableMonopolyBoard<M>]? : {
+        readonly [P in keyof WritableMonopolyBoard<M>[S]]? : 
+            Space<M>
+    }
+}
 
 /**
  * Every location on the board has a specific type of Space that must occupy it
@@ -28,7 +52,7 @@ export type Space<M extends Money> =
  * Assignment notes
  * - 
  */
-export type MonopolyBoard<M extends Money> = {
+type WritableMonopolyBoard<M extends Money> = {
     1: {
         1: Go<M>,
         2: Deed<M>,
