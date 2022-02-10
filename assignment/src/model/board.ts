@@ -9,14 +9,21 @@ import { Tax } from './tax';
 import { Train } from './train';
 import { Utility } from './utility';
 
+export type Location = {
+    readonly street : BoardStreet,
+    readonly num : BoardNumber
+}
+export type BoardStreet = 1 | 2 | 3 | 4
+export type BoardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+
 /**
  * Assignment notes
  * - We use a nested Readonly implementation to make board read-only
  */
  export type MonopolyBoard<M extends Money> = {
-    readonly [S in keyof WritableMonopolyBoard<M>] : {
-        readonly [P in keyof WritableMonopolyBoard<M>[S]] : 
-            WritableMonopolyBoard<M>[S][P]
+    readonly [S in keyof ConcreteBoard<M>] : {
+        readonly [P in keyof ConcreteBoard<M>[S]] : 
+            ConcreteBoard<M>[S][P]
     }
 }
 
@@ -26,11 +33,11 @@ import { Utility } from './utility';
  *   board which will automatically update with inline with MonopolyBoard type
  */
 export type Space<M extends Money> = 
-    WritableMonopolyBoard<M>[
-        keyof WritableMonopolyBoard<M> // 1, 2, 3, 4
+    ConcreteBoard<M>[
+        keyof ConcreteBoard<M> // 1, 2, 3, 4
     ][
-        keyof WritableMonopolyBoard<M>[ // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-            keyof WritableMonopolyBoard<M>
+        keyof ConcreteBoard<M>[ // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+            keyof ConcreteBoard<M>
         ] 
     ]
 
@@ -39,8 +46,8 @@ export type Space<M extends Money> =
  * - We make a minimal version of MonopolyBoard where all spaces are optional
  */
 export type MinimalBoard<M extends Money> = {
-    readonly [S in keyof WritableMonopolyBoard<M>]? : {
-        readonly [P in keyof WritableMonopolyBoard<M>[S]]? : 
+    readonly [S in keyof ConcreteBoard<M>]? : {
+        readonly [P in keyof ConcreteBoard<M>[S]]? : 
             Space<M>
     }
 }
@@ -52,7 +59,7 @@ export type MinimalBoard<M extends Money> = {
  * Assignment notes
  * - 
  */
-type WritableMonopolyBoard<M extends Money> = {
+type ConcreteBoard<M extends Money> = {
     1: {
         1: Go<M>,
         2: Deed<M>,

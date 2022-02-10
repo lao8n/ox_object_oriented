@@ -1,5 +1,5 @@
 import { Money } from '../model/money';
-import { MinimalBoard, Space } from '../model/board'
+import * as monopolyboard from '../model/board'
 import { PairDiceValue } from './dice';
 
 /**
@@ -9,55 +9,77 @@ import { PairDiceValue } from './dice';
  * - 
  */
 
-export class Board<M extends Money, T extends MinimalBoard<M>>{
+export class Board<M extends Money, T extends monopolyboard.MinimalBoard<M>>{
 
-    constructor(public readonly board: T, 
-                public readonly numberSpaces: number){
-        if(!Number.isInteger(numberSpaces)){
-            throw new Error(`Number of spaces is invalid ${numberSpaces}. 
-                It should be an integer`)
-        }
-        if(numberSpaces > 40){
-            throw new Error(`Exceeds the maximum number of spaces for a
-                valid monopoly board of 40 ${numberSpaces}`)
-        }
-        this.numberSpaces = numberSpaces
+    private boardSize: number
+
+    constructor(public readonly board: T){
         this.board = board
+        this.numberSpaces(board)    
     }
 
-    movePiece(currentLocation: number, diceRoll: PairDiceValue): number {
-        if (currentLocation >= this.numberSpaces || currentLocation < 0){
-            throw new Error(`Current location is invalid ${currentLocation} 
-                only {this.numberSpaces} on board`)
+    /**
+     * Assignment notes
+     * - 
+     */
+    private numberSpaces(board: T){
+        let numberSpaces = 0;
+        for(let s = 1; s <= 4; s++){
+            for(let n = 1; n <= 10; n++){
+                if(board[s][n] == undefined){
+                    this.boardSize == numberSpaces
+                    if(numberSpaces == 0){
+                        throw new Error(`Inputted board has no spaces. Note
+                            spaces must be filled from the first street, 
+                            and first number onwards`)
+                    }
+                    return
+                }
+                numberSpaces++
+            }
         }
-        if (!Number.isInteger(currentLocation)){
-            throw new Error(`Current location is not an integer 
-                ${currentLocation}`)
-        }
-        let newLocation = (currentLocation + diceRoll) % this.numberSpaces
-        return newLocation
     }
 
-    getSpace(currentLocation: number): Space<M> {
-        if (currentLocation >= this.numberSpaces || currentLocation < 0){
+    movePiece(currentLocation: monopolyboard.Location, diceRoll: PairDiceValue): 
+        monopolyboard.Location {
+        // validate
+        let currentLocationIndex = 
+            (currentLocation.street - 1) * 10 + currentLocation.num
+        if(currentLocationIndex > this.boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
-                only {this.numberSpaces} on board`)
+                only ${this.boardSize} on board`)
         }
-        if (!Number.isInteger(currentLocation)){
-            throw new Error(`Current location is not an integer 
-                ${currentLocation}`)
-        }
+
+        // get new location
+        currentLocationIndex = (currentLocationIndex + diceRoll) 
+            % this.boardSize 
+        
+        // convert to type Location
         let streetIndex = 1
-        while(currentLocation >= 10){
+        while(currentLocationIndex >= 10){
             streetIndex++
-            currentLocation = currentLocation - 10
+            currentLocationIndex = currentLocationIndex - 10
         }
         let numberIndex = 1
-        while(currentLocation >= 0){
+        while(currentLocationIndex >= 0){
             numberIndex++
-            currentLocation--
+            currentLocationIndex--
         }
-        return this.board[streetIndex][numberIndex]
+        return {
+            street: streetIndex as monopolyboard.BoardStreet,
+            num: numberIndex as monopolyboard.BoardNumber
+        }
     }
 
+    getSpace(currentLocation: monopolyboard.Location): monopolyboard.Space<M> {
+        // validate
+        let currentLocationIndex = 
+            (currentLocation.street - 1) * 10 + currentLocation.num
+        if(currentLocationIndex > this.boardSize){
+            throw new Error(`Current location is invalid ${currentLocation} 
+                only ${this.boardSize} on board`)
+        }
+        
+        return this.board[currentLocation.street][currentLocation.num]
+    }
 }
