@@ -11,19 +11,23 @@ import { Train } from '../src/model/train';
 import { Utility } from '../src/model/utility';
 
 export class TestDataFactory {
-    static createTestBoard<M extends money.Money>(): board.GenericBoard<M> {
+    static createTestBoard1<M extends money.Money>(): board.GenericBoard<M> {
         let testBoard : board.GenericBoard<M> = {
             1: {
-                1: { 
-                    name: "Mayfair",
-                    deedPrice: 13n as M,
-                    rentNoHouse: 10n as M,
-                    rentOneHouse: 15n as M,
-                    rentTwoHouse: 11n as M,
-                    rentThreeHouse: 13n as M,
-                    rentFourHouse: 14n as M,
-                    rentHotel: 16n as M,
-                }
+                1: this.createDeed<M>()
+            }
+        }
+        return testBoard
+    }
+
+    static createTestBoard2<M extends money.Money>(): board.GenericBoard<M> {
+        let testBoard : board.GenericBoard<M> = {
+            1: {
+                1: this.createDeed<M>(),
+                2: this.createDeed<M>(),
+                3: this.createDeed<M>(),
+                // 4 missing
+                5: this.createDeed<M>(),
             }
         }
         return testBoard

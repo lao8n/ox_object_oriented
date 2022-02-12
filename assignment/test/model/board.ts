@@ -6,7 +6,7 @@ import { TestDataFactory } from '../../test_data/data'
 describe('model minimal board', () => {
     it('can initialize generic board', () => {
         let testBoard : board.GenericBoard<money.GBP> = 
-            TestDataFactory.createTestBoard<money.GBP>()
+            TestDataFactory.createTestBoard1<money.GBP>()
         _chai.assert.isUndefined(testBoard![1]![2])
     })
 })

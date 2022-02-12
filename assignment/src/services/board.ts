@@ -24,24 +24,35 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
 
     /**
      * Assignment notes
-     * - 
+     * - Optional chaining ?. to get nested access when reference might be 
+     *   undefined
      */
     private numberSpaces(b: T){
-        let numberSpaces = 0;
+        let numberSpaces = 0
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
-                if(b![bs]![bn] == undefined){
-                    this.boardSize == numberSpaces
+                // if space is undefined then that is max board size
+                if(!b?.[bs]?.[bn]){ 
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
                             spaces must be filled from the first street, 
                             and first number onwards`)
                     }
+                    this.boardSize = numberSpaces
                     return
                 }
                 numberSpaces++
             }
         }
+        this.boardSize = numberSpaces
+    }
+
+    /**
+     * Assignment notes
+     * - 
+     */
+    get size(): number{
+        return this.boardSize
     }
 
     movePiece(currentLocation: board.Location, diceRoll: PairDiceValue): 
