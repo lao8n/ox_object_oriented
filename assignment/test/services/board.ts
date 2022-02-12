@@ -123,7 +123,7 @@ describe('services board move piece', () => {
 })
 
 describe('services board get space', () => {
-    it('can get space', 
+    it('can get correct space from location on size 1 board', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
             TestDataFactory.createTestBoard1<money.GBP>()
@@ -133,18 +133,24 @@ describe('services board get space', () => {
         let expectedSpace = TestDataFactory.createDeed<money.GBP>()
         _chai.assert.deepEqual(newSpace, expectedSpace)
     })
-    it('can construct monopoly board and get correct size with full board', 
+    it('can get correct space from location on size 3 board', 
     () => {
         let b = new bs.Board<money.USD, board.GenericBoard<money.USD>>(
             TestDataFactory.createTestBoard2<money.USD>()
         )
-        _chai.assert.equal(b.size, 3)
+        let currentLocation = {street: 1, num: 3} as board.Location
+        let newSpace = b.getSpace(currentLocation)
+        let expectedSpace = TestDataFactory.createDeed<money.USD>()
+        _chai.assert.deepEqual(newSpace, expectedSpace)
     })
-    it('can construct monopoly board and get correct size with full board', 
+    it('can get correct space from location on full size board', 
     () => {
-        let b = new bs.Board<money.USD, board.MonopolyBoard<money.USD>>(
-            TestDataFactory.createMonopolyBoard<money.USD>()
+        let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
+            TestDataFactory.createMonopolyBoard<money.GBP>()
         )
-        _chai.assert.equal(b.size, 40)
+        let currentLocation = {street: 1, num: 6} as board.Location
+        let newSpace = b.getSpace(currentLocation)
+        let expectedSpace = TestDataFactory.createTrain<money.GBP>()
+        _chai.assert.deepEqual(newSpace, expectedSpace)
     })
 })

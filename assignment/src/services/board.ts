@@ -92,6 +92,15 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
         }
     }
 
+    /**
+     * 
+     * @param currentLocation 
+     * @returns 
+     * 
+     * Assignment notes
+     * - Returning board.Space we have the kind field to discriminate which of 
+     *   the Space union we have.
+     */
     getSpace(currentLocation: board.Location): board.Space<M> {
         // validate
         let currentLocationIndex = 
