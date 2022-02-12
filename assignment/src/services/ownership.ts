@@ -33,6 +33,8 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
                 if(!b?.[bs]?.[bn]){ 
                     return
                 }
+                // safe as already checked that these are defined and kind and 
+                // name must exist
                 let kind = b![bs]![bn]!.kind
                 let name = b![bs]![bn]!.name
                 const isDeed = kind == "deed";

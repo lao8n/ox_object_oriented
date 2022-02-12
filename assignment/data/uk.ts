@@ -27,7 +27,7 @@ export class DataFactory {
                 2: this.createDeed<M>("Whitechapel Road"),
                 3: this.createDeed<M>("The Angel, Islington"),
                 // 4 missing
-                5: this.createDeed<M>("Euston Road"),
+                5: this.createDeed<M>("Pentonville Road"),
             }
         }
         return testBoard

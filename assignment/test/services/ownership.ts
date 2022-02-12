@@ -27,3 +27,42 @@ describe('services ownership constructor', () => {
         _chai.assert.instanceOf(o, os.Ownership);
     })
 })
+
+describe('services ownership isOwned', () => {
+    it(`space not on the board undefined`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        let result = o.isOwned("Chelsea")
+        _chai.assert.isUndefined(result)
+    })
+    it(`space on the board but not ownable is undefined`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        let result = o.isOwned("Jail")
+        _chai.assert.isUndefined(result)    
+    })
+    it(`space on the board but after max board size is undefined`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createTestBoard2<money.GBP>()
+        );
+        let result = o.isOwned("Pentonville Road")
+        _chai.assert.isUndefined(result)        
+    })
+    it(`space on the board after init is null`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.MonopolyBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        let result = o.isOwned("King's Cross Station")
+        _chai.assert.isNull(result)         
+        result = o.isOwned("Water Works")
+        _chai.assert.isNull(result)       
+        result = o.isOwned("Bond Street")
+        _chai.assert.isNull(result)   
+    })
+})
