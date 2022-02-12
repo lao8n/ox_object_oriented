@@ -1,14 +1,14 @@
 import * as board from '../src/model/board'
-import { Card } from '../src/model/card';
-import { Deed } from '../src/model/deed';
-import { FreeParking } from '../src/model/free_parking';
-import { Go } from '../src/model/go';
-import { GoToJail } from '../src/model/gotojail';
-import { Jail } from '../src/model/jail';
+import { Card } from '../src/model/space/card';
+import { Deed } from '../src/model/space/deed';
+import { FreeParking } from '../src/model/space/free_parking';
+import { Go } from '../src/model/space/go';
+import { GoToJail } from '../src/model/space/gotojail';
+import { Jail } from '../src/model/space/jail';
 import * as money from '../src/model/money';
-import { Tax } from '../src/model/tax';
-import { Train } from '../src/model/train';
-import { Utility } from '../src/model/utility';
+import { Tax } from '../src/model/space/tax';
+import { Train } from '../src/model/space/train';
+import { Utility } from '../src/model/space/utility';
 
 export class TestDataFactory {
     static createTestBoard1<M extends money.Money>(): board.GenericBoard<M> {
@@ -89,6 +89,7 @@ export class TestDataFactory {
 
     static createGo<M extends money.Money>(): Go<M> {
         return { 
+            kind: "go",
             name: "Mayfair",
             amount: 13n as M,
         }
@@ -96,24 +97,28 @@ export class TestDataFactory {
 
     static createJail<M extends money.Money>(): Jail {
         return { 
+            kind: "jail",
             name: "Mayfair",
         }
     }
 
     static createFreeParking<M extends money.Money>(): FreeParking {
         return { 
+            kind: "free parking",
             name: "Mayfair",
         }
     }
 
     static createGoToJail<M extends money.Money>(): GoToJail {
         return { 
+            kind: "go to jail",
             name: "Mayfair",
         }
     }
 
     static createDeed<M extends money.Money>(): Deed<M> {
         return { 
+            kind: "deed",
             name: "Mayfair",
             deedPrice: 13n as M,
             rentNoHouse: 10n as M,
@@ -127,6 +132,7 @@ export class TestDataFactory {
 
     static createTrain<M extends money.Money>(): Train<M> {
         return { 
+            kind: "train",
             name: "Mayfair",
             amount: 13n as M,
         }
@@ -134,6 +140,7 @@ export class TestDataFactory {
 
     static createUtility<M extends money.Money>(): Utility<M> {
         return { 
+            kind: "utility",
             name: "Mayfair",
             amount: 13n as M,
         }
@@ -141,6 +148,7 @@ export class TestDataFactory {
     
     static createCard<M extends money.Money>(): Card<M> {
         return { 
+            kind: "card",
             name: "Mayfair",
             amount: 13n as M,
         }
@@ -148,6 +156,7 @@ export class TestDataFactory {
 
     static createTax<M extends money.Money>(): Tax<M> {
         return { 
+            kind: "tax",
             name: "Mayfair",
             amount: 13n as M,
         }

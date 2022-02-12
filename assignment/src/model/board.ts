@@ -1,13 +1,13 @@
-import { Card } from './card';
-import { Deed } from './deed';
-import { FreeParking } from './free_parking';
-import { Go } from './go';
-import { GoToJail } from './gotojail';
-import { Jail } from './jail';
+import { Card } from './space/card';
+import { Deed } from './space/deed';
+import { FreeParking } from './space/free_parking';
+import { Go } from './space/go';
+import { GoToJail } from './space/gotojail';
+import { Jail } from './space/jail';
 import { Money } from './money';
-import { Tax } from './tax';
-import { Train } from './train';
-import { Utility } from './utility';
+import { Tax } from './space/tax';
+import { Train } from './space/train';
+import { Utility } from './space/utility';
 
 export type Location = {
     readonly street : BoardStreet,
@@ -20,8 +20,8 @@ export const boardnumbers: BoardNumber[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 /**
  * Assignment notes
- * - We use a nested Readonly implementation to make board read-only
- * - We iterate over BoardStreet and BoardNumber types to give types to indices
+ * - Nested Readonly implementation to make board read-only
+ * - Iterate over BoardStreet and BoardNumber types to give types to indices
  *   rather than [S in keyof ConcreteBoard<M>][P in keyof ConcreteBoard<M>[S]] 
  */
 export type MonopolyBoard<M extends Money> = {
@@ -35,8 +35,7 @@ export type MonopolyBoard<M extends Money> = {
  * 
  * 
  * Assignment notes
- * - We make all board locations a Space rather than a specific type and
- *   optional
+ * - All board locations a Space rather than a specific type and optional
  */
 export type GenericBoard<M extends Money> = {
     readonly [S in BoardStreet]? : { readonly [N in BoardNumber]? : Space<M>}
@@ -44,8 +43,8 @@ export type GenericBoard<M extends Money> = {
 
 /**
  * Assignment notes
- * - We use the keyof operator to get all the types of space on the monopoly 
- *   board which will automatically update with inline with MonopolyBoard type
+ * - keyof operator gets all the types of space on the monopoly board which 
+ *   will automatically update with inline with MonopolyBoard type
  */
 export type Space<M extends Money> = 
     ConcreteBoard<M>[

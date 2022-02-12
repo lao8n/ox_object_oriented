@@ -1,6 +1,7 @@
 import { Money } from "./money"
 
-export type Card<M extends Money> = {
+export type Utility<M extends Money> = {
+    readonly kind: "utility",
     readonly name: string,
     readonly amount: M,
 }

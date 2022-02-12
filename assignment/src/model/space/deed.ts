@@ -1,4 +1,4 @@
-import { Money } from "./money"
+import { Money } from "../money"
 
 /**
  * Lightweight, immutable type for Deed data
@@ -9,6 +9,7 @@ import { Money } from "./money"
  * - Type = model underlying data with lightweight immutable type not a class 
  *   which can be exposed much like  */
 export type Deed<M extends Money> = {
+    readonly kind: "deed",
     readonly name: string, // TODO enforce uniqueness
     readonly deedPrice: M,
     readonly rentNoHouse: M,

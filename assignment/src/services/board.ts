@@ -49,18 +49,24 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
 
     /**
      * Assignment notes
-     * - 
+     * - getter give access to private value set in constructor
      */
     get size(): number{
         return this.boardSize
     }
 
+    /**
+     * In order to use modulus we convert to current location index which is 
+     * between 0 and boardSize (inclusive)
+     * Assignment notes
+     * - getter give access to private value set in constructor
+     */
     movePiece(currentLocation: board.Location, diceRoll: PairDiceValue): 
         board.Location {
         // validate
         let currentLocationIndex = 
-            (currentLocation.street - 1) * 10 + currentLocation.num
-        if(currentLocationIndex > this.boardSize){
+            (currentLocation.street - 1) * 10 + currentLocation.num - 1
+        if(currentLocationIndex >= this.boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
                 only ${this.boardSize} on board`)
         }
@@ -68,7 +74,7 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
         // get new location
         currentLocationIndex = (currentLocationIndex + diceRoll) 
             % this.boardSize 
-        
+
         // convert to type Location
         let streetIndex = 1
         while(currentLocationIndex >= 10){
@@ -76,7 +82,7 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
             currentLocationIndex = currentLocationIndex - 10
         }
         let numberIndex = 1
-        while(currentLocationIndex >= 0){
+        while(currentLocationIndex >= 1){
             numberIndex++
             currentLocationIndex--
         }
@@ -86,15 +92,18 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
         }
     }
 
-    // getSpace(currentLocation: board.Location): board.Space<M> {
-    //     // validate
-    //     let currentLocationIndex = 
-    //         (currentLocation.street - 1) * 10 + currentLocation.num
-    //     if(currentLocationIndex > this.boardSize){
-    //         throw new Error(`Current location is invalid ${currentLocation} 
-    //             only ${this.boardSize} on board`)
-    //     }
+    getSpace(currentLocation: board.Location): board.Space<M> {
+        // validate
+        let currentLocationIndex = 
+            (currentLocation.street - 1) * 10 + currentLocation.num - 1
+        if(currentLocationIndex > this.boardSize){
+            throw new Error(`Current location is invalid ${currentLocation} 
+                only ${this.boardSize} on board`)
+        }
         
-    //     return this.monopolyboard[currentLocation.street][currentLocation.num]
-    // }
+        // we know that index is not undefined as we validated above
+        return this.monopolyboard!
+            [currentLocation.street]!
+                [currentLocation.num]!
+    }
 }
