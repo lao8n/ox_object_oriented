@@ -1,5 +1,7 @@
 import { Money } from "../money"
 
+export type Colour = "Brown" | "Light Blue" | "Pink" | "Orange" | "Red" | 
+    "Yellow" | "Green" | "Dark Blue"
 /**
  * Lightweight, immutable type for Deed data
  * 
@@ -11,6 +13,7 @@ import { Money } from "../money"
 export type Deed<M extends Money> = {
     readonly kind: "deed",
     readonly name: string, // TODO enforce uniqueness
+    readonly colourSet: Colour,
     readonly deedPrice: M,
     readonly rentNoHouse: M,
     readonly rentOneHouse: M,

@@ -10,11 +10,11 @@ import { Tax } from '../src/model/space/tax';
 import { Train } from '../src/model/space/train';
 import { Utility } from '../src/model/space/utility';
 
-export class TestDataFactory {
+export class DataFactory {
     static createTestBoard1<M extends money.Money>(): board.GenericBoard<M> {
         let testBoard : board.GenericBoard<M> = {
             1: {
-                1: this.createDeed<M>()
+                1: this.createDeed<M>("Old Kent Road")
             }
         }
         return testBoard
@@ -23,11 +23,11 @@ export class TestDataFactory {
     static createTestBoard2<M extends money.Money>(): board.GenericBoard<M> {
         let testBoard : board.GenericBoard<M> = {
             1: {
-                1: this.createDeed<M>(),
-                2: this.createDeed<M>(),
-                3: this.createDeed<M>(),
+                1: this.createDeed<M>("Old Kent Road"),
+                2: this.createDeed<M>("Whitechapel Road"),
+                3: this.createDeed<M>("The Angel, Islington"),
                 // 4 missing
-                5: this.createDeed<M>(),
+                5: this.createDeed<M>("Euston Road"),
             }
         }
         return testBoard
@@ -37,51 +37,51 @@ export class TestDataFactory {
         let monopolyBoard : board.MonopolyBoard<M> = {
             1: {
                 1: this.createGo<M>(),
-                2: this.createDeed<M>(),
+                2: this.createDeed<M>("Old Kent Road"),
                 3: this.createCard<M>(),
-                4: this.createDeed<M>(),
+                4: this.createDeed<M>("Whitechapel Road"),
                 5: this.createTax<M>(),
-                6: this.createTrain<M>(),
-                7: this.createDeed<M>(),
+                6: this.createTrain<M>("King's Cross Station"),
+                7: this.createDeed<M>("The Angel, Islington"),
                 8: this.createCard<M>(),
-                9: this.createDeed<M>(),
-                10: this.createDeed<M>(),
+                9: this.createDeed<M>("Euston Road"),
+                10: this.createDeed<M>("Pentonville Road"),
             },
             2: {
                 1: this.createJail(),
-                2: this.createDeed<M>(),
-                3: this.createUtility<M>(),
-                4: this.createDeed<M>(),
-                5: this.createDeed<M>(),
-                6: this.createTrain<M>(),
-                7: this.createDeed<M>(),
+                2: this.createDeed<M>("Pall Mall"),
+                3: this.createUtility<M>("Electric Company"),
+                4: this.createDeed<M>("Whitehall"),
+                5: this.createDeed<M>("Northumberland Avenue"),
+                6: this.createTrain<M>("Marylebone Station"),
+                7: this.createDeed<M>("Bow Street"),
                 8: this.createCard<M>(),
-                9: this.createDeed<M>(),
-                10: this.createDeed<M>(),
+                9: this.createDeed<M>("Marlborough Street"),
+                10: this.createDeed<M>("Vine Street"),
             },
             3: {
                 1: this.createFreeParking(),
-                2: this.createDeed<M>(),
+                2: this.createDeed<M>("The Strand"),
                 3: this.createCard<M>(),
-                4: this.createDeed<M>(),
-                5: this.createDeed<M>(),
-                6: this.createTrain<M>(),
-                7: this.createDeed<M>(),
-                8: this.createDeed<M>(),
-                9: this.createUtility<M>(),
-                10: this.createDeed<M>(),
+                4: this.createDeed<M>("Fleet Street"),
+                5: this.createDeed<M>("Trafalgar Square"),
+                6: this.createTrain<M>("Fenchurch St Station"),
+                7: this.createDeed<M>("Leicester Square"),
+                8: this.createDeed<M>("Coventry Street"),
+                9: this.createUtility<M>("Water Works"),
+                10: this.createDeed<M>("Piccadilly"),
             },
             4: {
                 1: this.createGoToJail(),
-                2: this.createDeed<M>(),
-                3: this.createDeed<M>(),
+                2: this.createDeed<M>("Regent Street"),
+                3: this.createDeed<M>("Oxford Street"),
                 4: this.createCard<M>(),
-                5: this.createDeed<M>(),
-                6: this.createTrain<M>(),
+                5: this.createDeed<M>("Bond Street"),
+                6: this.createTrain<M>("Liverpool St Station"),
                 7: this.createCard<M>(),
-                8: this.createDeed<M>(),
+                8: this.createDeed<M>("Park Lane"),
                 9: this.createTax<M>(),
-                10: this.createDeed<M>(),
+                10: this.createDeed<M>("Mayfair"),
             },
         }
         return monopolyBoard
@@ -116,10 +116,11 @@ export class TestDataFactory {
         }
     }
 
-    static createDeed<M extends money.Money>(): Deed<M> {
+    static createDeed<M extends money.Money>(name: string): Deed<M> {
         return { 
             kind: "deed",
-            name: "Mayfair",
+            name: name,
+            colourSet: "Dark Blue",
             deedPrice: 13n as M,
             rentNoHouse: 10n as M,
             rentOneHouse: 15n as M,
@@ -130,18 +131,18 @@ export class TestDataFactory {
         }
     }
 
-    static createTrain<M extends money.Money>(): Train<M> {
+    static createTrain<M extends money.Money>(name : string): Train<M> {
         return { 
             kind: "train",
-            name: "Mayfair",
+            name: name,
             amount: 13n as M,
         }
     }
 
-    static createUtility<M extends money.Money>(): Utility<M> {
+    static createUtility<M extends money.Money>(name : string): Utility<M> {
         return { 
             kind: "utility",
-            name: "Mayfair",
+            name: name,
             amount: 13n as M,
         }
     }

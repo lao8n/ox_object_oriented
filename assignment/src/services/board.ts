@@ -9,15 +9,16 @@ import { PairDiceValue } from './dice';
  * - 
  */
 
-export class Board<M extends Money, T extends board.GenericBoard<M>>{
+export class Board<M extends Money, B extends board.GenericBoard<M>>{
 
     /**
      * Assignment notes
      * - As discussed in class, typescript doesn't know that this is definitely
      *   assigned so need a default
      */
-    private boardSize: number = 0 
-    constructor(public readonly monopolyboard: T){
+    // TODO check it is okay that constructor argument is private readonly
+    private _boardSize: number = 0 
+    constructor(private readonly monopolyboard: B){
         this.monopolyboard = monopolyboard
         this.numberSpaces(monopolyboard)    
     }
@@ -27,24 +28,24 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
      * - Optional chaining ?. to get nested access when reference might be 
      *   undefined
      */
-    private numberSpaces(b: T){
+    private numberSpaces(b: B){
         let numberSpaces = 0
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
-                // if space is undefined then that is max board size
+                // if space is undefined then that is the max board size
                 if(!b?.[bs]?.[bn]){ 
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
                             spaces must be filled from the first street, 
                             and first number onwards`)
                     }
-                    this.boardSize = numberSpaces
+                    this._boardSize = numberSpaces
                     return
                 }
                 numberSpaces++
             }
         }
-        this.boardSize = numberSpaces
+        this._boardSize = numberSpaces
     }
 
     /**
@@ -52,7 +53,7 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
      * - getter give access to private value set in constructor
      */
     get size(): number{
-        return this.boardSize
+        return this._boardSize
     }
 
     /**
@@ -66,14 +67,14 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
         // validate
         let currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num - 1
-        if(currentLocationIndex >= this.boardSize){
+        if(currentLocationIndex >= this._boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
-                only ${this.boardSize} on board`)
+                only ${this._boardSize} on board`)
         }
 
         // get new location
         currentLocationIndex = (currentLocationIndex + diceRoll) 
-            % this.boardSize 
+            % this._boardSize 
 
         // convert to type Location
         let streetIndex = 1
@@ -105,9 +106,9 @@ export class Board<M extends Money, T extends board.GenericBoard<M>>{
         // validate
         let currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num - 1
-        if(currentLocationIndex > this.boardSize){
+        if(currentLocationIndex > this._boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
-                only ${this.boardSize} on board`)
+                only ${this._boardSize} on board`)
         }
         
         // we know that index is not undefined as we validated above
