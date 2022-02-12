@@ -14,17 +14,32 @@ export type Location = {
     readonly num : BoardNumber
 }
 export type BoardStreet = 1 | 2 | 3 | 4
+export const boardstreets: BoardStreet[] = [1, 2, 3, 4]
 export type BoardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export const boardnumbers: BoardNumber[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 /**
  * Assignment notes
  * - We use a nested Readonly implementation to make board read-only
+ * - We iterate over BoardStreet and BoardNumber types to give types to indices
+ *   rather than [S in keyof ConcreteBoard<M>][P in keyof ConcreteBoard<M>[S]] 
  */
- export type MonopolyBoard<M extends Money> = {
-    readonly [S in keyof ConcreteBoard<M>] : {
-        readonly [P in keyof ConcreteBoard<M>[S]] : 
-            ConcreteBoard<M>[S][P]
+export type MonopolyBoard<M extends Money> = {
+    readonly [S in BoardStreet] : 
+        {readonly [N in BoardNumber] : 
+            ConcreteBoard<M>[S][N]
     }
+}
+
+/**
+ * 
+ * 
+ * Assignment notes
+ * - We make all board locations a Space rather than a specific type and
+ *   optional
+ */
+export type GenericBoard<M extends Money> = {
+    readonly [S in BoardStreet]? : { readonly [N in BoardNumber]? : Space<M>}
 }
 
 /**
@@ -41,16 +56,6 @@ export type Space<M extends Money> =
         ] 
     ]
 
-/**
- * Assignment notes
- * - We make a minimal version of MonopolyBoard where all spaces are optional
- */
-export type MinimalBoard<M extends Money> = {
-    readonly [S in keyof ConcreteBoard<M>]? : {
-        readonly [P in keyof ConcreteBoard<M>[S]]? : 
-            Space<M>
-    }
-}
 
 /**
  * Every location on the board has a specific type of Space that must occupy it
@@ -59,7 +64,7 @@ export type MinimalBoard<M extends Money> = {
  * Assignment notes
  * - 
  */
-type ConcreteBoard<M extends Money> = {
+type ConcreteBoard<M extends Money>  = {
     1: {
         1: Go<M>,
         2: Deed<M>,

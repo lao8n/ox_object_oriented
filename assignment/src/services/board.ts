@@ -1,5 +1,5 @@
 import { Money } from '../model/money';
-import * as monopolyboard from '../model/board'
+import * as board from '../model/board'
 import { PairDiceValue } from './dice';
 
 /**
@@ -9,24 +9,28 @@ import { PairDiceValue } from './dice';
  * - 
  */
 
-export class Board<M extends Money, T extends monopolyboard.MinimalBoard<M>>{
+export class Board<M extends Money, T extends board.GenericBoard<M>>{
 
-    private boardSize: number
-
-    constructor(public readonly board: T){
-        this.board = board
-        this.numberSpaces(board)    
+    /**
+     * Assignment notes
+     * - As discussed in class, typescript doesn't know that this is definitely
+     *   assigned so need a default
+     */
+    private boardSize: number = 0 
+    constructor(public readonly monopolyboard: T){
+        this.monopolyboard = monopolyboard
+        this.numberSpaces(monopolyboard)    
     }
 
     /**
      * Assignment notes
      * - 
      */
-    private numberSpaces(board: T){
+    private numberSpaces(b: T){
         let numberSpaces = 0;
-        for(let s = 1; s <= 4; s++){
-            for(let n = 1; n <= 10; n++){
-                if(board[s][n] == undefined){
+        for(const bs of board.boardstreets){
+            for(const bn of board.boardnumbers){
+                if(b![bs]![bn] == undefined){
                     this.boardSize == numberSpaces
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
@@ -40,8 +44,8 @@ export class Board<M extends Money, T extends monopolyboard.MinimalBoard<M>>{
         }
     }
 
-    movePiece(currentLocation: monopolyboard.Location, diceRoll: PairDiceValue): 
-        monopolyboard.Location {
+    movePiece(currentLocation: board.Location, diceRoll: PairDiceValue): 
+        board.Location {
         // validate
         let currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num
@@ -66,20 +70,20 @@ export class Board<M extends Money, T extends monopolyboard.MinimalBoard<M>>{
             currentLocationIndex--
         }
         return {
-            street: streetIndex as monopolyboard.BoardStreet,
-            num: numberIndex as monopolyboard.BoardNumber
+            street: streetIndex as board.BoardStreet,
+            num: numberIndex as board.BoardNumber
         }
     }
 
-    getSpace(currentLocation: monopolyboard.Location): monopolyboard.Space<M> {
-        // validate
-        let currentLocationIndex = 
-            (currentLocation.street - 1) * 10 + currentLocation.num
-        if(currentLocationIndex > this.boardSize){
-            throw new Error(`Current location is invalid ${currentLocation} 
-                only ${this.boardSize} on board`)
-        }
+    // getSpace(currentLocation: board.Location): board.Space<M> {
+    //     // validate
+    //     let currentLocationIndex = 
+    //         (currentLocation.street - 1) * 10 + currentLocation.num
+    //     if(currentLocationIndex > this.boardSize){
+    //         throw new Error(`Current location is invalid ${currentLocation} 
+    //             only ${this.boardSize} on board`)
+    //     }
         
-        return this.board[currentLocation.street][currentLocation.num]
-    }
+    //     return this.monopolyboard[currentLocation.street][currentLocation.num]
+    // }
 }
