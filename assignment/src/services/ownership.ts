@@ -44,8 +44,8 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
                 const canBeOwned = isDeed || isTrain || isUtility
                 if(canBeOwned && !this.ownership[name]){
                     if(this.ownership[name] === null){
-                        throw new Error(`Inputted board has non-unique space 
-                            names where ${name} already exists`)
+                        throw new Error(`Inputted board has non-unique space ` + 
+                            `names where ${name} already exists`)
                     } else {
                         this.ownership[name] = null   
                     }
@@ -68,18 +68,42 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
      * -  
      */
     public acquire(player: PlayerID, name: string, setNames : string[]){
-        if(!this.isOwned(name)){
+        // validate
+        if(!setNames.includes(name)){
+            throw new Error(`Invalid setNames does not include ${name}`)
+        }
+
+        if(this.isOwned(name) === null){
             this.ownership[name] = { id: player, sameOwner: false }
             let sameOwner = this.sameOwner(player, setNames)
             if(sameOwner){
-                this.ownership[name] = { id : player, sameOwner: true}
+                for(const sn of setNames){
+                    this.ownership[sn] = { id : player, sameOwner: true}
+                }
             }
+            return true
         }
+        // if name doesn't exist or is already owned
+        return false
     }
 
+    /**
+     * 
+     * @param player 
+     * @param setNames 
+     * @returns 
+     * 
+     * Assignment notes
+     * - use functional methods map and reduce to replicate fold logic
+     */
     private sameOwner(player: PlayerID, setNames : string[]){
+        // validate
+        if(setNames.length < 2 || setNames.length > 4){
+            throw new Error(`Inputted set is invalid, it has length ` + 
+                            `${setNames.length} but it must have at least 2 ` +
+                            `and at most 4 entries`)
+        }
         return setNames.map(name => this.ownership[name]?.id == player)
-                       .reduce((acc, cv) => acc && cv)
+                       .reduce((acc, cv) => acc && cv, true)
     }
-
 }
