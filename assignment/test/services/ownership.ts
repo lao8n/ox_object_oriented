@@ -201,7 +201,7 @@ describe('services ownership acquire', () => {
         let result = o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
         _chai.assert.isTrue(result)
     })
-    it(`if name does exist and its unowned return true`, 
+    it(`if name does exist and its unowned return true for train`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
@@ -224,7 +224,6 @@ describe('services ownership acquire', () => {
             ["King's Cross Station", "Marylebone Station", 
              "Fenchurch St Station", "Liverpool St Station"])
         _chai.assert.isFalse(result)
-
     })
 })
 
@@ -237,5 +236,68 @@ describe('services ownership release', () => {
         _chai.expect(() => o.release(1, "Mayfair", [])).to.throw(
             'Invalid setNames does not include Mayfair')
     })
-  
+    it(`if name not in given set return error`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        _chai.expect(() => o.release(1, "Mayfair", 
+            ["Old Kent Road", "Whitechapel Road"])).to.throw(
+            'Invalid setNames does not include Mayfair')
+    })
+    it(`if name not in given set return error`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        _chai.expect(() => o.release(1, "Mayfair", 
+            ["Mayfair"])).to.throw(
+            'Inputted set is invalid, it has length 1 but it must have at ' + 
+            'least 2 and at most 4 entries')
+    })
+    it(`if name does exist and its unowned return false`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        let result = o.release(1, "Park Lane", ["Park Lane", "Mayfair"])
+        _chai.assert.isFalse(result)
+    })
+    it(`if name does exist and its owned but by different id return false`,
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
+        let result = o.release(2, "Park Lane", ["Park Lane", "Mayfair"])
+        _chai.assert.isFalse(result)
+    })
+    it(`if name does exist and its owned by same id return true`,
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
+        let result = o.release(1, "Park Lane", ["Park Lane", "Mayfair"])
+        _chai.assert.isTrue(result)
+    })
+    it(`if name does exist and its owned by same id return true and isOwned ` + 
+       `sameOwner false`,
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
+        o.acquire(1, "Mayfair", ["Park Lane", "Mayfair"])
+        let result = o.release(1, "Mayfair", ["Park Lane", "Mayfair"])
+        _chai.assert.isTrue(result)
+        let owner = o.isOwned("Mayfair")
+        _chai.assert.isNull(owner)
+        owner = o.isOwned("Park Lane")
+        let expectedResult = {
+            id: 1 as PlayerID,
+            sameOwner: false
+        }
+        _chai.assert.deepEqual(owner, expectedResult)
+    })
 })

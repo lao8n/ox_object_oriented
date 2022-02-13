@@ -92,12 +92,17 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         if(!setNames.includes(name)){
             throw new Error(`Invalid setNames does not include ${name}`)
         }
+        if(setNames.length < 2 || setNames.length > 4){
+            throw new Error(`Inputted set is invalid, it has length ` + 
+                            `${setNames.length} but it must have at least 2 ` +
+                            `and at most 4 entries`)
+        }
+
         if(this.isOwned(name)?.id == player){
             if(this.ownership[name]?.sameOwner){
                 for(const sn of setNames){
                     if(!this.ownership?.[sn]){ // undefined or null
-                        throw new Error(`Same owner flag on ${sn} does not ` + 
-                            `exist`)
+                        throw new Error(`${sn} does not exist`)
                     } else {
                         // check that sameOwner == true (and not undefined or 
                         // null) though still need to assert that .sameOwner
