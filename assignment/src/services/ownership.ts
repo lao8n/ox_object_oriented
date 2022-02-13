@@ -30,13 +30,14 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
                 // reached end of board
-                if(!b?.[bs]?.[bn]){ 
+                let space = b?.[bs]?.[bn]
+                if(!space){ 
                     return
                 }
                 // safe as already checked that these are defined and kind and 
                 // name must exist
-                let kind = b![bs]![bn]!.kind
-                let name = b![bs]![bn]!.name
+                let kind = space.kind
+                let name = space.name
                 const isDeed = kind == "Deed";
                 const isTrain = kind == "Train";
                 const isUtility = kind == "Utility";
@@ -57,8 +58,28 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         return this.ownership[name]
     }
 
-    // public acquire(player: PlayerID, name: string){
+    /**
+     * 
+     * @param player 
+     * @param name 
+     * @param setNames
+     * 
+     * Assignment notes
+     * -  
+     */
+    public acquire(player: PlayerID, name: string, setNames : string[]){
+        if(!this.isOwned(name)){
+            this.ownership[name] = { id: player, sameOwner: false }
+            let sameOwner = this.sameOwner(player, setNames)
+            if(sameOwner){
+                this.ownership[name] = { id : player, sameOwner: true}
+            }
+        }
+    }
 
-    // }
+    private sameOwner(player: PlayerID, setNames : string[]){
+        return setNames.map(name => this.ownership[name]?.id == player)
+                       .reduce((acc, cv) => acc && cv)
+    }
 
 }

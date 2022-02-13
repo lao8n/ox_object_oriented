@@ -38,7 +38,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
                 // if space is undefined then that is the max board size
-                if(!monopolyboard?.[bs]?.[bn]){ 
+                let space = monopolyboard?.[bs]?.[bn]
+                if(!space){ 
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
                             spaces must be filled from the first street, 
@@ -46,20 +47,19 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
                     }
                     this._boardSize = numberSpaces
                     return
-                }
+                } 
                 numberSpaces++
-                let space = monopolyboard![bs]![bn]
                 if(space?.kind){
                     let kind = space.kind
                     if(kind == "Train" || kind == "Utility"){
                         if(this._sets?.[kind]){
-                            this._sets![kind]!.push(space.name)
+                            this._sets[kind]?.push(space.name)
                         } else {
                             this._sets[kind] = [space.name]
                         }
                     } else if(space.kind == "Deed"){
                         if(this._sets?.[space.colourSet]){
-                            this._sets![space.colourSet]!.push(space.name)
+                            this._sets[space.colourSet]?.push(space.name)
                         } else {
                             this._sets[space.colourSet] = [space.name]
                         }
@@ -135,8 +135,7 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         
         // we know that index is not undefined as we validated above
         return this.monopolyboard!
-            [currentLocation.street]!
-                [currentLocation.num]!
+            [currentLocation.street]![currentLocation.num]!
     }
 
     getSet(set : Colour | "Train" | "Utility" ){ 
