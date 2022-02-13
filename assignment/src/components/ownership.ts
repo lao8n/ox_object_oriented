@@ -1,6 +1,6 @@
-import { Money } from '../model/money';
-import { PlayerID } from '../model/player';
-import * as board from '../model/board'
+import { Money } from '../types/money';
+import { PlayerID } from '../types/player';
+import * as board from '../types/board'
 
 export type Owner = {
     id: PlayerID, 

@@ -1,5 +1,5 @@
 import * as _chai from 'chai';
-import * as money from '../../src/model/money';
+import * as money from '../../src/types/money';
 
 describe('model money', () => {
     it('can use GBP when GBP expected', () => {

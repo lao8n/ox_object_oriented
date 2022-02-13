@@ -1,6 +1,6 @@
 import * as _chai from 'chai';
-import * as deed from '../../../src/model/space/deed';
-import * as money from '../../../src/model/money';
+import * as deed from '../../../src/types/space/deed';
+import * as money from '../../../src/types/money';
 import { DataFactory } from '../../../data/uk';
 
 describe('model deed', () => {

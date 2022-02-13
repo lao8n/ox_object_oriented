@@ -1,9 +1,9 @@
 import * as _chai from 'chai';
-import * as board from '../../src/model/board';
-import * as money from '../../src/model/money';
-import * as os from '../../src/utilities/ownership';
+import * as board from '../../src/types/board';
+import * as money from '../../src/types/money';
+import * as os from '../../src/components/ownership';
 import { DataFactory } from '../../data/uk';
-import { PlayerID } from '../../src/model/player';
+import { PlayerID } from '../../src/types/player';
 
 describe('services ownership constructor', () => {
     it(`can construct ownership service for board with 1 space`, 

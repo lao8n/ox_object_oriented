@@ -1,6 +1,6 @@
 import * as _chai from 'chai';
-import * as board from '../../src/model/board'
-import * as money from '../../src/model/money';
+import * as board from '../../src/types/board'
+import * as money from '../../src/types/money';
 import { DataFactory } from '../../data/uk'
 
 describe('model minimal board', () => {

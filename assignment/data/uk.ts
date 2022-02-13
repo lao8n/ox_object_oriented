@@ -1,14 +1,14 @@
-import * as board from '../src/model/board'
-import { Card } from '../src/model/space/card';
-import { Colour, Deed } from '../src/model/space/deed';
-import { FreeParking } from '../src/model/space/free_parking';
-import { Go } from '../src/model/space/go';
-import { GoToJail } from '../src/model/space/gotojail';
-import { Jail } from '../src/model/space/jail';
-import * as money from '../src/model/money';
-import { Tax } from '../src/model/space/tax';
-import { Train } from '../src/model/space/train';
-import { Utility } from '../src/model/space/utility';
+import * as board from '../src/types/board'
+import { Card } from '../src/types/space/card';
+import { Colour, Deed } from '../src/types/space/deed';
+import { FreeParking } from '../src/types/space/free_parking';
+import { Go } from '../src/types/space/go';
+import { GoToJail } from '../src/types/space/gotojail';
+import { Jail } from '../src/types/space/jail';
+import * as money from '../src/types/money';
+import { Tax } from '../src/types/space/tax';
+import { Train } from '../src/types/space/train';
+import { Utility } from '../src/types/space/utility';
 
 export class DataFactory {
     static createTestBoard1<M extends money.Money>(): board.GenericBoard<M> {

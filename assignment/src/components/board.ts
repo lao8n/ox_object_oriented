@@ -1,8 +1,8 @@
-import { Money } from '../model/money';
-import * as board from '../model/board';
-import { Colour } from '../model/space/deed';
+import { Money } from '../types/money';
+import * as board from '../types/board';
+import { Colour } from '../types/space/deed';
 import { PairDiceValue } from './dice';
-import { PlayerID } from '../model/player';
+import { PlayerID } from '../types/player';
 
 /**
  * Full monopoly board with 40 spaces
