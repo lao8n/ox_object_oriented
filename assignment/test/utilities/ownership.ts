@@ -1,7 +1,7 @@
 import * as _chai from 'chai';
 import * as board from '../../src/model/board';
 import * as money from '../../src/model/money';
-import * as os from '../../src/services/ownership';
+import * as os from '../../src/utilities/ownership';
 import { DataFactory } from '../../data/uk';
 import { PlayerID } from '../../src/model/player';
 

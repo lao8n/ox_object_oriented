@@ -1,5 +1,5 @@
 import * as _chai from 'chai';
-import * as dice from '../../src/services/dice';
+import * as dice from '../../src/utilities/dice';
 
 describe('services dice', () => {
     /**

@@ -1,8 +1,8 @@
 import * as _chai from 'chai';
 import * as board from '../../src/model/board';
 import * as money from '../../src/model/money';
-import * as bs from '../../src/services/board';
-import { PairDiceValue } from '../../src/services/dice';
+import * as bs from '../../src/utilities/board';
+import { PairDiceValue } from '../../src/utilities/dice';
 import { DataFactory } from '../../data/uk';
 
 describe('services board constructor', () => {
