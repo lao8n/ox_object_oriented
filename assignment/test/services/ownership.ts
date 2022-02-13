@@ -227,3 +227,15 @@ describe('services ownership acquire', () => {
 
     })
 })
+
+describe('services ownership release', () => {
+    it(`if name not in given set return error`, 
+    () => {
+        let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        );
+        _chai.expect(() => o.release(1, "Mayfair", [])).to.throw(
+            'Invalid setNames does not include Mayfair')
+    })
+  
+})

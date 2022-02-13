@@ -87,6 +87,34 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         return false
     }
 
+    public release(player: PlayerID, name: string, setNames : string[]){
+        // validate
+        if(!setNames.includes(name)){
+            throw new Error(`Invalid setNames does not include ${name}`)
+        }
+        if(this.isOwned(name)?.id == player){
+            if(this.ownership[name]?.sameOwner){
+                for(const sn of setNames){
+                    if(!this.ownership?.[sn]){ // undefined or null
+                        throw new Error(`Same owner flag on ${sn} does not ` + 
+                            `exist`)
+                    } else {
+                        // check that sameOwner == true (and not undefined or 
+                        // null) though still need to assert that .sameOwner
+                        // exists
+                        if(this.ownership[sn]?.sameOwner){
+                            this.ownership[sn]!.sameOwner = false
+                        }
+                    }
+                }
+            }
+            this.ownership[name] = null
+            return true
+        }
+        // if property doesn't exist, not owned, or owned by another player
+        return false
+    }
+
     /**
      * 
      * @param player 
