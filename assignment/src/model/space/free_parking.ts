@@ -1,6 +1,6 @@
 import { Money } from "../money"
 
 export type FreeParking = {
-    readonly kind: "free parking",
+    readonly kind: "Free Parking",
     readonly name: string,
 }

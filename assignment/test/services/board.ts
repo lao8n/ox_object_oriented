@@ -130,7 +130,7 @@ describe('services board get space', () => {
         let currentLocation = {street: 1, num: 1} as board.Location
         let newSpace = b.getSpace(currentLocation)
         let expectedSpace = 
-            DataFactory.createDeed<money.GBP>("Old Kent Road")
+            DataFactory.createDeed<money.GBP>("Old Kent Road", "Brown")
         _chai.assert.deepEqual(newSpace, expectedSpace)
     })
     it('can get correct space from location on size 3 board', 
@@ -141,7 +141,8 @@ describe('services board get space', () => {
         let currentLocation = {street: 1, num: 3} as board.Location
         let newSpace = b.getSpace(currentLocation)
         let expectedSpace = 
-            DataFactory.createDeed<money.USD>("The Angel, Islington")
+            DataFactory.createDeed<money.USD>("The Angel, Islington", 
+                                              "LightBlue")
         _chai.assert.deepEqual(newSpace, expectedSpace)
     })
     it('can get correct space from location on full size board', 
@@ -154,5 +155,36 @@ describe('services board get space', () => {
         let expectedSpace = 
             DataFactory.createTrain<money.GBP>("King's Cross Station")
         _chai.assert.deepEqual(newSpace, expectedSpace)
+    })
+})
+
+describe('services board get set', () => {
+    it('can get correct space from location on size 1 board', 
+    () => {
+        let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createTestBoard1<money.GBP>()
+        )
+        let set = b.getSet("Brown")
+        let expectedSet = ["Old Kent Road"]
+        _chai.assert.deepEqual(set, expectedSet)
+    })
+    it('can get correct space from location on size 3 board', 
+    () => {
+        let b = new bs.Board<money.USD, board.GenericBoard<money.USD>>(
+            DataFactory.createTestBoard2<money.USD>()
+        )
+        let set = b.getSet("Brown")
+        let expectedSet = ["Old Kent Road", "Whitechapel Road"]
+        _chai.assert.deepEqual(set, expectedSet)
+    })
+    it('can get correct space from location on full size board', 
+    () => {
+        let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
+            DataFactory.createMonopolyBoard<money.GBP>()
+        )
+        let set = b.getSet("Train")
+        let expectedSet = ["King's Cross Station", "Marylebone Station",
+            "Fenchurch St Station", "Liverpool St Station"]
+        _chai.assert.deepEqual(set, expectedSet)
     })
 })

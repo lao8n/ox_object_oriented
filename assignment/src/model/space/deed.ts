@@ -1,7 +1,7 @@
 import { Money } from "../money"
 
-export type Colour = "Brown" | "Light Blue" | "Pink" | "Orange" | "Red" | 
-    "Yellow" | "Green" | "Dark Blue"
+export type Colour = "Brown" | "LightBlue" | "Pink" | "Orange" | "Red" | 
+    "Yellow" | "Green" | "DarkBlue"
 /**
  * Lightweight, immutable type for Deed data
  * 
@@ -11,8 +11,8 @@ export type Colour = "Brown" | "Light Blue" | "Pink" | "Orange" | "Red" |
  * - Type = model underlying data with lightweight immutable type not a class 
  *   which can be exposed much like  */
 export type Deed<M extends Money> = {
-    readonly kind: "deed",
-    readonly name: string, // TODO enforce uniqueness
+    readonly kind: "Deed",
+    readonly name: string,
     readonly colourSet: Colour,
     readonly deedPrice: M,
     readonly rentNoHouse: M,

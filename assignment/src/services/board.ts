@@ -1,6 +1,8 @@
 import { Money } from '../model/money';
-import * as board from '../model/board'
+import * as board from '../model/board';
+import { Colour } from '../model/space/deed';
 import { PairDiceValue } from './dice';
+import { PlayerID } from '../model/player';
 
 /**
  * Full monopoly board with 40 spaces
@@ -18,22 +20,25 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      */
     // TODO check it is okay that constructor argument is private readonly
     private _boardSize: number = 0 
-    constructor(private readonly monopolyboard: B){
-        this.monopolyboard = monopolyboard
-        this.numberSpaces(monopolyboard)    
-    }
+    /**
+     * Assignment notes
+     * - Union of ownable property sets with optional mapped type
+     */
+    private _sets : {
+        [S in Colour | "Train" | "Utility"]?: string[]
+    } = {}
 
     /**
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be 
      *   undefined
      */
-    private numberSpaces(b: B){
+    constructor(private readonly monopolyboard: B){
         let numberSpaces = 0
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
                 // if space is undefined then that is the max board size
-                if(!b?.[bs]?.[bn]){ 
+                if(!monopolyboard?.[bs]?.[bn]){ 
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
                             spaces must be filled from the first street, 
@@ -43,9 +48,26 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
                     return
                 }
                 numberSpaces++
+                let space = monopolyboard![bs]![bn]
+                if(space?.kind){
+                    let kind = space.kind
+                    if(kind == "Train" || kind == "Utility"){
+                        if(this._sets?.[kind]){
+                            this._sets![kind]!.push(space.name)
+                        } else {
+                            this._sets[kind] = [space.name]
+                        }
+                    } else if(space.kind == "Deed"){
+                        if(this._sets?.[space.colourSet]){
+                            this._sets![space.colourSet]!.push(space.name)
+                        } else {
+                            this._sets[space.colourSet] = [space.name]
+                        }
+                    }
+                }
             }
         }
-        this._boardSize = numberSpaces
+        this._boardSize = numberSpaces  
     }
 
     /**
@@ -115,5 +137,9 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         return this.monopolyboard!
             [currentLocation.street]!
                 [currentLocation.num]!
+    }
+
+    getSet(set : Colour | "Train" | "Utility" ){ 
+        return this._sets[set]
     }
 }

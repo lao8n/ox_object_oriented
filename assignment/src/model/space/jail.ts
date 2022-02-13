@@ -1,4 +1,4 @@
 export type Jail = {
-    readonly kind: "jail",
+    readonly kind: "Jail",
     readonly name: string,
 }

@@ -4,7 +4,7 @@ import * as board from '../model/board'
 
 export type Owner = {
     id: PlayerID, 
-    allOwned: boolean
+    sameOwner: boolean
 }
 
 export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
@@ -37,9 +37,9 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
                 // name must exist
                 let kind = b![bs]![bn]!.kind
                 let name = b![bs]![bn]!.name
-                const isDeed = kind == "deed";
-                const isTrain = kind == "train";
-                const isUtility = kind == "utility";
+                const isDeed = kind == "Deed";
+                const isTrain = kind == "Train";
+                const isUtility = kind == "Utility";
                 const canBeOwned = isDeed || isTrain || isUtility
                 if(canBeOwned && !this.ownership[name]){
                     if(this.ownership[name] === null){
@@ -56,4 +56,9 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
     public isOwned(name : string): Owner | undefined | null {
         return this.ownership[name]
     }
+
+    // public acquire(player: PlayerID, name: string){
+
+    // }
+
 }
