@@ -87,6 +87,10 @@ export class DataFactory {
         return monopolyBoard
     }
 
+    static createStartingMoney<M extends money.Money>(): M {
+        return BigInt(1500) as M
+    }
+
     static createGo<M extends money.Money>(): Go<M> {
         return { 
             kind: "Go",
