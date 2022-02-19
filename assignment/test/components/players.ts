@@ -43,6 +43,38 @@ describe('component player setLocation', () => {
     });
 });
 
+describe('component player getInJail', () => {
+    it('can get player not in jail', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.isFalse(p.getInJail(1))
+    });
+    it('errors if player doesnt exist', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.expect(() => p.getInJail(3)).to.throw(
+            `Id 3 is invalid as only 2 players`)
+    });
+});
+
+describe('component player setInJail', () => {
+    it('can set player inJail', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.isFalse(p.getInJail(1))
+        p.setInJail(1, true)
+        _chai.assert.isTrue(p.getInJail(1))
+        p.setInJail(1, false)
+        _chai.assert.isFalse(p.getInJail(1))
+    });
+    it('errors if player doesnt exist', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.expect(() => p.setInJail(3, false)).to.throw(
+            `Id 3 is invalid as only 2 players`)
+    });
+});
+
 describe('component player getWealth', () => {
     it('can get player wealths', 
     () => {

@@ -13,7 +13,8 @@ export class Players<M extends Money> {
             this._players[i as PlayerID] = {
                 id: i as PlayerID,
                 wealth: DataFactory.createStartingMoney<M>(),
-                location: {street: 1 , num: 1} as BoardLocation
+                location: {street: 1 , num: 1} as BoardLocation,
+                inJail: false
             }
         }
     }
@@ -31,6 +32,24 @@ export class Players<M extends Money> {
         this.validatePlayerID(id)
         if(this._players?.[id]?.location){
             this._players[id]!.location = location
+            return true
+        }
+        return false
+    }
+
+    getInJail(id: PlayerID){
+        this.validatePlayerID(id)
+        const player = this._players?.[id]
+        if(player){
+            return player.inJail
+        }
+        return null
+    }
+
+    setInJail(id: PlayerID, inJail: boolean){
+        this.validatePlayerID(id)
+        if(this._players?.[id]){
+            this._players[id]!.inJail = inJail
             return true
         }
         return false

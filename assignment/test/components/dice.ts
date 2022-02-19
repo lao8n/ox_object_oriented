@@ -14,18 +14,24 @@ describe('component dice', () => {
     */
     it('can get a dice roll between 1 and 12', () => {
         let diceOneTurn = dice.diceGenerator();
+        let init = diceOneTurn.next() // init yield
+        _chai.assert.isUndefined(init.value)
         let diceRoll = diceOneTurn.next()
-        if(diceRoll.done == false){
-            _chai.assert.isAbove(diceRoll.value, 0)
-            _chai.assert.isBelow(diceRoll.value, 13)
+        if(diceRoll.done == false && diceRoll.value){
+            _chai.assert.isAbove(diceRoll.value[0], 0)
+            _chai.assert.isBelow(diceRoll.value[0], 13)
+            _chai.assert.isBoolean(diceRoll.value[1])
         }
     })
     it('can get dice rolls until throw 3 doubles in a row', () => {
         let diceOneTurn = dice.diceGenerator();
+        let init = diceOneTurn.next() // init yield
+        _chai.assert.isUndefined(init.value)        
         let diceRoll = diceOneTurn.next()
-        while(diceRoll.done == false){
-            _chai.assert.isAbove(diceRoll.value, 0)
-            _chai.assert.isBelow(diceRoll.value, 13)
+        while(diceRoll.done == false && diceRoll.value){
+            _chai.assert.isAbove(diceRoll.value[0], 0)
+            _chai.assert.isBelow(diceRoll.value[0], 13)
+            _chai.assert.isBoolean(diceRoll.value[1])
             diceRoll = diceOneTurn.next()
         }
         if(diceRoll.done){

@@ -27,6 +27,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         [S in Colour | "Train" | "Utility"]?: string[]
     } = {}
 
+    private _jail : board.BoardLocation | null = null
+
     /**
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be 
@@ -62,6 +64,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
                         } else {
                             this._sets[space.colourSet] = [space.name]
                         }
+                    } else if (space.kind == "Jail"){
+                        this._jail = {street: bs, num: bn} as board.BoardLocation
                     }
                 }
             }
@@ -139,5 +143,9 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
 
     getSet(set : Colour | "Train" | "Utility" ){ 
         return this._sets[set]
+    }
+
+    getJailLocation(){
+        return this._jail
     }
 }

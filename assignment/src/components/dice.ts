@@ -1,21 +1,33 @@
+import { PlayerID } from "../types/player"
+
 export type DiceValue = 1 | 2 | 3 | 4 | 5 | 6
 export type PairDiceValue = DiceValue | 7 | 8 | 9 | 10 | 11 | 12
 
 /**
- * Generator function for rolling a pair of dice for one turn. It keeps history 
- * of number of doubles rolled
+ * Generator function for rolling a pair of dice for one turn. Yield value is
+ * the PairDiceValue thrown and a flag for whether a double was thrown
+ * 
+ * It allows resetting if new player rolls by passing in true, and automatically
+ * resets if non-double is thrown. It keeps a history of the number of doubles 
+ * rolled finishing the generator if 3 are thrown
+ * 
+ * First yield returns .value undefined.
  * 
  * Assignment notes: 
- * - Use * for generator function for consumer-driven lazy generation of numbers
- * - We explicitly declare Generator yield type to be a tuple
- * - Each user creates a new rollPairDice per turn which is cleaner than
- *   using yield to pass values to the generator but first yield then being 
- *   ignored
+ * - Use * for generator function for consumer-driven lazy generation of 
+ *   dice rolls
+ * - We explicitly declare Generator return type to be a tuple of DiceValue
+ * - Use a tuple to for the yield types
  */
 export function* diceGenerator(){
     let numberDoubles = 0
     let doubles : [DiceValue, DiceValue, DiceValue] = [1, 1, 1]
     while(numberDoubles < 3) {
+        let newTurn : boolean = yield
+        if(newTurn){
+            numberDoubles = 0
+            newTurn = false
+        }
         let roll1 = roll()
         let roll2 = roll()
         if(roll1 == roll2){
@@ -24,7 +36,8 @@ export function* diceGenerator(){
         } else {
             numberDoubles = 0
         }
-        yield roll1 + roll2 as PairDiceValue
+        yield [roll1 + roll2 as PairDiceValue, roll1 != roll2] as 
+            [PairDiceValue, boolean]
     }
     return doubles
 }

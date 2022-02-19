@@ -8,4 +8,5 @@ export type Player<M extends Money> = {
     id: PlayerID
     wealth: M
     location: BoardLocation
+    inJail: boolean
 }
