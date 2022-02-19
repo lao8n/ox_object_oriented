@@ -18,13 +18,26 @@ export class Players<M extends Money> {
         }
     }
 
-    getWealth(id: PlayerID){
-        // validate
-        if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` + 
-                            `players`)
+    getLocation(id: PlayerID){
+        this.validatePlayerID(id)
+        const player = this._players?.[id]
+        if(player && player?.location){
+            return player.location
         }
+        return null
+    }
 
+    setLocation(id: PlayerID, location: BoardLocation){
+        this.validatePlayerID(id)
+        if(this._players?.[id]?.location){
+            this._players[id]!.location = location
+            return true
+        }
+        return false
+    }
+
+    getWealth(id: PlayerID){
+        this.validatePlayerID(id)
         const player = this._players?.[id]
         if(player && player?.wealth){
             return player.wealth
@@ -33,14 +46,9 @@ export class Players<M extends Money> {
     }
     
     addMoney(id: PlayerID, amount: M){
-        // validate
-        if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
-            `players`)
-        }
-        if(amount <= 0){
-            throw new Error(`Expected positive amount of money not ${amount}`)
-        }
+        this.validatePlayerID(id)
+        this.validateAmount(amount)
+
         // we check that wealth is not undefined, still need ! as typescript
         // cannot handle multiple layers of nesting
         if(this._players?.[id]?.wealth){
@@ -51,14 +59,8 @@ export class Players<M extends Money> {
     }
 
     removeMoney(id: PlayerID, amount: M){
-        // validate
-        if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
-                            `players`)
-        }
-        if(amount <= 0){
-            throw new Error(`Expected positive amount of money not ${amount}`)
-        }
+        this.validatePlayerID(id)
+        this.validateAmount(amount)
 
         // we check that wealth is not undefined, still need ! as typescript
         // can handle multiple layers of nesting
@@ -71,5 +73,18 @@ export class Players<M extends Money> {
             return true
         }
         return false
+    }
+
+    private validatePlayerID(id: PlayerID){
+        if(id > this.numPlayers){
+            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
+                            `players`)
+        }
+    }
+
+    private validateAmount(amount: M){
+        if(amount <= 0){
+            throw new Error(`Expected positive amount of money not ${amount}`)
+        }
     }
 }

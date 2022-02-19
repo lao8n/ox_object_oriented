@@ -11,6 +11,38 @@ describe('component player constructor', () => {
     
 });
 
+describe('component player getLocation', () => {
+    it('can get player location', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.deepEqual(p.getLocation(1), {street: 1, num: 1})
+        _chai.assert.deepEqual(p.getLocation(2), {street: 1, num: 1})
+    });
+    it('errors if player doesnt exist', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.expect(() => p.getLocation(3)).to.throw(
+            `Id 3 is invalid as only 2 players`)
+    });
+});
+
+describe('component player setLocation', () => {
+    it('can set player location', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.deepEqual(p.getLocation(1), {street: 1, num: 1})
+        let result = p.setLocation(1, {street: 3, num: 5})
+        _chai.assert.isTrue(result)
+        _chai.assert.deepEqual(p.getLocation(1), {street: 3, num: 5})
+    });
+    it('errors if player doesnt exist', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.expect(() => p.setLocation(3, {street: 3, num: 5})).to.throw(
+            `Id 3 is invalid as only 2 players`)
+    });
+});
+
 describe('component player getWealth', () => {
     it('can get player wealths', 
     () => {

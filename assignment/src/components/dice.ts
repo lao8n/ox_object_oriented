@@ -12,7 +12,7 @@ export type PairDiceValue = DiceValue | 7 | 8 | 9 | 10 | 11 | 12
  *   using yield to pass values to the generator but first yield then being 
  *   ignored
  */
-export function* rollPair(){
+export function* diceGenerator(){
     let numberDoubles = 0
     let doubles : [DiceValue, DiceValue, DiceValue] = [1, 1, 1]
     while(numberDoubles < 3) {
