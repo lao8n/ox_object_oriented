@@ -1,5 +1,5 @@
 import * as _chai from 'chai';
-import { Players } from "../../src/components/player";
+import { Players } from "../../src/components/players";
 import * as money from "../../src/types/money";
 
 describe('component player constructor', () => {
@@ -74,5 +74,13 @@ describe('component player removeMoney', () => {
         _chai.assert.isFalse(result)
         _chai.assert.equal(p.getWealth(1), 1500n as money.GBP)
         _chai.assert.equal(p.getWealth(2), 1500n as money.GBP)
+    });
+    it('errors if player id is invalid', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.expect(() => p.addMoney(5, 
+            1000n as money.GBP)).to.throw(
+            'Id 5 is invalid as only 2 players'
+        )
     });
 });

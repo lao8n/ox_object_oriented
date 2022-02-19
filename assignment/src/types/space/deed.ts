@@ -14,7 +14,7 @@ export type Deed<M extends Money> = {
     readonly kind: "Deed",
     readonly name: string,
     readonly colourSet: Colour,
-    readonly deedPrice: M,
+    readonly price: M,
     readonly rentNoHouse: M,
     readonly rentOneHouse: M,
     readonly rentTwoHouse: M,

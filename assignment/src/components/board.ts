@@ -2,7 +2,6 @@ import { Money } from '../types/money';
 import * as board from '../types/board';
 import { Colour } from '../types/space/deed';
 import { PairDiceValue } from './dice';
-import { PlayerID } from '../types/player';
 
 /**
  * Full monopoly board with 40 spaces
@@ -84,8 +83,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * Assignment notes
      * - getter give access to private value set in constructor
      */
-    movePiece(currentLocation: board.Location, diceRoll: PairDiceValue): 
-        board.Location {
+    movePiece(currentLocation: board.BoardLocation, diceRoll: PairDiceValue): 
+        board.BoardLocation {
         // validate
         let currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num - 1
@@ -124,7 +123,7 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * - Returning board.Space we have the kind field to discriminate which of 
      *   the Space union we have.
      */
-    getSpace(currentLocation: board.Location): board.Space<M> {
+    getSpace(currentLocation: board.BoardLocation): board.Space<M> {
         // validate
         let currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num - 1

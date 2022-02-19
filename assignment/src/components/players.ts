@@ -1,6 +1,7 @@
 import { DataFactory } from "../../data/uk";
 import { Money } from "../types/money";
 import { NumPlayers, Player, PlayerID } from "../types/player";
+import { BoardLocation } from "../types/board";
 
 export class Players<M extends Money> {
     private _players : {
@@ -11,7 +12,8 @@ export class Players<M extends Money> {
         for(let i = 1; i <= numPlayers; i++){
             this._players[i as PlayerID] = {
                 id: i as PlayerID,
-                wealth: DataFactory.createStartingMoney<M>()
+                wealth: DataFactory.createStartingMoney<M>(),
+                location: {street: 1 , num: 1} as BoardLocation
             }
         }
     }
@@ -33,18 +35,16 @@ export class Players<M extends Money> {
     addMoney(id: PlayerID, amount: M){
         // validate
         if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers}`)
+            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
+            `players`)
         }
         if(amount <= 0){
             throw new Error(`Expected positive amount of money not ${amount}`)
         }
-
-        const player = this._players?.[id]
-        if(player && player?.wealth){
-            this._players[id] = {
-                id: id,
-                wealth: player.wealth + amount as M
-            }
+        // we check that wealth is not undefined, still need ! as typescript
+        // cannot handle multiple layers of nesting
+        if(this._players?.[id]?.wealth){
+            this._players[id]!.wealth = this._players[id]!.wealth + amount as M
             return true
         }
         return false
@@ -53,22 +53,21 @@ export class Players<M extends Money> {
     removeMoney(id: PlayerID, amount: M){
         // validate
         if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers}`)
+            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
+                            `players`)
         }
         if(amount <= 0){
             throw new Error(`Expected positive amount of money not ${amount}`)
         }
 
-        const player = this._players?.[id]
-        if(player && player?.wealth){
-            const r = BigInt(player.wealth - amount)
+        // we check that wealth is not undefined, still need ! as typescript
+        // can handle multiple layers of nesting
+        if(this._players?.[id]?.wealth){
+            const r = BigInt(this._players[id]!.wealth - amount)
             if(r < 0){
                 return false
             } 
-            this._players[id] = {
-                id: id,
-                wealth: r as M
-            }
+            this._players[id]!.wealth = r as M
             return true
         }
         return false

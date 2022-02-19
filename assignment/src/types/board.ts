@@ -9,7 +9,7 @@ import { Tax } from './space/tax';
 import { Train } from './space/train';
 import { Utility } from './space/utility';
 
-export type Location = {
+export type BoardLocation = {
     readonly street : BoardStreet,
     readonly num : BoardNumber
 }
@@ -17,6 +17,7 @@ export type BoardStreet = 1 | 2 | 3 | 4
 export const boardstreets: BoardStreet[] = [1, 2, 3, 4]
 export type BoardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 export const boardnumbers: BoardNumber[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+export type Property<M extends Money> = Deed<M> | Utility<M> | Train<M>
 
 /**
  * Assignment notes

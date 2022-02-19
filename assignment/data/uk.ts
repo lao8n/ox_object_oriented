@@ -125,7 +125,7 @@ export class DataFactory {
             kind: "Deed",
             name: name,
             colourSet: colourSet,
-            deedPrice: 13n as M,
+            price: 13n as M,
             rentNoHouse: 10n as M,
             rentOneHouse: 15n as M,
             rentTwoHouse: 11n as M,
@@ -139,6 +139,7 @@ export class DataFactory {
         return { 
             kind: "Train",
             name: name,
+            price: 100n as M,
             amount: 13n as M,
         }
     }
@@ -147,6 +148,7 @@ export class DataFactory {
         return { 
             kind: "Utility",
             name: name,
+            price: 100n as M,
             amount: 13n as M,
         }
     }

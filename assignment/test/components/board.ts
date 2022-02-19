@@ -52,9 +52,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createTestBoard1<money.GBP>()
         )
-        let currentLocation = {street: 1, num: 1} as board.Location
+        let currentLocation = {street: 1, num: 1} as board.BoardLocation
         let newLocation = b.movePiece(currentLocation, 1 as PairDiceValue)
-        let expectedLocation = {street: 1, num: 1} as board.Location
+        let expectedLocation = {street: 1, num: 1} as board.BoardLocation
         _chai.assert.deepEqual(newLocation, expectedLocation)
     });
     it('can calculate correct location with 3 space board and 1 dice roll', 
@@ -62,9 +62,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.USD, board.GenericBoard<money.USD>>(
             DataFactory.createTestBoard2<money.USD>()
         )
-        let currentLocation = {street: 1, num: 1} as board.Location
+        let currentLocation = {street: 1, num: 1} as board.BoardLocation
         let newLocation = b.movePiece(currentLocation, 1 as PairDiceValue)
-        let expectedLocation = {street: 1, num: 2} as board.Location
+        let expectedLocation = {street: 1, num: 2} as board.BoardLocation
         _chai.assert.deepEqual(newLocation, expectedLocation)
     });
     it(`can calculate correct location with full space board and 1 dice roll`, 
@@ -72,9 +72,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.USD, board.MonopolyBoard<money.USD>>(
             DataFactory.createMonopolyBoard<money.USD>()
         )
-        let currentLocation = {street: 1, num: 1} as board.Location
+        let currentLocation = {street: 1, num: 1} as board.BoardLocation
         let newLocation = b.movePiece(currentLocation, 1 as PairDiceValue)
-        let expectedLocation = {street: 1, num: 2} as board.Location
+        let expectedLocation = {street: 1, num: 2} as board.BoardLocation
         _chai.assert.deepEqual(newLocation, expectedLocation)    
     });
     it(`can calculate correct location with 1 space board and 5 dice roll`, 
@@ -82,9 +82,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createTestBoard1<money.GBP>()
         )
-        let currentLocation = {street: 1, num: 1} as board.Location
+        let currentLocation = {street: 1, num: 1} as board.BoardLocation
         let newLocation = b.movePiece(currentLocation, 5 as PairDiceValue)
-        let expectedLocation = {street: 1, num: 1} as board.Location
+        let expectedLocation = {street: 1, num: 1} as board.BoardLocation
         _chai.assert.deepEqual(newLocation, expectedLocation)
     });
     it(`can calculate correct location with 3 space board and 5 dice roll`, 
@@ -92,9 +92,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.USD, board.GenericBoard<money.USD>>(
             DataFactory.createTestBoard2<money.USD>()
         )
-        let currentLocation = {street: 1, num: 2} as board.Location
+        let currentLocation = {street: 1, num: 2} as board.BoardLocation
         let newLocation = b.movePiece(currentLocation, 5 as PairDiceValue)
-        let expectedLocation = {street: 1, num: 1} as board.Location
+        let expectedLocation = {street: 1, num: 1} as board.BoardLocation
         _chai.assert.deepEqual(newLocation, expectedLocation)
     });
     it(`can calculate correct location with full space board and 5 dice roll
@@ -103,9 +103,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.USD, board.MonopolyBoard<money.USD>>(
             DataFactory.createMonopolyBoard<money.USD>()
         );
-        let currentLocation = {street: 1, num: 9} as board.Location;
+        let currentLocation = {street: 1, num: 9} as board.BoardLocation;
         let newLocation = b.movePiece(currentLocation, 5 as PairDiceValue);
-        let expectedLocation = {street: 2, num: 4} as board.Location;
+        let expectedLocation = {street: 2, num: 4} as board.BoardLocation;
         _chai.assert.deepEqual(newLocation, expectedLocation);   
     });
     it(`can calculate correct location with full space board and 8 dice roll
@@ -114,9 +114,9 @@ describe('component board move piece', () => {
         let b = new bs.Board<money.USD, board.MonopolyBoard<money.USD>>(
             DataFactory.createMonopolyBoard<money.USD>()
         );
-        let currentLocation = {street: 4, num: 4} as board.Location;
+        let currentLocation = {street: 4, num: 4} as board.BoardLocation;
         let newLocation = b.movePiece(currentLocation, 8 as PairDiceValue);
-        let expectedLocation = {street: 1, num: 2} as board.Location;
+        let expectedLocation = {street: 1, num: 2} as board.BoardLocation;
         _chai.assert.deepEqual(newLocation, expectedLocation);    
     });
 });
@@ -127,7 +127,7 @@ describe('component board get space', () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createTestBoard1<money.GBP>()
         )
-        let currentLocation = {street: 1, num: 1} as board.Location
+        let currentLocation = {street: 1, num: 1} as board.BoardLocation
         let newSpace = b.getSpace(currentLocation)
         let expectedSpace = 
             DataFactory.createDeed<money.GBP>("Old Kent Road", "Brown")
@@ -138,7 +138,7 @@ describe('component board get space', () => {
         let b = new bs.Board<money.USD, board.GenericBoard<money.USD>>(
             DataFactory.createTestBoard2<money.USD>()
         )
-        let currentLocation = {street: 1, num: 3} as board.Location
+        let currentLocation = {street: 1, num: 3} as board.BoardLocation
         let newSpace = b.getSpace(currentLocation)
         let expectedSpace = 
             DataFactory.createDeed<money.USD>("The Angel, Islington", 
@@ -150,7 +150,7 @@ describe('component board get space', () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         )
-        let currentLocation = {street: 1, num: 6} as board.Location
+        let currentLocation = {street: 1, num: 6} as board.BoardLocation
         let newSpace = b.getSpace(currentLocation)
         let expectedSpace = 
             DataFactory.createTrain<money.GBP>("King's Cross Station")

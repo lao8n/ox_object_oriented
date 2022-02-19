@@ -16,7 +16,6 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         this.initOwnership(monopolyboard)
     }
 
-
     /**
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be 
