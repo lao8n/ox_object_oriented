@@ -1,16 +1,29 @@
+import { Board } from "../components/board";
 import { Owner, Ownership } from "../components/ownership";
 import { Players } from "../components/players";
-import { GenericBoard, Property } from "../types/board";
+import { boardnumbers, GenericBoard, MonopolyBoard, Property } from "../types/board";
 import { Money } from "../types/money";
 import { PlayerID } from "../types/player";
-import { Deed } from "../types/space/deed";
+import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
 
 export class Transfer<M extends Money, B extends GenericBoard<M>>{
-    private constructor(
+
+    /**
+     * 
+     * @param ownership 
+     * @param players 
+     * 
+     * Assignment notes
+     * - Typescript objects are passed by reference, and only primitives are 
+     *   passed by value, therefore updates to ownership and players update the 
+     *   originally passed in object
+     */
+    constructor(
+        private readonly board: Board<M, B>,
+        private readonly players : Players<M>,
         private readonly ownership : Ownership<M, B>,
-        private readonly players : Players<M>
     ){}
 
     /**
@@ -22,7 +35,11 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
      * Assignment notes
      * - .kind tag is used to discriminate union
      */
-    payRent(player: PlayerID, owner: Owner, property : Property<M>){
+    payRent(player: PlayerID, property : Property<M>){
+        let owner = this.ownership.isOwned(property.name)
+        if(!owner){
+            return false
+        }
         let rent : M
         switch(property.kind){
             case "Deed": 
@@ -41,9 +58,26 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return this.transferMoney(player, owner.id, rent)
     }
 
-    buyProperty(player: PlayerID, property: Property<M>, setNames : string[]){
-        if(this.players.getWealth(player) > property.price){
-            if(this.ownership.acquire(player, property.name, setNames)){
+    buyProperty(player: PlayerID, property: Property<M>){
+        const wealth = this.players.getWealth(player)
+        if(wealth && wealth > property.price){
+            let set : "Utility" | "Train" | Colour
+            switch(property.kind){
+                case "Deed":
+                    set = property.colourSet
+                    break
+                case "Train":
+                    set = "Train"
+                    break
+                case "Utility":
+                    set = "Utility"
+                    break
+                default: 
+                    // type never so can't get here
+                    throw new Error(`Invalid property with unknown kind`)
+            }
+            let setNames = this.board.getSet(set)
+            if(setNames && this.ownership.acquire(player, property.name, setNames)){
                 let result = this.players.removeMoney(player, property.price)
                 // we check that player has enough money so this should
                 // never fail

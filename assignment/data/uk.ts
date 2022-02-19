@@ -37,9 +37,9 @@ export class DataFactory {
         let monopolyBoard : board.MonopolyBoard<M> = {
             1: {
                 1: this.createGo<M>(),
-                2: this.createDeed<M>("Old Kent Road", "Brown"),
+                2: this.createDeed<M>("Old Kent Road", "Brown", 60n as M, 2n as M),
                 3: this.createCard<M>(),
-                4: this.createDeed<M>("Whitechapel Road", "Brown"),
+                4: this.createDeed<M>("Whitechapel Road", "Brown", 60n as M, 4n as M),
                 5: this.createTax<M>(),
                 6: this.createTrain<M>("King's Cross Station"),
                 7: this.createDeed<M>("The Angel, Islington", "LightBlue"),
@@ -120,13 +120,18 @@ export class DataFactory {
         }
     }
 
-    static createDeed<M extends money.Money>(name: string, colourSet: Colour): Deed<M> {
+    static createDeed<M extends money.Money>(
+        name: string, 
+        colourSet: Colour, 
+        price : M = 13n as M, 
+        rentNoHouse : M = 10n as M
+    ): Deed<M> {
         return { 
             kind: "Deed",
             name: name,
             colourSet: colourSet,
-            price: 13n as M,
-            rentNoHouse: 10n as M,
+            price: price,
+            rentNoHouse: rentNoHouse,
             rentOneHouse: 15n as M,
             rentTwoHouse: 11n as M,
             rentThreeHouse: 13n as M,
