@@ -19,7 +19,8 @@ export class Players<M extends Money> {
     getWealth(id: PlayerID){
         // validate
         if(id > this.numPlayers){
-            throw new Error(`Id ${id} is invalid as only ${this.numPlayers}`)
+            throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` + 
+                            `players`)
         }
 
         const player = this._players?.[id]

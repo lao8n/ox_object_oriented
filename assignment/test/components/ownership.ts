@@ -5,7 +5,7 @@ import * as os from '../../src/components/ownership';
 import { DataFactory } from '../../data/uk';
 import { PlayerID } from '../../src/types/player';
 
-describe('services ownership constructor', () => {
+describe('component ownership constructor', () => {
     it(`can construct ownership service for board with 1 space`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
@@ -29,7 +29,7 @@ describe('services ownership constructor', () => {
     })
 })
 
-describe('services ownership isOwned', () => {
+describe('component ownership isOwned', () => {
     it(`space not on the board undefined`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
@@ -165,7 +165,7 @@ describe('services ownership isOwned', () => {
  * Assignment notes
  * - chai.expect with wrapper arrow function to catch thrown errors
  */
-describe('services ownership acquire', () => {
+describe('component ownership acquire', () => {
     it(`if name not in given set return error`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
@@ -227,7 +227,7 @@ describe('services ownership acquire', () => {
     })
 })
 
-describe('services ownership release', () => {
+describe('component ownership release', () => {
     it(`if name not in given set return error`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
