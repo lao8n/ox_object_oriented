@@ -11,19 +11,19 @@ import { Transfer } from "./transfer"
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
 export interface TurnRoll {
-    roll
+    roll(): TurnUnownedProperty | TurnOwnedProperty
 }
 export interface TurnUnownedProperty{
-    buyProperty
-    finishTurn
+    buyProperty(): TurnFinish
+    finishTurn(): TurnRoll
 }
 export interface TurnOwnedProperty{
-    payRent
-    finishTurn
+    payRent(): TurnFinish
+    finishTurn(): TurnRoll
 }
 
 export interface TurnFinish {
-    finishTurn
+    finishTurn(): TurnRoll
 }
 
 export type TurnTag = {
@@ -32,8 +32,8 @@ export type TurnTag = {
 }
 export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish"
 
-class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
-    turn : TurnTag // Turn is the tag property 
+export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
+    turn : TurnTag = {player: 1, stage: "Roll"} // tag property
     space : Space<M>
     dice = diceGenerator()
 
@@ -43,7 +43,7 @@ class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
         private readonly ownership: Ownership<M, B>,
         private readonly transfer: Transfer<M, B>,
     ){
-        this.turn = {player: this.players.getCurrentTurnPlayer(), stage: "Roll"} 
+        this.turn = {player: this.players.getTurnPlayer(), stage: "Roll"} 
         this.space = DataFactory.createGo<M>()
         this.dice.next(true) // initialize generator
     }
@@ -55,39 +55,42 @@ class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
     roll(): TurnUnownedProperty | TurnOwnedProperty {
         let roll = this.dice.next()
         if(roll.done == false){
-            const location = this.updateLocation(roll.value[0])  
-            // didn't throw a double           
-            if(roll.value[1]){
-                this.space = this.board.getSpace(location)
-                const owner = this.ownership.isOwned(this.space.name)
-                // unowned
-                if(owner == null){
-                    this.turn.stage = "UnownedProperty"
-                    return this as TurnUnownedProperty
-                } 
-                // owned
-                else if (owner){
-                    this.turn.stage = "OwnedProperty"
-                    return this as TurnOwnedProperty
-                }
-                // undefined i.e. not an ownable property  
-                else {
-
+            if(roll.value){
+                const location = this.updateLocation(roll.value[0])  
+                // didn't throw a double           
+                if(roll.value[1]){
+                    this.space = this.board.getSpace(location)
+                    const owner = this.ownership.isOwned(this.space.name)
+                    // unowned
+                    if(owner == null){
+                        this.turn.stage = "UnownedProperty"
+                        return this as TurnUnownedProperty
+                    } 
+                    // owned
+                    else if (owner){
+                        this.turn.stage = "OwnedProperty"
+                        return this as TurnOwnedProperty
+                    }
+                    // undefined i.e. not an ownable property  
+                    // else {
+                    //     return undefined
+                    // }
                 }
             }
         } 
         // threw 3 doubles
-        else {
-            const jail = this.board.getJailLocation()
-            if(jail){
-                this.players.setLocation(this.turn.player, jail)
-                this.players.setInJail(this.turn.player, true)
-            }
+        // else {
+        //     const jail = this.board.getJailLocation()
+        //     if(jail){
+        //         this.players.setLocation(this.turn.player, jail)
+        //         this.players.setInJail(this.turn.player, true)
+        //     }
 
-        }
+        // }
+        return this as TurnUnownedProperty // TODO remove me
     }
 
-    buyProperty(): TurnFinish{
+    buyProperty(): TurnFinish {
         // cannot make a separate method isProperty as typescript cannot do type 
         // inference
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
@@ -98,7 +101,7 @@ class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
         return this as TurnFinish
     }
 
-    payRent(): TurnFinish{
+    payRent(): TurnFinish {
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
            this.space.kind == "Train") {
             this.transfer.payRent(this.turn.player, this.space)
@@ -107,15 +110,19 @@ class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
         return this as TurnFinish
     }
 
-    finishTurn(): TurnRoll{
-        this.turn = { player : this.players.getCurrentTurnPlayer(), stage: "Roll"} 
+    finishTurn(): TurnRoll {
+        this.turn = {player : this.players.getTurnPlayer(), 
+                     stage: "Roll"} 
         return this as TurnRoll
     }
 
     private updateLocation(rollResult: PairDiceValue){
         let location = this.players.getLocation(this.turn.player)
-        location = this.board.movePiece(location, rollResult)
-        this.players.setLocation(this.turn.player, {street: 2, num: 1})
+        if(location){
+            location = this.board.movePiece(location, rollResult)
+            this.players.setLocation(this.turn.player, {street: 2, num: 1})
+
+        }
         return location
     }
 }

@@ -26,8 +26,11 @@ export class Players<M extends Money> {
         this._orderIndex = 0
     }
 
-    getCurrentTurnPlayer(){
+    getTurnPlayer(): PlayerID{
         const player = this._order[this._orderIndex]
+        if(!player){
+            throw new Error("Unable to find current turn player")
+        }
         this._orderIndex = (this._orderIndex + 1) % this.numPlayers
         return player
     }
@@ -61,7 +64,7 @@ export class Players<M extends Money> {
         if(player && player?.location){
             return player.location
         }
-        return null
+        throw new Error(`Player ${id} has null location`)
     }
 
     setLocation(id: PlayerID, location: BoardLocation){

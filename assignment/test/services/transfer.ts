@@ -12,8 +12,8 @@ describe('service transfer constructor', () => {
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
         _chai.assert.instanceOf(t, Transfer);
     });
@@ -24,8 +24,8 @@ describe('service transfer pay rent', () => {
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
         let deed = m[1][2]
         t.buyProperty(2, deed)
@@ -38,8 +38,8 @@ describe('service transfer pay rent', () => {
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
         let deed1 = m[1][2]
         t.buyProperty(2, deed1)
@@ -61,8 +61,8 @@ describe('service transfer buy property', () => {
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
         let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
         let deed = m[1][2]
         let result = t.buyProperty(1, deed)
