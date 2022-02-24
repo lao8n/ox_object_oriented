@@ -8,7 +8,11 @@ export class Players<M extends Money> {
         [P in PlayerID]?: Player<M>
     } = {}
 
+    private _order : PlayerID[]
+    private _orderIndex : number
+
     constructor(private readonly numPlayers: NumPlayers){
+        this._order = new Array<PlayerID>(numPlayers)
         for(let i = 1; i <= numPlayers; i++){
             this._players[i as PlayerID] = {
                 id: i as PlayerID,
@@ -16,7 +20,39 @@ export class Players<M extends Money> {
                 location: {street: 1 , num: 1} as BoardLocation,
                 inJail: false
             }
+            // default order
+            this._order[i - 1] = i as PlayerID
         }
+        this._orderIndex = 0
+    }
+
+    getCurrentTurnPlayer(){
+        const player = this._order[this._orderIndex]
+        this._orderIndex = (this._orderIndex + 1) % this.numPlayers
+        return player
+    }
+
+    setOrder(order : PlayerID[]){
+        if(order.length != this.numPlayers){
+            throw new Error(`Order has ${order.length} players not ` +
+                            `${this.numPlayers} as required`)
+        }
+        let orderSet = new Set<PlayerID>();
+        let newOrder : PlayerID[] = []
+        for(let i = 0; i < this.numPlayers; i++){
+            let p = order[i]
+            if(p){
+                this.validatePlayerID(p)
+                if(orderSet.has(p)){
+                    throw new Error(`Repeated player ${p} in order`)
+                }
+                newOrder[i] = p
+                orderSet.add(p)
+            }
+        }
+        // only override order if it's valid
+        this._order = newOrder
+        this._orderIndex = 0
     }
 
     getLocation(id: PlayerID){

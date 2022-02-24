@@ -1,6 +1,7 @@
 import * as _chai from 'chai';
 import { Players } from "../../src/components/players";
 import * as money from "../../src/types/money";
+import { PlayerID } from '../../src/types/player';
 
 describe('component player constructor', () => {
     it('can construct player with different currencies', 
@@ -9,6 +10,84 @@ describe('component player constructor', () => {
         _chai.assert.instanceOf(p, Players);
     });
     
+});
+
+describe('component player getCurrentTurnPlayer', () => {
+    it('can get players for 2 person game', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+    });
+    it('can get players for 5 person game', 
+    () => {
+        let p = new Players<money.GBP>(5)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 3)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 4)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 5)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+    });
+});
+
+describe('component player setOrder', () => {
+    it('can set order for 2 person game', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        p.setOrder([2, 1])
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+    });
+    it('can set order for 5 person game', 
+    () => {
+        let p = new Players<money.GBP>(5)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 3)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 4)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 5)
+        p.setOrder([3, 1, 4, 5, 2])
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 3)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 1)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 4)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 5)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 2)
+        _chai.assert.equal(p.getCurrentTurnPlayer(), 3)
+    });
+    it('get error if order is too short', 
+    () => {
+        let p = new Players<money.GBP>(5)
+        _chai.expect(() => p.setOrder([3, 1, 4])).to.throw(
+            `Order has 3 players not 5 as required`
+        )
+    });
+    it('get error if order is too long', 
+    () => {
+        let p = new Players<money.GBP>(3)
+        _chai.expect(() => p.setOrder([3, 1, 4, 2, 5])).to.throw(
+            `Order has 5 players not 3 as required`
+        )
+    });
+    it('get error if player id is too large for size of game', 
+    () => {
+        let p = new Players<money.GBP>(3)
+        _chai.expect(() => p.setOrder([2, 1, 4])).to.throw(
+            `Id 4 is invalid as only 3 players`
+        )
+    });
+    it('get error if repeated player id', 
+    () => {
+        let p = new Players<money.GBP>(3)
+        _chai.expect(() => p.setOrder([2, 1, 2])).to.throw(
+            `Repeated player 2 in order`
+        )
+    });
 });
 
 describe('component player getLocation', () => {
