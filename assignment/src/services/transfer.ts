@@ -8,7 +8,7 @@ import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
 
-export class Transfer<M extends Money, B extends MonopolyBoard<M>>{
+export class Transfer<M extends Money, B extends GenericBoard<M>>{
 
     /**
      * 

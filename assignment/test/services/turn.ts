@@ -5,8 +5,9 @@ import { Owner, Ownership } from '../../src/components/ownership';
 import { Players } from "../../src/components/players";
 import { Transfer } from '../../src/services/transfer';
 import { ConcreteTurn, TurnRoll } from '../../src/services/turn';
-import { MonopolyBoard } from '../../src/types/board';
+import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
+import { PlayerID } from '../../src/types/player';
 
 describe('service turn constructor', () => {
     it('can construct turn with GBP currency', 
@@ -34,5 +35,49 @@ describe('service turn start', () => {
             b, p, o, t)
         let r = c.start()
         _chai.assert.typeOf(r.roll, "function")
+        _chai.assert.equal(r.stage, "Roll")
+        _chai.assert.equal(r.player, 1)
+    });
+});
+
+describe('service turn roll', () => {
+    it('roll returns either UnownedProperty or OwnedProperty', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll()
+        _chai.assert.oneOf(result.stage, 
+            ["UnownedProperty", "OwnedProperty"] )
+        _chai.assert.equal(result.player, 1)
+    });
+});
+
+describe('service turn buy property', () => {
+    it('buy property returns TurnFinish', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll()
+        while(result.stage != "UnownedProperty"){
+            console.log(result.stage + result.player)
+            r = result.finishTurn()
+            result = r.roll()
+        }
+        // result is now OwnedProperty
+        _chai.assert.equal(result.stage, "UnownedProperty")
+        let finish = result.buyProperty()
+        _chai.assert.equal(finish.stage, "Finish")
     });
 });

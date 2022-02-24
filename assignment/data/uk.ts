@@ -33,6 +33,19 @@ export class DataFactory {
         return testBoard
     }
 
+    static createTestBoard3<M extends money.Money>(): board.GenericBoard<M> {
+        let testBoard : board.GenericBoard<M> = {
+            1: {
+                1: this.createDeed<M>("Old Kent Road", "Brown"),
+                2: this.createDeed<M>("Whitechapel Road", "Brown"),
+                3: this.createDeed<M>("The Angel, Islington", "LightBlue"),
+                4: this.createDeed<M>("Euston Road", "LightBlue"),
+                5: this.createDeed<M>("Pentonville Road", "LightBlue"),
+            }
+        }
+        return testBoard
+    }
+
     static createMonopolyBoard<M extends money.Money>(): board.MonopolyBoard<M> {
         let monopolyBoard : board.MonopolyBoard<M> = {
             1: {

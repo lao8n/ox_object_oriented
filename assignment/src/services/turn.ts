@@ -5,35 +5,44 @@ import { Ownership } from "../components/ownership"
 import { Players } from "../components/players"
 import { GenericBoard, MonopolyBoard, Space } from "../types/board"
 import { Money } from "../types/money"
-import { PlayerID } from "../types/player"
+import { Player, PlayerID } from "../types/player"
 import { Transfer } from "./transfer"
 
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
-export interface TurnRoll {
+export interface TurnBase {
+    player: PlayerID
+    stage: Stage
+}
+
+export interface TurnRoll extends TurnBase {
+    stage: "Roll"
     roll(): TurnUnownedProperty | TurnOwnedProperty
 }
-export interface TurnUnownedProperty{
+export interface TurnUnownedProperty extends TurnBase {
+    stage: "UnownedProperty"
     buyProperty(): TurnFinish
     finishTurn(): TurnRoll
 }
-export interface TurnOwnedProperty{
+export interface TurnOwnedProperty extends TurnBase{
+    stage: "OwnedProperty"
     payRent(): TurnFinish
     finishTurn(): TurnRoll
 }
 
-export interface TurnFinish {
+export interface TurnFinish extends TurnBase {
+    stage: "Finish"
     finishTurn(): TurnRoll
 }
 
-export type TurnTag = {
-    player : PlayerID
-    stage : Stage
-}
+
 export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish"
 
-export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
-    private turn : TurnTag = {player: 1, stage: "Roll"} // tag property
+export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
+    // these fields are not exposed through the interfaces so do not need to be
+    // private
+    player : PlayerID = 1
+    stage: Stage = "Roll" // tag property
     private space : Space<M>
     private dice = diceGenerator()
 
@@ -43,9 +52,10 @@ export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
         private readonly ownership: Ownership<M, B>,
         private readonly transfer: Transfer<M, B>,
     ){
-        this.turn = {player: this.players.getTurnPlayer(), stage: "Roll"} 
+        this.player = this.players.getTurnPlayer()
+        this.stage = "Roll" // tag property
         this.space = DataFactory.createGo<M>()
-        this.dice.next(true) // initialize generator
+        // this.dice.next(true) // initialize generator
     }
 
     start(): TurnRoll{
@@ -53,8 +63,10 @@ export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
     }
 
     roll(): TurnUnownedProperty | TurnOwnedProperty {
+        this.dice.next()
         let roll = this.dice.next()
         if(roll.done == false){
+            console.log(roll)
             if(roll.value){
                 const location = this.updateLocation(roll.value[0])  
                 // didn't throw a double           
@@ -63,27 +75,28 @@ export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
                     const owner = this.ownership.isOwned(this.space.name)
                     // unowned
                     if(owner == null){
-                        this.turn.stage = "UnownedProperty"
+                        this.stage = "UnownedProperty"
                         return this as TurnUnownedProperty
                     } 
                     // owned
                     else if (owner){
-                        this.turn.stage = "OwnedProperty"
+                        this.stage = "OwnedProperty"
                         return this as TurnOwnedProperty
                     }
                     // undefined i.e. not an ownable property  
                     // else {
                     // }
                 }
+            } else {
+                throw new Error(`Unable to get dice roll value for ${roll}`)
             }
-            throw new Error("Unable to get dice roll value")
         } 
         // threw 3 doubles
         // else {
         //     const jail = this.board.getJailLocation()
         //     if(jail){
-        //         this.players.setLocation(this.turn.player, jail)
-        //         this.players.setInJail(this.turn.player, true)
+        //         this.players.setLocation(this.player, jail)
+        //         this.players.setInJail(this.player, true)
         //     }
 
         // }
@@ -95,33 +108,32 @@ export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
         // inference
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
            this.space.kind == "Train") {
-            this.transfer.buyProperty(this.turn.player, this.space)
+            this.transfer.buyProperty(this.player, this.space)
         }
-        this.turn.stage = "Finish"
+        this.stage = "Finish"
         return this as TurnFinish
     }
 
     payRent(): TurnFinish {
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
            this.space.kind == "Train") {
-            this.transfer.payRent(this.turn.player, this.space)
+            this.transfer.payRent(this.player, this.space)
         }
-        this.turn.stage = "Finish"
+        this.stage = "Finish"
         return this as TurnFinish
     }
 
     finishTurn(): TurnRoll {
-        this.turn = {player : this.players.getTurnPlayer(), 
-                     stage: "Roll"} 
+        this.stage = "Roll"
+        this.player =  this.players.getTurnPlayer()
         return this as TurnRoll
     }
 
     private updateLocation(rollResult: PairDiceValue){
-        let location = this.players.getLocation(this.turn.player)
+        let location = this.players.getLocation(this.player)
         if(location){
             location = this.board.movePiece(location, rollResult)
-            this.players.setLocation(this.turn.player, {street: 2, num: 1})
-
+            this.players.setLocation(this.player, location)
         }
         return location
     }
