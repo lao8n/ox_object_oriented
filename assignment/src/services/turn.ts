@@ -33,9 +33,9 @@ export type TurnTag = {
 export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish"
 
 export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
-    turn : TurnTag = {player: 1, stage: "Roll"} // tag property
-    space : Space<M>
-    dice = diceGenerator()
+    private turn : TurnTag = {player: 1, stage: "Roll"} // tag property
+    private space : Space<M>
+    private dice = diceGenerator()
 
     constructor(
         private readonly board: Board<M, B>,
@@ -73,10 +73,10 @@ export class ConcreteTurn<M extends Money, B extends MonopolyBoard<M>>{
                     }
                     // undefined i.e. not an ownable property  
                     // else {
-                    //     return undefined
                     // }
                 }
             }
+            throw new Error("Unable to get dice roll value")
         } 
         // threw 3 doubles
         // else {
