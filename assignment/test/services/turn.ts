@@ -103,7 +103,10 @@ describe('service turn buyProperty', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){} // this is immediate
+        while(result.stage != "UnownedProperty"){ // this is immediate 
+            r = result.finishTurn(result.player)
+            result = r.roll(r.player)
+        } 
         _chai.assert.equal(result.stage, "UnownedProperty")
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
         let finish = result.buyProperty(notTurnPlayer)
@@ -125,7 +128,10 @@ describe('service turn payRent', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){} // this is immediate
+        while(result.stage != "UnownedProperty"){ // this is immediate 
+            r = result.finishTurn(result.player)
+            result = r.roll(r.player)
+        }     
         let finish = result.buyProperty(result.player)
         let newRoll = finish.finishTurn(finish.player)
         result = newRoll.roll(newRoll.player)
@@ -152,7 +158,10 @@ describe('service turn payRent', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){} // this is immediate
+        while(result.stage != "UnownedProperty"){ // this is immediate 
+            r = result.finishTurn(result.player)
+            result = r.roll(r.player)
+        }         
         let finish = result.buyProperty(result.player)
         let newRoll = finish.finishTurn(finish.player)
         result = newRoll.roll(newRoll.player)
@@ -184,7 +193,10 @@ describe('service finishTurn', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){} // this is immediate 
+        while(result.stage != "UnownedProperty"){ // this is immediate 
+            r = result.finishTurn(result.player)
+            result = r.roll(r.player)
+        }         
         let finish = result.buyProperty(result.player)
         let newTurn = finish.finishTurn(finish.player)
         _chai.assert.equal(newTurn.stage, "Roll")
@@ -201,7 +213,10 @@ describe('service finishTurn', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){} // this is immediate 
+        while(result.stage != "UnownedProperty"){ // this is immediate 
+            r = result.finishTurn(result.player)
+            result = r.roll(r.player)
+        }         
         let finish = result.buyProperty(result.player)
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
         let notNewTurn = finish.finishTurn(notTurnPlayer)
