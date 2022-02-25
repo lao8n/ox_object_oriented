@@ -25,6 +25,7 @@ export function* diceGenerator(){
     while(numberDoubles < 3) {
         let newTurn : boolean = yield
         if(newTurn){
+            console.log("new turn")
             numberDoubles = 0
             newTurn = false
         }

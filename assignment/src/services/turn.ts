@@ -55,7 +55,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         this.player = this.players.getTurnPlayer()
         this.stage = "Roll" // tag property
         this.space = DataFactory.createGo<M>()
-        // this.dice.next(true) // initialize generator
+        // let roll1 = this.dice.next()
+        // console.log("class1 " + roll1.value)
+        // let roll = this.dice.next()
+        // console.log("class2 " + roll.value)
     }
 
     start(): TurnRoll{
@@ -63,10 +66,11 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     }
 
     roll(): TurnUnownedProperty | TurnOwnedProperty {
-        this.dice.next()
+        let roll1 = this.dice.next()
+        console.log("roll1 " + roll1.value)
         let roll = this.dice.next()
+        console.log("roll2 " + roll.value)
         if(roll.done == false){
-            console.log(roll)
             if(roll.value){
                 const location = this.updateLocation(roll.value[0])  
                 // didn't throw a double           
@@ -86,6 +90,8 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
                     // undefined i.e. not an ownable property  
                     // else {
                     // }
+                } else {
+                    console.log("threw a double")
                 }
             } else {
                 throw new Error(`Unable to get dice roll value for ${roll}`)
@@ -100,6 +106,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         //     }
 
         // }
+        this.stage = "UnownedProperty"
         return this as TurnUnownedProperty // TODO remove me
     }
 
@@ -126,6 +133,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     finishTurn(): TurnRoll {
         this.stage = "Roll"
         this.player =  this.players.getTurnPlayer()
+        let roll2 = this.dice.next()
+        console.log("finish " + roll2.value)
+        let roll1 = this.dice.next(true)
+        console.log("finish true " + roll1.value)
         return this as TurnRoll
     }
 
