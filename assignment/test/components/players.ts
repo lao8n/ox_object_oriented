@@ -1,7 +1,6 @@
 import * as _chai from 'chai';
 import { Players } from "../../src/components/players";
 import * as money from "../../src/types/money";
-import { PlayerID } from '../../src/types/player';
 
 describe('component player constructor', () => {
     it('can construct player with different currencies', 

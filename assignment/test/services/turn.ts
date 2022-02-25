@@ -4,10 +4,9 @@ import { Board } from '../../src/components/board';
 import { Owner, Ownership } from '../../src/components/ownership';
 import { Players } from "../../src/components/players";
 import { Transfer } from '../../src/services/transfer';
-import { ConcreteTurn, TurnRoll } from '../../src/services/turn';
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty } from '../../src/services/turn';
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
-import { PlayerID } from '../../src/types/player';
 
 describe('service turn constructor', () => {
     it('can construct turn with GBP currency', 
@@ -33,10 +32,11 @@ describe('service turn start', () => {
         let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, MonopolyBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        _chai.assert.typeOf(r.roll, "function")
-        _chai.assert.equal(r.stage, "Roll")
-        _chai.assert.equal(r.player, 1)
+        let tr : TurnRoll
+        tr = c.start()
+        _chai.assert.typeOf(tr.roll, "function")
+        _chai.assert.equal(tr.stage, "Roll")
+        _chai.assert.equal(tr.player, 1)
     });
 });
 
@@ -50,11 +50,12 @@ describe('service turn roll', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        _chai.assert.oneOf(result.stage, 
+        let tr : TurnRoll
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        _chai.assert.oneOf(trResult.stage, 
             ["UnownedProperty", "OwnedProperty", "Finish"] )
-        _chai.assert.equal(result.player, 1)
+        _chai.assert.equal(trResult.player, 1)
     });
     it('roll unchanged if different player calls', 
     () => {
@@ -65,10 +66,11 @@ describe('service turn roll', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(2)
-        _chai.assert.equal(result.stage, "Roll")
-        _chai.assert.equal(result.player, 1)
+        let tr : TurnRoll
+        tr = c.start()       
+        let trResult = tr.roll(2)
+        _chai.assert.equal(trResult.stage, "Roll")
+        _chai.assert.equal(trResult.player, 1)
     });
 });
 
@@ -82,15 +84,20 @@ describe('service turn buyProperty', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
         }
-        _chai.assert.equal(result.stage, "UnownedProperty")
-        let finish = result.buyProperty(result.player)
-        _chai.assert.equal(finish.stage, "Finish")
+        tu = trResult
+        _chai.assert.equal(tu.stage, "UnownedProperty")
+        let tuResult = tu.buyProperty(tu.player)
+        while(tuResult.stage != "Finish"){
+            tuResult = tu.buyProperty(tu.player)
+        }
+        _chai.assert.equal(tuResult.stage, "Finish")
     });
     it('buy property unchanged if different player calls it', 
     () => {
@@ -101,18 +108,19 @@ describe('service turn buyProperty', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        } 
-        _chai.assert.equal(result.stage, "UnownedProperty")
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        tu = trResult
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
-        let finish = result.buyProperty(notTurnPlayer)
-        _chai.assert.equal(finish.stage, "UnownedProperty")
-        _chai.assert.notEqual(finish.player, notTurnPlayer)
-        _chai.assert.equal(finish.player, result.player)
+        let tuResult = tu.buyProperty(notTurnPlayer)
+        _chai.assert.equal(tuResult.stage, "UnownedProperty")
+        _chai.assert.notEqual(tuResult.player, notTurnPlayer)
+        _chai.assert.equal(tuResult.player, tu.player)
     });
 });
 
@@ -126,26 +134,36 @@ describe('service turn payRent', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        }     
-        let finish = result.buyProperty(result.player)
-        let newRoll = finish.finishTurn(finish.player)
-        result = newRoll.roll(newRoll.player)
-        while(result.stage != "OwnedProperty"){
-            if(result.stage == "UnownedProperty"){
-                finish = result.buyProperty(result.player)
-                r = finish.finishTurn(result.player)
-            } else {
-                r = result.finishTurn(result.player)
-            }
-            result = r.roll(r.player)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        let tf : TurnFinish
+        let to : TurnOwnedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
         }
-        let rent = result.payRent(result.player)
-        _chai.assert.equal(rent.stage, "Finish")
+        tu = trResult
+        let tuResult = tu.buyProperty(tu.player)
+        while(tuResult.stage != "Finish"){
+            tuResult = tu.buyProperty(tu.player)
+        }
+        tf = tuResult
+        let tfResult = tf.finishTurn(tf.player)
+        while(tfResult.stage != "Roll"){
+            tfResult = tf.finishTurn(tf.player)
+        }
+        tr = tfResult
+        trResult = tr.roll(tr.player)
+        while(trResult.stage != "OwnedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        to = trResult
+        let toResult = to.payRent(to.player)
+        while(toResult.stage != "Finish"){
+            toResult = to.payRent(to.player)
+        }
+        _chai.assert.equal(toResult.stage, "Finish")
     });
     it('pay rent unchanged if different player calls it', 
     () => {
@@ -156,28 +174,36 @@ describe('service turn payRent', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        }         
-        let finish = result.buyProperty(result.player)
-        let newRoll = finish.finishTurn(finish.player)
-        result = newRoll.roll(newRoll.player)
-        while(result.stage != "OwnedProperty"){
-            if(result.stage == "UnownedProperty"){
-                finish = result.buyProperty(result.player)
-                r = finish.finishTurn(result.player)
-            } else {
-                r = result.finishTurn(result.player)
-            }
-            result = r.roll(r.player)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        let tf : TurnFinish
+        let to : TurnOwnedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
         }
+        tu = trResult
+        let tuResult = tu.buyProperty(tu.player)
+        while(tuResult.stage != "Finish"){
+            tuResult = tu.buyProperty(tu.player)
+        }
+        tf = tuResult
+        let tfResult = tf.finishTurn(tf.player)
+        while(tfResult.stage != "Roll"){
+            tfResult = tf.finishTurn(tf.player)
+        }
+        tr = tfResult
+        trResult = tr.roll(tr.player)
+        while(trResult.stage != "OwnedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        to = trResult
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
-        let rent = result.payRent(notTurnPlayer)
-        _chai.assert.equal(rent.stage, "OwnedProperty")
-        _chai.assert.equal(rent.player, result.player)
+        let toResult = to.payRent(notTurnPlayer)
+        _chai.assert.equal(toResult.stage, "OwnedProperty")
+        _chai.assert.equal(toResult.player, to.player)
+        _chai.assert.notEqual(toResult.player, notTurnPlayer)
     });
 });
 
@@ -191,17 +217,18 @@ describe('service finishTurn', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        }         
-        let finish = result.buyProperty(result.player)
-        let previousTurnPlayer = finish.player
-        let newTurn = finish.finishTurn(finish.player)
-        _chai.assert.equal(newTurn.stage, "Roll")
-        _chai.assert.notEqual(newTurn.player, previousTurnPlayer)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        tu = trResult
+        let previousTurnPlayer = tu.player
+        let tuResult = tu.finishTurn(tu.player)
+        _chai.assert.equal(tuResult.stage, "Roll")
+        _chai.assert.notEqual(tuResult.player, previousTurnPlayer)
     });
     it('finish unchanged if different player calls it', 
     () => {
@@ -212,16 +239,18 @@ describe('service finishTurn', () => {
         let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
             b, p, o, t)
-        let r = c.start()
-        let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        }         
-        let finish = result.buyProperty(result.player)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        tu = trResult
+        let previousTurnPlayer = tu.player
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
-        let notNewTurn = finish.finishTurn(notTurnPlayer)
-        _chai.assert.equal(notNewTurn.stage, "Finish")
-        _chai.assert.equal(notNewTurn.player, finish.player)
+        let tuResult = tu.finishTurn(notTurnPlayer)
+        _chai.assert.equal(tuResult.stage, "UnownedProperty")
+        _chai.assert.equal(tuResult.player, previousTurnPlayer)
     });
 });
