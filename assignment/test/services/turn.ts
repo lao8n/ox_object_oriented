@@ -56,9 +56,23 @@ describe('service turn roll', () => {
             ["UnownedProperty", "OwnedProperty"] )
         _chai.assert.equal(result.player, 1)
     });
+    it('roll unchanged if different player calls', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll(2)
+        _chai.assert.equal(result.stage, "Roll")
+        _chai.assert.equal(result.player, 1)
+    });
 });
 
-describe('service turn buy property', () => {
+describe('service turn buyProperty', () => {
     it('buy property returns TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -78,9 +92,28 @@ describe('service turn buy property', () => {
         let finish = result.buyProperty(result.player)
         _chai.assert.equal(finish.stage, "Finish")
     });
+    it('buy property unchanged if different player calls it', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll(r.player)
+        while(result.stage != "UnownedProperty"){} // this is immediate
+        _chai.assert.equal(result.stage, "UnownedProperty")
+        let notTurnPlayer = p.getCurrentTurnNotPlayer()
+        let finish = result.buyProperty(notTurnPlayer)
+        _chai.assert.equal(finish.stage, "UnownedProperty")
+        _chai.assert.notEqual(finish.player, notTurnPlayer)
+        _chai.assert.equal(finish.player, result.player)
+    });
 });
 
-describe('service turn rent property', () => {
+describe('service turn payRent', () => {
     it('pay rent returns TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -92,24 +125,19 @@ describe('service turn rent property', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate
-            r = result.finishTurn(result.player)
-            result = r.roll(r.player)
-        }
+        while(result.stage != "UnownedProperty"){} // this is immediate
         let finish = result.buyProperty(result.player)
         let newRoll = finish.finishTurn(finish.player)
         result = newRoll.roll(newRoll.player)
         while(result.stage != "OwnedProperty"){
-            r = result.finishTurn(result.player)
+            let buy = result.buyProperty(result.player)
+            r = buy.finishTurn(result.player)
             result = r.roll(r.player)
         }
         let rent = result.payRent(result.player)
         _chai.assert.equal(rent.stage, "Finish")
     });
-});
-
-describe('service turn buy property', () => {
-    it('buy property returns TurnFinish', 
+    it('pay rent unchanged if different player calls it', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
@@ -120,12 +148,56 @@ describe('service turn buy property', () => {
             b, p, o, t)
         let r = c.start()
         let result = r.roll(r.player)
-        while(result.stage != "UnownedProperty"){ // this is immediate 
-            r = result.finishTurn(result.player)
+        while(result.stage != "UnownedProperty"){} // this is immediate
+        let finish = result.buyProperty(result.player)
+        let newRoll = finish.finishTurn(finish.player)
+        result = newRoll.roll(newRoll.player)
+        while(result.stage != "OwnedProperty"){
+            let buy = result.buyProperty(result.player)
+            r = buy.finishTurn(result.player)
             result = r.roll(r.player)
         }
-        _chai.assert.equal(result.stage, "UnownedProperty")
+        let notTurnPlayer = p.getCurrentTurnNotPlayer()
+        let rent = result.payRent(notTurnPlayer)
+        _chai.assert.equal(rent.stage, "OwnedProperty")
+        _chai.assert.equal(rent.player, result.player)
+    });
+});
+
+describe('service finishTurn', () => {
+    it('finish returns roll', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll(r.player)
+        while(result.stage != "UnownedProperty"){} // this is immediate 
         let finish = result.buyProperty(result.player)
-        _chai.assert.equal(finish.stage, "Finish")
+        let newTurn = finish.finishTurn(finish.player)
+        _chai.assert.equal(newTurn.stage, "Roll")
+        _chai.assert.equal(newTurn.player, 2)
+    });
+    it('finish unchanged if different player calls it', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let r = c.start()
+        let result = r.roll(r.player)
+        while(result.stage != "UnownedProperty"){} // this is immediate 
+        let finish = result.buyProperty(result.player)
+        let notTurnPlayer = p.getCurrentTurnNotPlayer()
+        let notNewTurn = finish.finishTurn(notTurnPlayer)
+        _chai.assert.equal(notNewTurn.stage, "Finish")
+        _chai.assert.equal(notNewTurn.player, finish.player)
     });
 });

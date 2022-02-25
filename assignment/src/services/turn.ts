@@ -11,29 +11,29 @@ import { Transfer } from "./transfer"
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
 export interface TurnBase {
-    player: PlayerID
-    stage: Stage
+    readonly player: PlayerID
+    readonly stage: Stage
 }
 
 export type NotTurn = TurnBase 
 
 export interface TurnRoll extends TurnBase {
-    stage: "Roll"
+    readonly stage: "Roll"
     roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty
 }
 export interface TurnUnownedProperty extends TurnBase {
-    stage: "UnownedProperty"
+    readonly stage: "UnownedProperty"
     buyProperty(player : PlayerID): TurnFinish
     finishTurn(player : PlayerID): TurnRoll
 }
 export interface TurnOwnedProperty extends TurnBase{
-    stage: "OwnedProperty"
+    readonly stage: "OwnedProperty"
     payRent(player : PlayerID): TurnFinish
     finishTurn(player : PlayerID): TurnRoll
 }
 
 export interface TurnFinish extends TurnBase {
-    stage: "Finish"
+    readonly stage: "Finish"
     finishTurn(player : PlayerID): TurnRoll
 }
 
@@ -54,7 +54,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         private readonly ownership: Ownership<M, B>,
         private readonly transfer: Transfer<M, B>,
     ){
-        this.player = this.players.getTurnPlayer()
+        this.player = this.players.getNextTurnPlayer()
         this.stage = "Roll" // tag property
         this.space = DataFactory.createGo<M>()
         // let roll1 = this.dice.next()
@@ -146,7 +146,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             return this as NotTurn
         }
         this.stage = "Roll"
-        this.player =  this.players.getTurnPlayer()
+        this.player =  this.players.getNextTurnPlayer()
         let roll2 = this.dice.next()
         console.log("finish " + roll2.value)
         let roll1 = this.dice.next(true)

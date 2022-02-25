@@ -26,12 +26,21 @@ export class Players<M extends Money> {
         this._orderIndex = 0
     }
 
-    getTurnPlayer(): PlayerID{
+    getNextTurnPlayer(): PlayerID{
         const player = this._order[this._orderIndex]
         if(!player){
             throw new Error("Unable to find current turn player")
         }
         this._orderIndex = (this._orderIndex + 1) % this.numPlayers
+        return player
+    }
+
+    getCurrentTurnNotPlayer(): PlayerID {
+        let orderIndex =  (this._orderIndex + 1) % this.numPlayers
+        const player = this._order[orderIndex]
+        if(!player){
+            throw new Error("Unable to find current turn player")
+        }
         return player
     }
 

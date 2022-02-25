@@ -12,25 +12,25 @@ describe('component player constructor', () => {
     
 });
 
-describe('component player getTurnPlayer', () => {
+describe('component player getNextTurnPlayer', () => {
     it('can get players for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
     });
     it('can get players for 5 person game', 
     () => {
         let p = new Players<money.GBP>(5)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
-        _chai.assert.equal(p.getTurnPlayer(), 3)
-        _chai.assert.equal(p.getTurnPlayer(), 4)
-        _chai.assert.equal(p.getTurnPlayer(), 5)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 3)
+        _chai.assert.equal(p.getNextTurnPlayer(), 4)
+        _chai.assert.equal(p.getNextTurnPlayer(), 5)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
     });
 });
 
@@ -38,27 +38,27 @@ describe('component player setOrder', () => {
     it('can set order for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
         p.setOrder([2, 1])
-        _chai.assert.equal(p.getTurnPlayer(), 2)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
     });
     it('can set order for 5 person game', 
     () => {
         let p = new Players<money.GBP>(5)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
-        _chai.assert.equal(p.getTurnPlayer(), 3)
-        _chai.assert.equal(p.getTurnPlayer(), 4)
-        _chai.assert.equal(p.getTurnPlayer(), 5)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 3)
+        _chai.assert.equal(p.getNextTurnPlayer(), 4)
+        _chai.assert.equal(p.getNextTurnPlayer(), 5)
         p.setOrder([3, 1, 4, 5, 2])
-        _chai.assert.equal(p.getTurnPlayer(), 3)
-        _chai.assert.equal(p.getTurnPlayer(), 1)
-        _chai.assert.equal(p.getTurnPlayer(), 4)
-        _chai.assert.equal(p.getTurnPlayer(), 5)
-        _chai.assert.equal(p.getTurnPlayer(), 2)
-        _chai.assert.equal(p.getTurnPlayer(), 3)
+        _chai.assert.equal(p.getNextTurnPlayer(), 3)
+        _chai.assert.equal(p.getNextTurnPlayer(), 1)
+        _chai.assert.equal(p.getNextTurnPlayer(), 4)
+        _chai.assert.equal(p.getNextTurnPlayer(), 5)
+        _chai.assert.equal(p.getNextTurnPlayer(), 2)
+        _chai.assert.equal(p.getNextTurnPlayer(), 3)
     });
     it('get error if order is too short', 
     () => {
