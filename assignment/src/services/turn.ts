@@ -5,7 +5,7 @@ import { Ownership } from "../components/ownership"
 import { Players } from "../components/players"
 import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/board"
 import { Money } from "../types/money"
-import { Player, PlayerID } from "../types/player"
+import { PlayerID } from "../types/player"
 import { Transfer } from "./transfer"
 
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
@@ -35,7 +35,6 @@ export interface TurnOwnedProperty extends TurnBase{
     payRent(player : PlayerID): TurnFinish | TurnOwnedProperty
     finishTurn(player : PlayerID): TurnRoll | TurnOwnedProperty
 }
-
 export interface TurnFinish extends TurnBase {
     readonly stage: "Finish"
     finishTurn(player : PlayerID): TurnRoll | TurnInJail | TurnFinish
@@ -116,6 +115,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
                     return this as TurnFinish
                 // threw a double
                 } else {
+                    this.players.setInJail(this.player, false)
                     const location = this.updateLocation(roll.value[0])
                     return this.updateStage(location)
                 }
@@ -155,7 +155,6 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         if(player != this.player){
             return this as TurnFinish
         }
-        this.stage = "Roll"
         this.dice.next(true)
         this.player = this.players.getNextTurnPlayer()
         if(this.players.getInJail(this.player)){

@@ -4,7 +4,7 @@ import { Board } from '../../src/components/board';
 import { Owner, Ownership } from '../../src/components/ownership';
 import { Players } from "../../src/components/players";
 import { Transfer } from '../../src/services/transfer';
-import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty } from '../../src/services/turn';
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../../src/services/turn';
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
 
@@ -320,5 +320,37 @@ describe('service finishTurn', () => {
         let tuResult = tu.finishTurn(notTurnPlayer)
         _chai.assert.equal(tuResult.stage, "UnownedProperty")
         _chai.assert.equal(tuResult.player, previousTurnPlayer)
+    });
+});
+
+describe('service turn rollJail', () => {
+    it('buy property returns TurnFinish', 
+    () => {
+        let m = DataFactory.createMonopolyBoard<money.GBP>()
+        let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(2)
+        let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, MonopolyBoard<money.GBP>>(
+            b, p, o, t)
+        let tp : TurnUnownedProperty |TurnOwnedProperty
+        let tj : TurnInJail
+
+        // set in jail
+        const jail = b.getJailLocation()
+        if(jail){
+            p.setLocation(1, jail)
+            p.setInJail(1, true)
+        }
+        c.stage = "Jail"
+        tj = c as TurnInJail
+
+        let tjResult = tj.rollJail(1)
+        while(tjResult.stage == "Finish" || tjResult.stage == "Jail"){
+            tjResult = tj.rollJail(1)
+        }
+        tp = tjResult
+        _chai.assert.oneOf(tp.stage, ["UnownedProperty", "OwnedProperty"] )        
+        _chai.assert.equal(tp.player, 1)
     });
 });
