@@ -15,11 +15,12 @@ export interface TurnBase {
     readonly stage: Stage
 }
 
-export type NotTurn = TurnBase 
+export type NotTurn = TurnBase
 
 export interface TurnRoll extends TurnBase {
     readonly stage: "Roll"
-    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | TurnFinish
+    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
+        TurnFinish
 }
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
@@ -37,7 +38,7 @@ export interface TurnFinish extends TurnBase {
     finishTurn(player : PlayerID): TurnRoll
 }
 
-export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish"
+export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish" 
 
 export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     // these fields are not exposed through the interfaces so do not need to be
