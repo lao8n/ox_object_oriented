@@ -15,24 +15,26 @@ export interface TurnBase {
     stage: Stage
 }
 
+export type NotTurn = TurnBase 
+
 export interface TurnRoll extends TurnBase {
     stage: "Roll"
-    roll(): TurnUnownedProperty | TurnOwnedProperty
+    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty
 }
 export interface TurnUnownedProperty extends TurnBase {
     stage: "UnownedProperty"
-    buyProperty(): TurnFinish
-    finishTurn(): TurnRoll
+    buyProperty(player : PlayerID): TurnFinish
+    finishTurn(player : PlayerID): TurnRoll
 }
 export interface TurnOwnedProperty extends TurnBase{
     stage: "OwnedProperty"
-    payRent(): TurnFinish
-    finishTurn(): TurnRoll
+    payRent(player : PlayerID): TurnFinish
+    finishTurn(player : PlayerID): TurnRoll
 }
 
 export interface TurnFinish extends TurnBase {
     stage: "Finish"
-    finishTurn(): TurnRoll
+    finishTurn(player : PlayerID): TurnRoll
 }
 
 
@@ -65,7 +67,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnRoll
     }
 
-    roll(): TurnUnownedProperty | TurnOwnedProperty {
+    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | NotTurn {
+        if(player != this.player){
+            return this as NotTurn
+        }
         let roll1 = this.dice.next()
         console.log("roll1 " + roll1.value)
         let roll = this.dice.next()
@@ -110,7 +115,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnUnownedProperty // TODO remove me
     }
 
-    buyProperty(): TurnFinish {
+    buyProperty(player : PlayerID): TurnFinish | NotTurn {
+        if(player != this.player){
+            return this as NotTurn
+        }
         // cannot make a separate method isProperty as typescript cannot do type 
         // inference
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
@@ -121,7 +129,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnFinish
     }
 
-    payRent(): TurnFinish {
+    payRent(player : PlayerID): TurnFinish | NotTurn{
+        if(player != this.player){
+            return this as NotTurn
+        }
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
            this.space.kind == "Train") {
             this.transfer.payRent(this.player, this.space)
@@ -130,7 +141,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnFinish
     }
 
-    finishTurn(): TurnRoll {
+    finishTurn(player : PlayerID): TurnRoll | NotTurn {
+        if(player != this.player){
+            return this as NotTurn
+        }
         this.stage = "Roll"
         this.player =  this.players.getTurnPlayer()
         let roll2 = this.dice.next()
