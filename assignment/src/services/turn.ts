@@ -3,7 +3,7 @@ import { Board } from "../components/board"
 import { diceGenerator, PairDiceValue } from "../components/dice"
 import { Ownership } from "../components/ownership"
 import { Players } from "../components/players"
-import { GenericBoard, MonopolyBoard, Space } from "../types/board"
+import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/board"
 import { Money } from "../types/money"
 import { Player, PlayerID } from "../types/player"
 import { Transfer } from "./transfer"
@@ -20,6 +20,11 @@ export interface TurnRoll extends TurnBase {
     roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
         TurnFinish | TurnRoll
 }
+export interface TurnInJail extends TurnBase {
+    readonly stage: "Jail"
+    rollJail(player: PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
+        TurnInJail | TurnFinish
+}
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty
@@ -33,10 +38,11 @@ export interface TurnOwnedProperty extends TurnBase{
 
 export interface TurnFinish extends TurnBase {
     readonly stage: "Finish"
-    finishTurn(player : PlayerID): TurnRoll | TurnFinish
+    finishTurn(player : PlayerID): TurnRoll | TurnInJail | TurnFinish
 }
 
-export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish" 
+export type Stage = "Roll" | "Jail" | "UnownedProperty" | "OwnedProperty" | 
+    "Finish"
 
 export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     // these fields are not exposed through the interfaces so do not need to be
@@ -72,21 +78,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
                 const location = this.updateLocation(roll.value[0])  
                 // didn't throw a double           
                 if(roll.value[1]){
-                    this.space = this.board.getSpace(location)
-                    const owner = this.ownership.isOwned(this.space.name)
-                    // unowned
-                    if(owner == null){
-                        this.stage = "UnownedProperty"
-                        return this as TurnUnownedProperty
-                    } 
-                    // owned
-                    else if (owner){
-                        this.stage = "OwnedProperty"
-                        return this as TurnOwnedProperty
-                    }
-                    // undefined i.e. not an ownable property  
-                    // else {
-                    // }
+                    return this.updateStage(location)
                 // threw a double
                 } else {
                     return this as TurnRoll
@@ -104,9 +96,31 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             } else {
                 this.players.setLocation(this.player, {street: 1, num: 1})
             } 
+            this.dice = diceGenerator()
+            this.stage = "Finish"
+            return this as TurnFinish
         }
-        // reset dice generator as we have three doubles
-        this.dice = diceGenerator()
+    }
+
+    rollJail(player: PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
+        TurnInJail | TurnFinish {
+        if(player != this.player){
+            return this as TurnInJail
+        }
+        let roll = this.dice.next()
+        if(roll.done == false){
+            if(roll.value){
+                // didn't throw a double
+                if(roll.value[1]){
+                    this.stage = "Finish"
+                    return this as TurnFinish
+                // threw a double
+                } else {
+                    const location = this.updateLocation(roll.value[0])
+                    return this.updateStage(location)
+                }
+            }
+        }
         this.stage = "Finish"
         return this as TurnFinish
     }
@@ -137,13 +151,18 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnFinish
     }
 
-    finishTurn(player : PlayerID): TurnRoll | TurnFinish {
+    finishTurn(player : PlayerID): TurnRoll | TurnInJail | TurnFinish {
         if(player != this.player){
             return this as TurnFinish
         }
         this.stage = "Roll"
-        this.player =  this.players.getNextTurnPlayer()
-        let x = this.dice.next(true)
+        this.dice.next(true)
+        this.player = this.players.getNextTurnPlayer()
+        if(this.players.getInJail(this.player)){
+            this.stage = "Jail"
+            return this as TurnInJail
+        }
+        this.stage = "Roll"
         return this as TurnRoll
     }
 
@@ -154,5 +173,25 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             this.players.setLocation(this.player, location)
         }
         return location
+    }
+
+    private updateStage(location: BoardLocation){
+        this.space = this.board.getSpace(location)
+        const owner = this.ownership.isOwned(this.space.name)
+        // unowned
+        if(owner == null){
+            this.stage = "UnownedProperty"
+            return this as TurnUnownedProperty
+        } 
+        // owned
+        else if (owner){
+            this.stage = "OwnedProperty"
+            return this as TurnOwnedProperty
+        }
+        // undefined i.e. not an ownable property  
+        else {
+            this.stage = "Finish"
+            return this as TurnFinish
+        }
     }
 }

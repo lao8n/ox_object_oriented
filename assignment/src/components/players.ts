@@ -95,7 +95,7 @@ export class Players<M extends Money> {
         if(player){
             return player.inJail
         }
-        return null
+        throw new Error(`Player ${id} doesn't exist`)
     }
 
     setInJail(id: PlayerID, inJail: boolean){
