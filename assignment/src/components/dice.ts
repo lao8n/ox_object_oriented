@@ -22,10 +22,10 @@ export type PairDiceValue = DiceValue | 7 | 8 | 9 | 10 | 11 | 12
 export function* diceGenerator(){
     let numberDoubles = 0
     let doubles : [DiceValue, DiceValue, DiceValue] = [1, 1, 1]
+    let newTurn : boolean = false
     while(numberDoubles < 3) {
-        let newTurn : boolean = yield
+        // let newTurn : boolean = yield
         if(newTurn){
-            console.log("new turn")
             numberDoubles = 0
             newTurn = false
         }
@@ -37,7 +37,7 @@ export function* diceGenerator(){
         } else {
             numberDoubles = 0
         }
-        yield [roll1 + roll2 as PairDiceValue, roll1 != roll2] as 
+        newTurn = yield [roll1 + roll2 as PairDiceValue, roll1 != roll2] as 
             [PairDiceValue, boolean]
     }
     return doubles

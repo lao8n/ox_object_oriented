@@ -54,7 +54,7 @@ describe('service turn roll', () => {
         tr = c.start()
         let trResult = tr.roll(tr.player)
         _chai.assert.oneOf(trResult.stage, 
-            ["UnownedProperty", "OwnedProperty", "Finish"] )
+            ["Roll", "UnownedProperty", "OwnedProperty", "Finish"] )
         _chai.assert.equal(trResult.player, 1)
     });
     it('roll unchanged if different player calls', 
@@ -86,10 +86,19 @@ describe('service turn buyProperty', () => {
             b, p, o, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
+        let tf : TurnFinish
         tr = c.start()
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         _chai.assert.equal(tu.stage, "UnownedProperty")
@@ -110,10 +119,19 @@ describe('service turn buyProperty', () => {
             b, p, o, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
+        let tf : TurnFinish
         tr = c.start()
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
@@ -142,6 +160,14 @@ describe('service turn payRent', () => {
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         let tuResult = tu.buyProperty(tu.player)
@@ -157,6 +183,14 @@ describe('service turn payRent', () => {
         trResult = tr.roll(tr.player)
         while(trResult.stage != "OwnedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         to = trResult
         let toResult = to.payRent(to.player)
@@ -182,6 +216,14 @@ describe('service turn payRent', () => {
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         let tuResult = tu.buyProperty(tu.player)
@@ -197,6 +239,14 @@ describe('service turn payRent', () => {
         trResult = tr.roll(tr.player)
         while(trResult.stage != "OwnedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         to = trResult
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
@@ -219,10 +269,19 @@ describe('service finishTurn', () => {
             b, p, o, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
+        let tf : TurnFinish
         tr = c.start()
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         let previousTurnPlayer = tu.player
@@ -241,10 +300,19 @@ describe('service finishTurn', () => {
             b, p, o, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
+        let tf : TurnFinish
         tr = c.start()
         let trResult = tr.roll(tr.player)
         while(trResult.stage != "UnownedProperty"){
             trResult = tr.roll(tr.player)
+            if(trResult.stage == "Finish"){
+                tf = trResult
+                let tfResult = tf.finishTurn(tf.player)
+                while(tfResult.stage != "Roll"){
+                    tfResult = tf.finishTurn(tf.player)
+                }
+                tr = tfResult
+            }
         }
         tu = trResult
         let previousTurnPlayer = tu.player

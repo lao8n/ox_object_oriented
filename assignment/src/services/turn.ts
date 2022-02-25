@@ -66,7 +66,6 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         if(player != this.player){
             return this as TurnRoll
         }
-        this.dice.next()
         let roll = this.dice.next()
         if(roll.done == false){
             if(roll.value){
@@ -88,22 +87,26 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
                     // undefined i.e. not an ownable property  
                     // else {
                     // }
+                // threw a double
                 } else {
-                    console.log("threw a double")
+                    return this as TurnRoll
                 }
             } else {
                 throw new Error(`Unable to get dice roll value for ${roll}`)
             }
-        } 
         // threw 3 doubles
-        // else {
-        //     const jail = this.board.getJailLocation()
-        //     if(jail){
-        //         this.players.setLocation(this.player, jail)
-        //         this.players.setInJail(this.player, true)
-        //     }
-
-        // }
+        } else {
+            const jail = this.board.getJailLocation()
+            if(jail){
+                this.players.setLocation(this.player, jail)
+                this.players.setInJail(this.player, true)
+            // if jail doesn't exist go to first location on board
+            } else {
+                this.players.setLocation(this.player, {street: 1, num: 1})
+            } 
+        }
+        // reset dice generator as we have three doubles
+        this.dice = diceGenerator()
         this.stage = "Finish"
         return this as TurnFinish
     }
@@ -140,8 +143,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         }
         this.stage = "Roll"
         this.player =  this.players.getNextTurnPlayer()
-        let roll2 = this.dice.next()
-        let roll1 = this.dice.next(true)
+        let x = this.dice.next(true)
         return this as TurnRoll
     }
 
