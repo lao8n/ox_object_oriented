@@ -19,7 +19,7 @@ export type NotTurn = TurnBase
 
 export interface TurnRoll extends TurnBase {
     readonly stage: "Roll"
-    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty
+    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | TurnFinish
 }
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
@@ -36,7 +36,6 @@ export interface TurnFinish extends TurnBase {
     readonly stage: "Finish"
     finishTurn(player : PlayerID): TurnRoll
 }
-
 
 export type Stage = "Roll" | "UnownedProperty" | "OwnedProperty" | "Finish"
 
@@ -57,17 +56,14 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         this.player = this.players.getNextTurnPlayer()
         this.stage = "Roll" // tag property
         this.space = DataFactory.createGo<M>()
-        // let roll1 = this.dice.next()
-        // console.log("class1 " + roll1.value)
-        // let roll = this.dice.next()
-        // console.log("class2 " + roll.value)
     }
 
     start(): TurnRoll{
         return this as TurnRoll
     }
 
-    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | NotTurn {
+    roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
+        TurnFinish | NotTurn {
         if(player != this.player){
             return this as NotTurn
         }
@@ -111,8 +107,8 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         //     }
 
         // }
-        this.stage = "UnownedProperty"
-        return this as TurnUnownedProperty // TODO remove me
+        this.stage = "Finish"
+        return this as TurnFinish
     }
 
     buyProperty(player : PlayerID): TurnFinish | NotTurn {
@@ -129,7 +125,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnFinish
     }
 
-    payRent(player : PlayerID): TurnFinish | NotTurn{
+    payRent(player : PlayerID): TurnFinish | NotTurn {
         if(player != this.player){
             return this as NotTurn
         }

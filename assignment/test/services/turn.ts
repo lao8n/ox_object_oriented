@@ -130,8 +130,12 @@ describe('service turn payRent', () => {
         let newRoll = finish.finishTurn(finish.player)
         result = newRoll.roll(newRoll.player)
         while(result.stage != "OwnedProperty"){
-            let buy = result.buyProperty(result.player)
-            r = buy.finishTurn(result.player)
+            if(result.stage == "UnownedProperty"){
+                finish = result.buyProperty(result.player)
+                r = finish.finishTurn(result.player)
+            } else {
+                r = result.finishTurn(result.player)
+            }
             result = r.roll(r.player)
         }
         let rent = result.payRent(result.player)
@@ -153,8 +157,12 @@ describe('service turn payRent', () => {
         let newRoll = finish.finishTurn(finish.player)
         result = newRoll.roll(newRoll.player)
         while(result.stage != "OwnedProperty"){
-            let buy = result.buyProperty(result.player)
-            r = buy.finishTurn(result.player)
+            if(result.stage == "UnownedProperty"){
+                finish = result.buyProperty(result.player)
+                r = finish.finishTurn(result.player)
+            } else {
+                r = result.finishTurn(result.player)
+            }
             result = r.roll(r.player)
         }
         let notTurnPlayer = p.getCurrentTurnNotPlayer()
