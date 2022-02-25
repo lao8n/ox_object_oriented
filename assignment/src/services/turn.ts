@@ -54,7 +54,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         private readonly ownership: Ownership<M, B>,
         private readonly transfer: Transfer<M, B>,
     ){
-        this.player = this.players.getNextTurnPlayer()
+        this.player = this.players.getCurrentTurnPlayer()
         this.stage = "Roll" // tag property
         this.space = DataFactory.createGo<M>()
     }
@@ -68,10 +68,8 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         if(player != this.player){
             return this as NotTurn
         }
-        let roll1 = this.dice.next()
-        console.log("roll1 " + roll1.value)
+        this.dice.next()
         let roll = this.dice.next()
-        console.log("roll2 " + roll.value)
         if(roll.done == false){
             if(roll.value){
                 const location = this.updateLocation(roll.value[0])  
@@ -145,9 +143,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         this.stage = "Roll"
         this.player =  this.players.getNextTurnPlayer()
         let roll2 = this.dice.next()
-        console.log("finish " + roll2.value)
         let roll1 = this.dice.next(true)
-        console.log("finish true " + roll1.value)
         return this as TurnRoll
     }
 

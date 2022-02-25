@@ -41,7 +41,7 @@ describe('service turn start', () => {
 });
 
 describe('service turn roll', () => {
-    it('roll returns either UnownedProperty or OwnedProperty', 
+    it('roll returns either UnownedProperty or OwnedProperty or TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
@@ -53,7 +53,7 @@ describe('service turn roll', () => {
         let r = c.start()
         let result = r.roll(r.player)
         _chai.assert.oneOf(result.stage, 
-            ["UnownedProperty", "OwnedProperty"] )
+            ["UnownedProperty", "OwnedProperty", "Finish"] )
         _chai.assert.equal(result.player, 1)
     });
     it('roll unchanged if different player calls', 
@@ -198,9 +198,10 @@ describe('service finishTurn', () => {
             result = r.roll(r.player)
         }         
         let finish = result.buyProperty(result.player)
+        let previousTurnPlayer = finish.player
         let newTurn = finish.finishTurn(finish.player)
         _chai.assert.equal(newTurn.stage, "Roll")
-        _chai.assert.equal(newTurn.player, 2)
+        _chai.assert.notEqual(newTurn.player, previousTurnPlayer)
     });
     it('finish unchanged if different player calls it', 
     () => {
