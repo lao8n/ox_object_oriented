@@ -176,7 +176,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
 
     private updateStage(location: BoardLocation){
         this.space = this.board.getSpace(location)
-        const owner = this.ownership.isOwned(this.space.name)
+        const owner = this.ownership.getOwner(this.space.name)
         // unowned
         if(owner == null){
             this.stage = "UnownedProperty"

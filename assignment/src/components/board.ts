@@ -17,7 +17,6 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * - As discussed in class, typescript doesn't know that this is definitely
      *   assigned so need a default
      */
-    // TODO check it is okay that constructor argument is private readonly
     private _boardSize: number = 0 
     /**
      * Assignment notes

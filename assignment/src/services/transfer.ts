@@ -36,7 +36,7 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
      * - .kind tag is used to discriminate union
      */
     payRent(player: PlayerID, property : Property<M>){
-        let owner = this.ownership.isOwned(property.name)
+        let owner = this.ownership.getOwner(property.name)
         if(!owner){
             return false
         }

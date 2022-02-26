@@ -2,6 +2,7 @@ import * as _chai from 'chai';
 import 'mocha';
 import * as money from '../../src/types/money';
 import { GameServer } from '../../src/api/game';
+import { DataFactory } from '../../data/uk';
 
 describe('api gameserver constructor', () => {
     it('can construct', () => {
@@ -42,7 +43,15 @@ describe('api gameserver getGame', () => {
 })
 
 describe('api game get information', () => {
-    it('get game player info ', () => {
+    it('get game board info ', () => {
+        let gs = new GameServer()
+        gs.startGame("Test", 2)
+        let g = gs.getGame(0)
+        _chai.assert.isDefined(g)
+        _chai.assert.deepEqual(g?.getSpace({street: 1, num: 1}), 
+            DataFactory.createDeed<money.GBP>("Old Kent Road", "Brown"))
+    })
+    it('get game players info ', () => {
         let gs = new GameServer()
         gs.startGame("British", 2)
         let g = gs.getGame(0)
@@ -54,4 +63,13 @@ describe('api game get information', () => {
         _chai.assert.equal(g?.getPlayerWealth(1), 1500n as money.GBP)
         _chai.assert.equal(g?.getPlayerInJail(1), false)
     })
+    it('get game ownership info ', () => {
+        let gs = new GameServer()
+        gs.startGame("British", 2)
+        let g = gs.getGame(0)
+        _chai.assert.isDefined(g)
+        _chai.assert.equal(g?.getOwner("Mayfair"), null)
+        _chai.assert.equal(g?.getOwner("Chelsea"), undefined)
+    })
+
 })

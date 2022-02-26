@@ -53,7 +53,7 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
         }
     }
 
-    public isOwned(name : string): Owner | undefined | null {
+    public getOwner(name : string): Owner | undefined | null {
         return this.ownership[name]
     }
 
@@ -72,7 +72,7 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
             throw new Error(`Invalid setNames does not include ${name}`)
         }
 
-        if(this.isOwned(name) === null){
+        if(this.getOwner(name) === null){
             this.ownership[name] = { id: player, sameOwner: false }
             let sameOwner = this.sameOwner(player, setNames)
             if(sameOwner){
@@ -97,7 +97,7 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
                             `and at most 4 entries`)
         }
 
-        if(this.isOwned(name)?.id == player){
+        if(this.getOwner(name)?.id == player){
             if(this.ownership[name]?.sameOwner){
                 for(const sn of setNames){
                     if(!this.ownership?.[sn]){ // undefined or null

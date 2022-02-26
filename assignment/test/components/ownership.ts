@@ -29,13 +29,13 @@ describe('component ownership constructor', () => {
     })
 })
 
-describe('component ownership isOwned', () => {
+describe('component ownership getOwner', () => {
     it(`space not on the board undefined`, 
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
-        let result = o.isOwned("Chelsea")
+        let result = o.getOwner("Chelsea")
         _chai.assert.isUndefined(result)
     })
     it(`space on the board but not ownable is undefined`, 
@@ -43,7 +43,7 @@ describe('component ownership isOwned', () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
-        let result = o.isOwned("Jail")
+        let result = o.getOwner("Jail")
         _chai.assert.isUndefined(result)    
     })
     it(`space on the board but after max board size is undefined`, 
@@ -51,7 +51,7 @@ describe('component ownership isOwned', () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
             DataFactory.createTestBoard2<money.GBP>()
         );
-        let result = o.isOwned("Pentonville Road")
+        let result = o.getOwner("Pentonville Road")
         _chai.assert.isUndefined(result)        
     })
     it(`space on the board after init is null`, 
@@ -59,11 +59,11 @@ describe('component ownership isOwned', () => {
         let o = new os.Ownership<money.GBP, board.MonopolyBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
-        let result = o.isOwned("King's Cross Station")
+        let result = o.getOwner("King's Cross Station")
         _chai.assert.isNull(result)         
-        result = o.isOwned("Water Works")
+        result = o.getOwner("Water Works")
         _chai.assert.isNull(result)       
-        result = o.isOwned("Bond Street")
+        result = o.getOwner("Bond Street")
         _chai.assert.isNull(result)   
     })
     it(`space on the board after acquire is Owner`, 
@@ -72,7 +72,7 @@ describe('component ownership isOwned', () => {
             DataFactory.createMonopolyBoard<money.GBP>()
         );
         o.acquire(1, "Mayfair", ["Park Lane", "Mayfair"])
-        let result = o.isOwned("Mayfair")
+        let result = o.getOwner("Mayfair")
         let expectedResult = {
             id: 1 as PlayerID,
             sameOwner: false
@@ -87,30 +87,30 @@ describe('component ownership isOwned', () => {
         );
         o.acquire(1, "Mayfair", ["Park Lane", "Mayfair"])
         o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
-        let result = o.isOwned("Park Lane")
+        let result = o.getOwner("Park Lane")
         let expectedResult = {
             id: 1 as PlayerID,
             sameOwner: true
         }
         _chai.assert.deepEqual(result, expectedResult)  
-        result = o.isOwned("Mayfair")
+        result = o.getOwner("Mayfair")
         _chai.assert.deepEqual(result, expectedResult)  
     })
     it(`space on the board after different properties with different owners ` + 
-        `has isOwner with sameOwner false`, 
+        `has getOwner with sameOwner false`, 
     () => {
         let o = new os.Ownership<money.GBP, board.MonopolyBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
         o.acquire(1, "Park Lane", ["Park Lane", "Mayfair"])
         o.acquire(2, "Mayfair", ["Park Lane", "Mayfair"])
-        let result = o.isOwned("Park Lane")
+        let result = o.getOwner("Park Lane")
         let expectedResult = {
             id: 1 as PlayerID,
             sameOwner: false
         }
         _chai.assert.deepEqual(result, expectedResult)  
-        result = o.isOwned("Mayfair")
+        result = o.getOwner("Mayfair")
         expectedResult = {
             id: 2 as PlayerID,
             sameOwner: false
@@ -118,20 +118,20 @@ describe('component ownership isOwned', () => {
         _chai.assert.deepEqual(result, expectedResult)  
     })
     it(`space on the board after different utilities with different owners ` + 
-        `has isOwner with sameOwner false`, 
+        `has getOwner with sameOwner false`, 
     () => {
         let o = new os.Ownership<money.GBP, board.MonopolyBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
         o.acquire(7, "Water Works", ["Water Works", "Electric Company"])
         o.acquire(5, "Electric Company", ["Water Works", "Electric Company"])
-        let result = o.isOwned("Water Works")
+        let result = o.getOwner("Water Works")
         let expectedResult = {
             id: 7 as PlayerID,
             sameOwner: false
         }
         _chai.assert.deepEqual(result, expectedResult)  
-        result = o.isOwned("Electric Company")
+        result = o.getOwner("Electric Company")
         expectedResult = {
             id: 5 as PlayerID,
             sameOwner: false
@@ -139,20 +139,20 @@ describe('component ownership isOwned', () => {
         _chai.assert.deepEqual(result, expectedResult)  
     })
     it(`space on the board after different utilities with same owner ` + 
-        `has isOwner with sameOwner true`, 
+        `has getOwner with sameOwner true`, 
     () => {
         let o = new os.Ownership<money.GBP, board.MonopolyBoard<money.GBP>>(
             DataFactory.createMonopolyBoard<money.GBP>()
         );
         o.acquire(7, "Water Works", ["Water Works", "Electric Company"])
         o.acquire(7, "Electric Company", ["Water Works", "Electric Company"])
-        let result = o.isOwned("Water Works")
+        let result = o.getOwner("Water Works")
         let expectedResult = {
             id: 7 as PlayerID,
             sameOwner: true
         }
         _chai.assert.deepEqual(result, expectedResult)  
-        result = o.isOwned("Electric Company")
+        result = o.getOwner("Electric Company")
         expectedResult = {
             id: 7 as PlayerID,
             sameOwner: true
@@ -281,7 +281,7 @@ describe('component ownership release', () => {
         let result = o.release(1, "Park Lane", ["Park Lane", "Mayfair"])
         _chai.assert.isTrue(result)
     })
-    it(`if name does exist and its owned by same id return true and isOwned ` + 
+    it(`if name does exist and its owned by same id return true and getOwner ` + 
        `sameOwner false`,
     () => {
         let o = new os.Ownership<money.GBP, board.GenericBoard<money.GBP>>(
@@ -291,9 +291,9 @@ describe('component ownership release', () => {
         o.acquire(1, "Mayfair", ["Park Lane", "Mayfair"])
         let result = o.release(1, "Mayfair", ["Park Lane", "Mayfair"])
         _chai.assert.isTrue(result)
-        let owner = o.isOwned("Mayfair")
+        let owner = o.getOwner("Mayfair")
         _chai.assert.isNull(owner)
-        owner = o.isOwned("Park Lane")
+        owner = o.getOwner("Park Lane")
         let expectedResult = {
             id: 1 as PlayerID,
             sameOwner: false

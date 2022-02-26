@@ -4,22 +4,37 @@ import { Owner, Ownership } from '../components/ownership';
 import { Players } from "../components/players";
 import { Transfer } from '../services/transfer';
 import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../services/turn';
-import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation } from '../types/board';
+import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } from '../types/board';
 import { GBP, Money } from "../types/money";
 import { NumPlayers, Player, PlayerID } from '../types/player';
 
 type MonopolyEdition = "British" | "Test"
 
+/**
+ * Game class directly exposes the turn interfaces through which all turn 
+ * actions are managed
+ * It indirectly exposes information from underlying components about game state
+ * without exposing those components.
+ * 
+ * Assignment notes
+ * - 
+ */
 class Game {
     readonly turn : TurnRoll | TurnFinish | TurnInJail | TurnOwnedProperty |
         TurnUnownedProperty
 
     constructor(
         readonly id: number,
+        private board: Board<Money, BoardEditions<Money>>,
         private players: Players<Money>,
+        private ownership: Ownership<Money, BoardEditions<Money>>,
         private concreteTurn: ConcreteTurn<Money, BoardEditions<Money>>
     ){
         this.turn = this.concreteTurn.start()
+    }
+
+    getSpace(location: BoardLocation): Space<Money> { 
+        return this.board.getSpace(location)
     }
 
     getCurrentTurnPlayer(): PlayerID {
@@ -40,6 +55,10 @@ class Game {
 
     getPlayerWealth(id: PlayerID): Money | null {
         return this.players.getWealth(id)
+    }
+
+    getOwner(name: string): Owner | null | undefined {
+        return this.ownership.getOwner(name)
     }
 }
 
@@ -89,7 +108,7 @@ export class GameServer {
         // services
         const t = new Transfer<typeof money, typeof m>(b, p, o)
         const c = new ConcreteTurn<typeof money, typeof m>(b, p, o, t)
-        const g = new Game(id, p, c)
+        const g = new Game(id, b, p, o, c)
         this.games.push(g)
         return g
     }

@@ -68,13 +68,13 @@ describe('service transfer buy property', () => {
         let result = t.buyProperty(1, deed)
         _chai.assert.isTrue(result)
         _chai.assert.equal(p.getWealth(1), 1440n as money.GBP)
-        _chai.assert.deepEqual(o.isOwned(deed.name), 
+        _chai.assert.deepEqual(o.getOwner(deed.name), 
             {id:1, sameOwner: false} as Owner)
         result = t.buyProperty(2, deed)
         _chai.assert.isFalse(result)
         _chai.assert.equal(p.getWealth(1), 1440n as money.GBP)
         _chai.assert.equal(p.getWealth(2), 1500n as money.GBP)
-        _chai.assert.deepEqual(o.isOwned(deed.name), 
+        _chai.assert.deepEqual(o.getOwner(deed.name), 
             {id:1, sameOwner: false} as Owner)
     });
 });
