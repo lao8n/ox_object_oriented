@@ -2,7 +2,7 @@ import * as _chai from 'chai';
 import { Game } from '../../src/index';
 import 'mocha';
 import * as money from '../../src/types/money';
-import { GameServer } from '../../src/api/gameserver';
+import { GameServer } from '../../src/api/game';
 
 describe('api gameserver constructor', () => {
     it('can construct', () => {
