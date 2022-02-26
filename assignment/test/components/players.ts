@@ -91,6 +91,15 @@ describe('component player getCurrentTurnNotPlayer', () => {
     });
 });
 
+describe('component player getOrder', () => {
+    it('can get order for 2 person game', 
+    () => {
+        let p = new Players<money.GBP>(2)
+        _chai.assert.deepEqual(p.getOrder(), [1, 2])
+        p.setOrder([2, 1])
+        _chai.assert.deepEqual(p.getOrder(), [2, 1])
+    });
+});
 
 describe('component player setOrder', () => {
     it('can set order for 2 person game', 

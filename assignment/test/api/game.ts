@@ -1,5 +1,4 @@
 import * as _chai from 'chai';
-import { Game } from '../../src/index';
 import 'mocha';
 import * as money from '../../src/types/money';
 import { GameServer } from '../../src/api/game';
@@ -39,5 +38,20 @@ describe('api gameserver getGame', () => {
         gs.startGame("British", 2)
         let g = gs.getGame(1)
         _chai.assert.isUndefined(g)
+    })
+})
+
+describe('api game get information', () => {
+    it('get game player info ', () => {
+        let gs = new GameServer()
+        gs.startGame("British", 2)
+        let g = gs.getGame(0)
+        _chai.assert.isDefined(g)
+        _chai.assert.equal(g?.getCurrentTurnPlayer(), 1)
+        _chai.assert.deepEqual(g?.getPlayersInOrder(), [1, 2])
+        _chai.assert.deepEqual(g?.getPlayerLocation(1), {street: 1, num: 1})
+        _chai.assert.equal(g?.getPlayerInJail(1), false)
+        _chai.assert.equal(g?.getPlayerWealth(1), 1500n as money.GBP)
+        _chai.assert.equal(g?.getPlayerInJail(1), false)
     })
 })

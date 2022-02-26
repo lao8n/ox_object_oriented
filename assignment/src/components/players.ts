@@ -48,6 +48,10 @@ export class Players<M extends Money> {
         return player
     }
 
+    getOrder(): PlayerID[]{
+        return this._order
+    }
+
     setOrder(order : PlayerID[]){
         if(order.length != this.numPlayers){
             throw new Error(`Order has ${order.length} players not ` +

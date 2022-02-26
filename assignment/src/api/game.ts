@@ -4,21 +4,42 @@ import { Owner, Ownership } from '../components/ownership';
 import { Players } from "../components/players";
 import { Transfer } from '../services/transfer';
 import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../services/turn';
-import { GenericBoard, MonopolyBoard, BoardEditions } from '../types/board';
+import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation } from '../types/board';
 import { GBP, Money } from "../types/money";
-import { NumPlayers } from '../types/player';
+import { NumPlayers, Player, PlayerID } from '../types/player';
 
 type MonopolyEdition = "British" | "Test"
 
-export class Game {
+class Game {
     readonly turn : TurnRoll | TurnFinish | TurnInJail | TurnOwnedProperty |
         TurnUnownedProperty
 
     constructor(
         readonly id: number,
-        private readonly concreteTurn: ConcreteTurn<Money, BoardEditions<Money>>
+        private players: Players<Money>,
+        private concreteTurn: ConcreteTurn<Money, BoardEditions<Money>>
     ){
         this.turn = this.concreteTurn.start()
+    }
+
+    getCurrentTurnPlayer(): PlayerID {
+        return this.players.getCurrentTurnPlayer()
+    }
+
+    getPlayersInOrder(): PlayerID[] {
+        return this.players.getOrder()
+    }
+
+    getPlayerLocation(id: PlayerID): BoardLocation {
+        return this.players.getLocation(id)
+    }
+
+    getPlayerInJail(id: PlayerID): boolean {
+        return this.players.getInJail(id)
+    }
+
+    getPlayerWealth(id: PlayerID): Money | null {
+        return this.players.getWealth(id)
     }
 }
 
@@ -68,7 +89,7 @@ export class GameServer {
         // services
         const t = new Transfer<typeof money, typeof m>(b, p, o)
         const c = new ConcreteTurn<typeof money, typeof m>(b, p, o, t)
-        const g = new Game(id, c)
+        const g = new Game(id, p, c)
         this.games.push(g)
         return g
     }

@@ -1,1 +1,1 @@
-export { Game } from './api/game';
+export { GameServer } from './api/game';
