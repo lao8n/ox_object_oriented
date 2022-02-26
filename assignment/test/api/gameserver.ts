@@ -16,6 +16,9 @@ describe('api gameserver startgame', () => {
         let gs = new GameServer()
         let g = gs.startGame("British", 2)
         _chai.assert.equal(g.id, 0)
-        _chai.assert.equal(g.game.instance.stage, "Roll")
+        _chai.assert.equal(g.turn.stage, "Roll")
+        if(g.turn.stage == "Roll"){
+            g.turn.roll(1)
+        }
     })
 })

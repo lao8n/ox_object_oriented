@@ -10,10 +10,6 @@ import { NumPlayers } from '../types/player';
 import { Game } from './game'
 
 type MonopolyEdition = "British" | "Test"
-type GameData = {
-    id: number,
-    game: Game
-}
 
 /**
  * Assignment notes
@@ -37,7 +33,7 @@ export class GameServer {
      * Assignment notes
      * - Factory pattern
      */
-    startGame(edition : MonopolyEdition, numberPlayers: NumPlayers): GameData {
+    startGame(edition : MonopolyEdition, numberPlayers: NumPlayers): Game {
         const id = this.games.length
         // components
         let money : Money
@@ -61,8 +57,8 @@ export class GameServer {
         // services
         const t = new Transfer<typeof money, typeof m>(b, p, o)
         const c = new ConcreteTurn<typeof money, typeof m>(b, p, o, t)
-        const g = new Game(c)
+        const g = new Game(id, c)
         this.games.push(g)
-        return {id: id, game: g}
+        return g
     }
 }

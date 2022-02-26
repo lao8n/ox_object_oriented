@@ -3,12 +3,13 @@ import { BoardEditions } from '../types/board';
 import { Money } from '../types/money';
 
 export class Game {
-    readonly instance : TurnRoll | TurnFinish | TurnInJail | TurnOwnedProperty |
+    readonly turn : TurnRoll | TurnFinish | TurnInJail | TurnOwnedProperty |
         TurnUnownedProperty
 
     constructor(
+        readonly id: number,
         private readonly concreteTurn: ConcreteTurn<Money, BoardEditions<Money>>
     ){
-        this.instance = concreteTurn.start()
+        this.turn = this.concreteTurn.start()
     }
 }
