@@ -1,1 +1,1 @@
-export { hello } from './api/game';
+export { Game } from './api/gameserver';

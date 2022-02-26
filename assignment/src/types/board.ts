@@ -18,6 +18,7 @@ export const boardstreets: BoardStreet[] = [1, 2, 3, 4]
 export type BoardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 export const boardnumbers: BoardNumber[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 export type Property<M extends Money> = Deed<M> | Utility<M> | Train<M>
+export type BoardEditions<M extends Money> = MonopolyBoard<M> | GenericBoard<M>
 
 /**
  * Assignment notes
