@@ -12,7 +12,7 @@ describe('api gameserver constructor', () => {
 })
 
 describe('api gameserver startgame', () => {
-    it('can call', () => {
+    it('returns game instance which can call turn', () => {
         let gs = new GameServer()
         let g = gs.startGame("British", 2)
         _chai.assert.equal(g.id, 0)
@@ -20,5 +20,24 @@ describe('api gameserver startgame', () => {
         if(g.turn.stage == "Roll"){
             g.turn.roll(1)
         }
+    })
+})
+
+describe('api gameserver getGame', () => {
+    it('returns game isntance which can call if id valid', () => {
+        let gs = new GameServer()
+        gs.startGame("British", 2)
+        let g = gs.getGame(0)
+        _chai.assert.equal(g?.id, 0)
+        _chai.assert.equal(g?.turn.stage, "Roll")
+        if(g?.turn.stage == "Roll"){
+            g?.turn.roll(1)
+        }
+    })
+    it('returns undefined if game doesnt exist', () => {
+        let gs = new GameServer()
+        gs.startGame("British", 2)
+        let g = gs.getGame(1)
+        _chai.assert.isUndefined(g)
     })
 })

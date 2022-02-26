@@ -61,4 +61,8 @@ export class GameServer {
         this.games.push(g)
         return g
     }
+
+    getGame(id: number): Game | undefined {
+        return this.games[id]
+    }
 }
