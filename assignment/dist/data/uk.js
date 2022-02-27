@@ -115,18 +115,18 @@ class DataFactory {
             name: "Go To Jail",
         };
     }
-    static createDeed(name, colourSet, price = 13n, rentNoHouse = 10n) {
+    static createDeed(name, colourSet, price = 10n, rentNoHouse = 10n, rentOneHouse = 10n, rentTwoHouse = 10n, rentThreeHouse = 10n, rentFourHouse = 10n, rentHotel = 10n) {
         return {
             kind: "Deed",
             name: name,
             colourSet: colourSet,
             price: price,
             rentNoHouse: rentNoHouse,
-            rentOneHouse: 15n,
-            rentTwoHouse: 11n,
-            rentThreeHouse: 13n,
-            rentFourHouse: 14n,
-            rentHotel: 16n,
+            rentOneHouse: rentOneHouse,
+            rentTwoHouse: rentTwoHouse,
+            rentThreeHouse: rentThreeHouse,
+            rentFourHouse: rentFourHouse,
+            rentHotel: rentHotel,
         };
     }
     static createTrain(name) {
