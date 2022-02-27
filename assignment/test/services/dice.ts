@@ -1,7 +1,7 @@
 import * as _chai from 'chai';
 import * as dice from '../../src/services/dice';
 
-describe('component dice', () => {
+describe('service dice', () => {
     /**
     * Assignment notes: 
     * - IteratorResult is the discriminated union of IteratorYieldResult and 

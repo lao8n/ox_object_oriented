@@ -8,7 +8,7 @@ import { Players } from "../../src/services/players";
 
 import * as money from "../../src/types/money";
 
-describe('component housing constructor', () => {
+describe('service housing constructor', () => {
     it('can construct', () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)

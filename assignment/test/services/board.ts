@@ -5,7 +5,7 @@ import * as bs from '../../src/services/board';
 import { PairDiceValue } from '../../src/services/dice';
 import { DataFactory } from '../../data/uk';
 
-describe('component board constructor', () => {
+describe('service board constructor', () => {
     it('can construct monopoly board with different currencies and boards', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
@@ -22,7 +22,7 @@ describe('component board constructor', () => {
     });
 });
 
-describe('component board size', () => {
+describe('service board size', () => {
     it('can construct monopoly board and get correct size with single space', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
@@ -46,7 +46,7 @@ describe('component board size', () => {
     });
 });
 
-describe('component board move piece', () => {
+describe('service board move piece', () => {
     it('can calculate correct location with 1 space board and 1 dice roll', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
@@ -121,7 +121,7 @@ describe('component board move piece', () => {
     });
 });
 
-describe('component board get space', () => {
+describe('service board get space', () => {
     it('can get correct space from location on size 1 board', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(
@@ -158,7 +158,7 @@ describe('component board get space', () => {
     })
 })
 
-describe('component board get set', () => {
+describe('service board get set', () => {
     it('can get correct space from location on size 1 board', 
     () => {
         let b = new bs.Board<money.GBP, board.GenericBoard<money.GBP>>(

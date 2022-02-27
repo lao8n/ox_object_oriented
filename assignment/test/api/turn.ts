@@ -8,7 +8,7 @@ import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedPrope
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
 
-describe('service turn constructor', () => {
+describe('api turn constructor', () => {
     it('can construct turn with GBP currency', 
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
@@ -22,7 +22,7 @@ describe('service turn constructor', () => {
     });
 });
 
-describe('service turn start', () => {
+describe('api turn start', () => {
     it('returns interface with correct type', 
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()
@@ -40,7 +40,7 @@ describe('service turn start', () => {
     });
 });
 
-describe('service turn roll', () => {
+describe('api turn roll', () => {
     it('roll returns either UnownedProperty or OwnedProperty or TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -74,7 +74,7 @@ describe('service turn roll', () => {
     });
 });
 
-describe('service turn roll', () => {
+describe('api turn roll', () => {
     it('roll returns either UnownedProperty or OwnedProperty or TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -96,7 +96,7 @@ describe('service turn roll', () => {
     });
 });
 
-describe('service turn buyProperty', () => {
+describe('api turn buyProperty', () => {
     it('buy property returns TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -164,7 +164,7 @@ describe('service turn buyProperty', () => {
     });
 });
 
-describe('service turn payRent', () => {
+describe('api turn payRent', () => {
     it('pay rent returns TurnFinish', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -279,7 +279,7 @@ describe('service turn payRent', () => {
     });
 });
 
-describe('service finishTurn', () => {
+describe('api finishTurn', () => {
     it('finish returns roll', 
     () => {
         let m = DataFactory.createTestBoard3<money.GBP>()
@@ -345,7 +345,7 @@ describe('service finishTurn', () => {
     });
 });
 
-describe('service turn rollJail', () => {
+describe('api turn rollJail', () => {
     it('buy property returns TurnFinish', 
     () => {
         let m = DataFactory.createMonopolyBoard<money.GBP>()

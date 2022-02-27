@@ -2,7 +2,7 @@ import * as _chai from 'chai';
 import { Players } from "../../src/services/players";
 import * as money from "../../src/types/money";
 
-describe('component player constructor', () => {
+describe('service player constructor', () => {
     it('can construct player with different currencies', 
     () => {
         let p = new Players<money.GBP>(4)
@@ -11,7 +11,7 @@ describe('component player constructor', () => {
     
 });
 
-describe('component player getCurrentTurnPlayer', () => {
+describe('service player getCurrentTurnPlayer', () => {
     it('can get players for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -40,7 +40,7 @@ describe('component player getCurrentTurnPlayer', () => {
     });
 });
 
-describe('component player getNextTurnPlayer', () => {
+describe('service player getNextTurnPlayer', () => {
     it('can get players for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -62,7 +62,7 @@ describe('component player getNextTurnPlayer', () => {
     });
 });
 
-describe('component player getCurrentTurnNotPlayer', () => {
+describe('service player getCurrentTurnNotPlayer', () => {
     it('can get players for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -91,7 +91,7 @@ describe('component player getCurrentTurnNotPlayer', () => {
     });
 });
 
-describe('component player getOrder', () => {
+describe('service player getOrder', () => {
     it('can get order for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -101,7 +101,7 @@ describe('component player getOrder', () => {
     });
 });
 
-describe('component player setOrder', () => {
+describe('service player setOrder', () => {
     it('can set order for 2 person game', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -157,7 +157,7 @@ describe('component player setOrder', () => {
     });
 });
 
-describe('component player getLocation', () => {
+describe('service player getLocation', () => {
     it('can get player location', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -172,7 +172,7 @@ describe('component player getLocation', () => {
     });
 });
 
-describe('component player setLocation', () => {
+describe('service player setLocation', () => {
     it('can set player location', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -189,7 +189,7 @@ describe('component player setLocation', () => {
     });
 });
 
-describe('component player getInJail', () => {
+describe('service player getInJail', () => {
     it('can get player not in jail', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -203,7 +203,7 @@ describe('component player getInJail', () => {
     });
 });
 
-describe('component player setInJail', () => {
+describe('service player setInJail', () => {
     it('can set player inJail', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -221,7 +221,7 @@ describe('component player setInJail', () => {
     });
 });
 
-describe('component player getWealth', () => {
+describe('service player getWealth', () => {
     it('can get player wealths', 
     () => {
         let p = new Players<money.GBP>(4)
@@ -238,7 +238,7 @@ describe('component player getWealth', () => {
     });
 });
 
-describe('component player addMoney', () => {
+describe('service player addMoney', () => {
     it('can add money to a player and have it update their wealth', 
     () => {
         let p = new Players<money.GBP>(2)
@@ -258,7 +258,7 @@ describe('component player addMoney', () => {
     });
 });
 
-describe('component player removeMoney', () => {
+describe('service player removeMoney', () => {
     it('can remove money from a player and have it update their wealth', 
     () => {
         let p = new Players<money.GBP>(2)
