@@ -11,7 +11,7 @@ export class Players<M extends Money> {
     private _order : PlayerID[]
     private _orderIndex : number
 
-    constructor(private readonly numPlayers: NumPlayers){
+    constructor(readonly numPlayers: NumPlayers){
         this._order = new Array<PlayerID>(numPlayers)
         for(let i = 1; i <= numPlayers; i++){
             this._players[i as PlayerID] = {

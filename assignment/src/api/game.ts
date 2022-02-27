@@ -37,6 +37,14 @@ class Game {
         return this.board.getSpace(location)
     }
 
+    getBoardSize(): number {
+        return this.board.size
+    }
+
+    getNumberPlayers(): number {
+        return this.players.numPlayers
+    }
+
     getCurrentTurnPlayer(): PlayerID {
         return this.players.getCurrentTurnPlayer()
     }

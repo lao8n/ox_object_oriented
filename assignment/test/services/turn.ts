@@ -74,6 +74,28 @@ describe('service turn roll', () => {
     });
 });
 
+describe('service turn roll', () => {
+    it('roll returns either UnownedProperty or OwnedProperty or TurnFinish', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(4)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, t)
+        let tr : TurnRoll
+        tr = c.start()
+        tr.roll(tr.player)
+        let d = tr.getDiceRoll()
+        _chai.assert.isDefined(d)
+        if(d){
+            _chai.assert.isAtLeast(d, 1)
+            _chai.assert.isAtMost(d, 12)
+        }
+    });
+});
+
 describe('service turn buyProperty', () => {
     it('buy property returns TurnFinish', 
     () => {

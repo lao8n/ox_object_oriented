@@ -50,12 +50,14 @@ describe('api game get information', () => {
         _chai.assert.isDefined(g)
         _chai.assert.deepEqual(g?.getSpace({street: 1, num: 1}), 
             DataFactory.createDeed<money.GBP>("Old Kent Road", "Brown"))
+        _chai.assert.equal(g?.getBoardSize(), 5)
     })
     it('get game players info ', () => {
         let gs = new GameServer()
         gs.startGame("British", 2)
         let g = gs.getGame(0)
         _chai.assert.isDefined(g)
+        _chai.assert.equal(g?.getNumberPlayers(), 2)
         _chai.assert.equal(g?.getCurrentTurnPlayer(), 1)
         _chai.assert.deepEqual(g?.getPlayersInOrder(), [1, 2])
         _chai.assert.deepEqual(g?.getPlayerLocation(1), {street: 1, num: 1})

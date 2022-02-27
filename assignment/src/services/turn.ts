@@ -19,11 +19,13 @@ export interface TurnRoll extends TurnBase {
     readonly stage: "Roll"
     roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
         TurnFinish | TurnRoll
+    getDiceRoll(): PairDiceValue | undefined
 }
 export interface TurnInJail extends TurnBase {
     readonly stage: "Jail"
     rollJail(player: PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
         TurnInJail | TurnFinish
+    getDiceRoll(): PairDiceValue | undefined
 }
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
@@ -50,6 +52,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     stage: Stage = "Roll" // tag property
     private space : Space<M>
     private dice = diceGenerator()
+    private lastDiceRoll: PairDiceValue | undefined = undefined
 
     constructor(
         private readonly board: Board<M, B>,
@@ -74,6 +77,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         let roll = this.dice.next()
         if(roll.done == false){
             if(roll.value){
+                this.lastDiceRoll = roll.value[0]
                 const location = this.updateLocation(roll.value[0])  
                 // didn't throw a double           
                 if(roll.value[1]){
@@ -109,6 +113,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         let roll = this.dice.next()
         if(roll.done == false){
             if(roll.value){
+                this.lastDiceRoll = roll.value[0]
                 // didn't throw a double
                 if(roll.value[1]){
                     this.stage = "Finish"
@@ -123,6 +128,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         }
         this.stage = "Finish"
         return this as TurnFinish
+    }
+
+    getDiceRoll(){
+        return this.lastDiceRoll
     }
 
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty {
