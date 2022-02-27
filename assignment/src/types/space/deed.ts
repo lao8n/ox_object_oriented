@@ -2,6 +2,8 @@ import { Money } from "../money"
 
 export type Colour = "Brown" | "LightBlue" | "Pink" | "Orange" | "Red" | 
     "Yellow" | "Green" | "DarkBlue"
+export const colours: Colour[] = ["Brown", "LightBlue", "Pink", "Orange", "Red", "Yellow", "Green", "DarkBlue"]
+
 /**
  * Lightweight, immutable type for Deed data
  * 
@@ -15,6 +17,7 @@ export type Deed<M extends Money> = {
     readonly name: string,
     readonly colourSet: Colour,
     readonly price: M,
+    readonly houseCost: M,
     readonly rentNoHouse: M,
     readonly rentOneHouse: M,
     readonly rentTwoHouse: M,

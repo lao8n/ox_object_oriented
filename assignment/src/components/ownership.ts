@@ -13,7 +13,7 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
     } = {}
 
     constructor(private readonly monopolyboard: B){
-        this.initOwnership(monopolyboard)
+        this.initOwnership(this.monopolyboard)
     }
 
     /**

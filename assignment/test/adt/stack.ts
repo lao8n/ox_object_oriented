@@ -1,5 +1,6 @@
 import * as _chai from 'chai';
 import { Stack } from '../../src/adt/stack';
+import 'mocha';
 
 describe('adt stack constructor', () => {
     it('can construct', () => {
