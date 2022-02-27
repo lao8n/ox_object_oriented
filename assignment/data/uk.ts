@@ -171,8 +171,7 @@ export class DataFactory {
         return { 
             kind: "Utility",
             name: name,
-            price: 100n as M,
-            amount: 13n as M,
+            price: 150n as M,
         }
     }
     

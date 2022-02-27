@@ -56,13 +56,14 @@ Reusable generic data structures
 | Banker                   | Yes         | Automated                                                                                                                                                        |
 | Title Deed Cards         | Yes         | All British Monopoly board locations                                                                                                                             |
 | Starting Money           | Yes         |                                                                                                                                                                  |
-| Number of player         | Yes         | 2 to 8                                                                                                                                                           |
+| Number of players        | Yes         | 2 to 8                                                                                                                                                           |
 | Highest dice to start    | No          | Player order can be customised however                                                                                                                           |
 | Roll dice                | Yes         | Including repeated moves with doubles, and going to jail if 3 doubles in a row                                                                                   |
 | Buy property             | Yes         | No auction however                                                                                                                                               |
 | Rent                     | Yes         | Including different rents when a set is owned, or houses/hotels                                                                                                  |
 | Passing Go               | Yes         | Only if pass Go, not if go to jail                                                                                                                               |
-| Train & Utility          | Yes         | Though flat rent fees, except if all in set owned                                                                                                                |
+| Train                    | Yes         | Though flat rent fees, except if all in set owned                                                                                                                |
+| Utility                  | Yes         | Based upon the dice roll                                                                                                                                         |
 | Income tax               | Yes         | Just though no choice, can only pay 200                                                                                                                          |
 | Jail                     | Yes         | But stay there forever until throw a double                                                                                                                      |
 | Chance & Community Chest | Yes         | Cards to either get or lose money only                                                                                                                           |

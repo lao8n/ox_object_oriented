@@ -1,9 +1,10 @@
 import { Board } from "../components/board";
+import { PairDiceValue } from "../components/dice";
 import { Owner, Ownership } from "../components/ownership";
 import { Players } from "../components/players";
 import { boardnumbers, GenericBoard, MonopolyBoard, Property } from "../types/board";
 import { Money } from "../types/money";
-import { PlayerID } from "../types/player";
+import { Player, PlayerID } from "../types/player";
 import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
@@ -49,12 +50,22 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
                 rent = this.calculateTrainRent(property, owner.sameOwner) 
                 break
             case "Utility":
-                rent = this.calculateUtilityRent(property, owner.sameOwner) 
+                throw new Error(`Should be handled by payUtilityRent`)
                 break
             default:
                 // type never so can't get here
                 throw new Error(`Invalid property with unknown kind`)
         }
+        return this.transferMoney(player, owner.id, rent)
+    }
+
+    payUtilityRent(player: PlayerID, utility: Utility<M>, 
+        diceRoll: PairDiceValue){
+        let owner = this.ownership.getOwner(utility.name)
+        if(!owner){
+            return false
+        }
+        let rent = this.calculateUtilityRent(utility, owner.sameOwner, diceRoll)
         return this.transferMoney(player, owner.id, rent)
     }
 
@@ -116,11 +127,12 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return rent
     }
 
-    private calculateUtilityRent(utility: Utility<M>, sameOwner: boolean){
-        let rent = utility.amount
+    private calculateUtilityRent(utility: Utility<M>, sameOwner: boolean, 
+        diceRoll: PairDiceValue){
         if(sameOwner){
-            rent = rent * 2n as M
+            return BigInt(diceRoll) * 10n as M
+        } else {
+            return BigInt(diceRoll) * 4n as M
         }
-        return rent
     }
 }
