@@ -14,6 +14,7 @@ class ConcreteTurn {
         this.player = 1;
         this.stage = "Roll"; // tag property
         this.dice = (0, dice_1.diceGenerator)();
+        this.lastDiceRoll = undefined;
         this.player = this.players.getCurrentTurnPlayer();
         this.stage = "Roll"; // tag property
         this.space = uk_1.DataFactory.createGo();
@@ -28,6 +29,7 @@ class ConcreteTurn {
         let roll = this.dice.next();
         if (roll.done == false) {
             if (roll.value) {
+                this.lastDiceRoll = roll.value[0];
                 const location = this.updateLocation(roll.value[0]);
                 // didn't throw a double           
                 if (roll.value[1]) {
@@ -65,6 +67,7 @@ class ConcreteTurn {
         let roll = this.dice.next();
         if (roll.done == false) {
             if (roll.value) {
+                this.lastDiceRoll = roll.value[0];
                 // didn't throw a double
                 if (roll.value[1]) {
                     this.stage = "Finish";
@@ -80,6 +83,9 @@ class ConcreteTurn {
         }
         this.stage = "Finish";
         return this;
+    }
+    getDiceRoll() {
+        return this.lastDiceRoll;
     }
     buyProperty(player) {
         if (player != this.player) {
@@ -128,7 +134,7 @@ class ConcreteTurn {
     }
     updateStage(location) {
         this.space = this.board.getSpace(location);
-        const owner = this.ownership.isOwned(this.space.name);
+        const owner = this.ownership.getOwner(this.space.name);
         // unowned
         if (owner == null) {
             this.stage = "UnownedProperty";

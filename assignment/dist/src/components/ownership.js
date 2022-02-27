@@ -64,7 +64,7 @@ class Ownership {
             }
         }
     }
-    isOwned(name) {
+    getOwner(name) {
         return this.ownership[name];
     }
     /**
@@ -81,7 +81,7 @@ class Ownership {
         if (!setNames.includes(name)) {
             throw new Error(`Invalid setNames does not include ${name}`);
         }
-        if (this.isOwned(name) === null) {
+        if (this.getOwner(name) === null) {
             this.ownership[name] = { id: player, sameOwner: false };
             let sameOwner = this.sameOwner(player, setNames);
             if (sameOwner) {
@@ -104,7 +104,7 @@ class Ownership {
                 `${setNames.length} but it must have at least 2 ` +
                 `and at most 4 entries`);
         }
-        if (this.isOwned(name)?.id == player) {
+        if (this.getOwner(name)?.id == player) {
             if (this.ownership[name]?.sameOwner) {
                 for (const sn of setNames) {
                     if (!this.ownership?.[sn]) { // undefined or null

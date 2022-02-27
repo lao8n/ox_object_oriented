@@ -38,6 +38,9 @@ class Players {
         }
         return player;
     }
+    getOrder() {
+        return this._order;
+    }
     setOrder(order) {
         if (order.length != this.numPlayers) {
             throw new Error(`Order has ${order.length} players not ` +

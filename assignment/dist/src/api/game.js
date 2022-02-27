@@ -7,11 +7,50 @@ const ownership_1 = require("../components/ownership");
 const players_1 = require("../components/players");
 const transfer_1 = require("../services/transfer");
 const turn_1 = require("../services/turn");
+/**
+ * Game class directly exposes the turn interfaces through which all turn
+ * actions are managed
+ * It indirectly exposes information from underlying components about game state
+ * without exposing those components.
+ *
+ * Assignment notes
+ * -
+ */
 class Game {
-    constructor(id, concreteTurn) {
+    constructor(id, board, players, ownership, concreteTurn) {
         this.id = id;
+        this.board = board;
+        this.players = players;
+        this.ownership = ownership;
         this.concreteTurn = concreteTurn;
         this.turn = this.concreteTurn.start();
+    }
+    getSpace(location) {
+        return this.board.getSpace(location);
+    }
+    getBoardSize() {
+        return this.board.size;
+    }
+    getNumberPlayers() {
+        return this.players.numPlayers;
+    }
+    getCurrentTurnPlayer() {
+        return this.players.getCurrentTurnPlayer();
+    }
+    getPlayersInOrder() {
+        return this.players.getOrder();
+    }
+    getPlayerLocation(id) {
+        return this.players.getLocation(id);
+    }
+    getPlayerInJail(id) {
+        return this.players.getInJail(id);
+    }
+    getPlayerWealth(id) {
+        return this.players.getWealth(id);
+    }
+    getOwner(name) {
+        return this.ownership.getOwner(name);
     }
 }
 /**
@@ -56,7 +95,7 @@ class GameServer {
         // services
         const t = new transfer_1.Transfer(b, p, o);
         const c = new turn_1.ConcreteTurn(b, p, o, t);
-        const g = new Game(id, c);
+        const g = new Game(id, b, p, o, c);
         this.games.push(g);
         return g;
     }

@@ -27,7 +27,7 @@ class Transfer {
      * - .kind tag is used to discriminate union
      */
     payRent(player, property) {
-        let owner = this.ownership.isOwned(property.name);
+        let owner = this.ownership.getOwner(property.name);
         if (!owner) {
             return false;
         }
