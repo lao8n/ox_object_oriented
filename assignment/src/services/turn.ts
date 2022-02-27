@@ -174,11 +174,22 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this as TurnRoll
     }
 
+    /**
+     * This method not only updates the user's position but also adds 200
+     * if the user passes Go
+     * 
+     * @param rollResult 
+     * @returns 
+     */
     private updateLocation(rollResult: PairDiceValue){
         let location = this.players.getLocation(this.player)
         if(location){
-            location = this.board.movePiece(location, rollResult)
-            this.players.setLocation(this.player, location)
+            let newLocation = this.board.movePiece(location, rollResult)
+            if(newLocation.street < location.street){
+                this.players.addMoney(this.player, 200n as M)
+            }
+            this.players.setLocation(this.player, newLocation)
+            location = newLocation
         }
         return location
     }
