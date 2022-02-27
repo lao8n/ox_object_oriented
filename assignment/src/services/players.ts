@@ -86,6 +86,7 @@ export class Players<M extends Money> {
 
     setLocation(id: PlayerID, location: BoardLocation){
         this.validatePlayerID(id)
+        // we check that its defined before asserting it is
         if(this._players?.[id]?.location){
             this._players[id]!.location = location
             return true
@@ -104,6 +105,7 @@ export class Players<M extends Money> {
 
     setInJail(id: PlayerID, inJail: boolean){
         this.validatePlayerID(id)
+        // we check that its defined before asserting it is
         if(this._players?.[id]){
             this._players[id]!.inJail = inJail
             return true

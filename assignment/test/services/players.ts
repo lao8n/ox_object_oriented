@@ -1,5 +1,5 @@
 import * as _chai from 'chai';
-import { Players } from "../../src/components/players";
+import { Players } from "../../src/services/players";
 import * as money from "../../src/types/money";
 
 describe('component player constructor', () => {

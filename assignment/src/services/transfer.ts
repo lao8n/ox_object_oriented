@@ -1,7 +1,7 @@
-import { Board } from "../components/board";
-import { PairDiceValue } from "../components/dice";
-import { Owner, Ownership } from "../components/ownership";
-import { Players } from "../components/players";
+import { Board } from "./board";
+import { PairDiceValue } from "./dice";
+import { Owner, Ownership } from "./ownership";
+import { Players } from "./players";
 import { boardnumbers, GenericBoard, MonopolyBoard, Property } from "../types/board";
 import { Money } from "../types/money";
 import { Player, PlayerID } from "../types/player";

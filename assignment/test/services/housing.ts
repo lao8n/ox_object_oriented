@@ -1,10 +1,10 @@
 import * as _chai from 'chai';
-import { Housing } from '../../src/components/housing'
+import { Housing } from '../../src/services/housing'
 import { MonopolyBoard } from '../../src/types/board'
 import { DataFactory } from '../../data/uk';
-import { Board } from '../../src/components/board';
-import { Owner, Ownership } from '../../src/components/ownership';
-import { Players } from "../../src/components/players";
+import { Board } from '../../src/services/board';
+import { Owner, Ownership } from '../../src/services/ownership';
+import { Players } from "../../src/services/players";
 
 import * as money from "../../src/types/money";
 

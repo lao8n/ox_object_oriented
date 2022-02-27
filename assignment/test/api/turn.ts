@@ -1,10 +1,10 @@
 import * as _chai from 'chai';
 import { DataFactory } from '../../data/uk';
-import { Board } from '../../src/components/board';
-import { Owner, Ownership } from '../../src/components/ownership';
-import { Players } from "../../src/components/players";
+import { Board } from '../../src/services/board';
+import { Owner, Ownership } from '../../src/services/ownership';
+import { Players } from "../../src/services/players";
 import { Transfer } from '../../src/services/transfer';
-import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../../src/services/turn';
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../../src/api/turn';
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
 

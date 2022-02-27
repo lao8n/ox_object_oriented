@@ -1,9 +1,9 @@
 import { DataFactory } from '../../data/uk';
-import { Board } from '../components/board';
-import { Owner, Ownership } from '../components/ownership';
-import { Players } from "../components/players";
+import { Board } from '../services/board';
+import { Owner, Ownership } from '../services/ownership';
+import { Players } from "../services/players";
 import { Transfer } from '../services/transfer';
-import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../services/turn';
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from './turn';
 import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } from '../types/board';
 import { GBP, Money } from "../types/money";
 import { NumPlayers, Player, PlayerID } from '../types/player';

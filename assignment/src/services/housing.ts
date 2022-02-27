@@ -2,10 +2,10 @@ import { Money } from '../types/money';
 import * as board from '../types/board'
 import { Colour, colours } from "../types/space/deed";
 import { Stack } from '../adt/stack';
-import { Owner, Ownership } from "../components/ownership";
+import { Owner, Ownership } from "./ownership";
 import { PlayerID } from '../types/player';
-import { Players } from "../components/players";
-import { Board } from "../components/board";
+import { Players } from "./players";
+import { Board } from "./board";
 
 export type NumHouses = 0 | 1 | 2 | 3 | 4 | 5 // 5 represents hotel
 

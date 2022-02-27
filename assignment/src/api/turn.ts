@@ -1,12 +1,12 @@
 import { DataFactory } from "../../data/uk"
-import { Board } from "../components/board"
-import { diceGenerator, PairDiceValue } from "../components/dice"
-import { Ownership } from "../components/ownership"
-import { Players } from "../components/players"
+import { Board } from "../services/board"
+import { diceGenerator, PairDiceValue } from "../services/dice"
+import { Ownership } from "../services/ownership"
+import { Players } from "../services/players"
 import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/board"
 import { Money } from "../types/money"
 import { PlayerID } from "../types/player"
-import { Transfer } from "./transfer"
+import { Transfer } from "../services/transfer"
 
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
