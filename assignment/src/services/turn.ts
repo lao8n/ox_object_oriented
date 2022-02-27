@@ -152,9 +152,13 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         if(player != this.player){
             return this as TurnOwnedProperty
         }
-        if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
-           this.space.kind == "Train") {
+        if(this.space.kind == "Deed" || this.space.kind == "Train") {
             this.transfer.payRent(this.player, this.space)
+        } else if (this.space.kind == "Utility"){
+            if(this.lastDiceRoll){
+                this.transfer.payUtilityRent(this.player, this.space, 
+                    this.lastDiceRoll)
+            }
         }
         this.stage = "Finish"
         return this as TurnFinish
