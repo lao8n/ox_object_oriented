@@ -5,7 +5,7 @@ import { Ownership } from "../services/ownership"
 import { Players } from "../services/players"
 import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/board"
 import { Money } from "../types/money"
-import { PlayerID } from "../types/player"
+import { Player, PlayerID } from "../types/player"
 import { Transfer } from "../services/transfer"
 import { Housing } from "../services/housing"
 
@@ -31,12 +31,13 @@ export interface TurnInJail extends TurnBase {
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty
+    buyHousing(player: PlayerID): TurnUnownedProperty
     finishTurn(player : PlayerID): TurnRoll | TurnUnownedProperty
 }
 export interface TurnOwnedProperty extends TurnBase{
     readonly stage: "OwnedProperty"
     payRent(player : PlayerID): TurnFinish | TurnOwnedProperty
-    finishTurn(player : PlayerID): TurnRoll | TurnOwnedProperty
+    buyHousing(player: PlayerID): TurnOwnedProperty
 }
 export interface TurnFinish extends TurnBase {
     readonly stage: "Finish"
@@ -134,6 +135,33 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
 
     getDiceRoll(){
         return this.lastDiceRoll
+    }
+
+    buyHousing(player: PlayerID): TurnOwnedProperty | TurnUnownedProperty {
+        if(player != this.player){
+            if(this.stage == "OwnedProperty"){
+                return this as TurnOwnedProperty
+            } else {
+                return this as TurnUnownedProperty
+            }
+        }
+        if(this.space.kind == "Deed"){
+            let setNames = this.board.getSet(this.space.colourSet)
+            if(setNames){
+                this.housing.buyHouseOrHotel(
+                    player, 
+                    this.space.name, 
+                    this.space.colourSet, 
+                    setNames,
+                    this.space.houseCost,
+                )
+            }
+        }
+        if(this.stage == "OwnedProperty"){
+            return this as TurnOwnedProperty
+        } else {
+            return this as TurnUnownedProperty
+        }
     }
 
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty {
