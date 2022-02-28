@@ -19,7 +19,7 @@ exports.diceGenerator = void 0;
  */
 function* diceGenerator() {
     let numberDoubles = 0;
-    let doubles = [1, 1, 1];
+    const doubles = [1, 1, 1];
     let newTurn = false;
     while (numberDoubles < 3) {
         // let newTurn : boolean = yield
@@ -27,8 +27,8 @@ function* diceGenerator() {
             numberDoubles = 0;
             newTurn = false;
         }
-        let roll1 = roll();
-        let roll2 = roll();
+        const roll1 = roll();
+        const roll2 = roll();
         if (roll1 == roll2) {
             doubles[numberDoubles] = roll1;
             numberDoubles++;

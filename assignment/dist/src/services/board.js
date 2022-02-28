@@ -46,12 +46,12 @@ class Board {
          * - Union of ownable property sets with optional mapped type
          */
         this._sets = {};
-        this._jail = null;
+        this._nameLocations = new Map();
         let numberSpaces = 0;
         for (const bs of board.boardstreets) {
             for (const bn of board.boardnumbers) {
                 // if space is undefined then that is the max board size
-                let space = monopolyboard?.[bs]?.[bn];
+                const space = monopolyboard?.[bs]?.[bn];
                 if (!space) {
                     if (numberSpaces == 0) {
                         throw new Error(`Inputted board has no spaces. Note
@@ -63,7 +63,7 @@ class Board {
                 }
                 numberSpaces++;
                 if (space?.kind) {
-                    let kind = space.kind;
+                    const kind = space.kind;
                     if (kind == "Train" || kind == "Utility") {
                         if (this._sets?.[kind]) {
                             this._sets[kind]?.push(space.name);
@@ -80,8 +80,8 @@ class Board {
                             this._sets[space.colourSet] = [space.name];
                         }
                     }
-                    else if (space.kind == "Jail") {
-                        this._jail = { street: bs, num: bn };
+                    if (space?.name) {
+                        this._nameLocations.set(space.name, { street: bs, num: bn });
                     }
                 }
             }
@@ -138,19 +138,20 @@ class Board {
      */
     getSpace(currentLocation) {
         // validate
-        let currentLocationIndex = (currentLocation.street - 1) * 10 + currentLocation.num - 1;
+        const currentLocationIndex = (currentLocation.street - 1) * 10 + currentLocation.num - 1;
         if (currentLocationIndex > this._boardSize) {
             throw new Error(`Current location is invalid ${currentLocation} 
                 only ${this._boardSize} on board`);
         }
         // we know that index is not undefined as we validated above
-        return this.monopolyboard[currentLocation.street][currentLocation.num];
+        const result = this.monopolyboard[currentLocation.street]?.[currentLocation.num];
+        return result;
     }
     getSet(set) {
         return this._sets[set];
     }
-    getJailLocation() {
-        return this._jail;
+    getLocation(name) {
+        return this._nameLocations.get(name);
     }
 }
 exports.Board = Board;

@@ -40,18 +40,18 @@ class Housing {
         for (const bs of board.boardstreets) {
             for (const bn of board.boardnumbers) {
                 // reached end of board
-                let space = b?.[bs]?.[bn];
+                const space = b?.[bs]?.[bn];
                 if (!space) {
                     return;
                 }
                 // safe as already checked that these are defined and kind and 
                 // name must exist
-                let kind = space.kind;
-                let name = space.name;
+                const kind = space.kind;
+                const name = space.name;
                 if (kind == "Deed" && !this.building[name]) {
                     if (this.building[name] == 0) {
-                        throw new Error(`Inputted board has non-unique space ` +
-                            `names where ${name} already exists`);
+                        throw new Error(`Inputted board has non-unique space` +
+                            ` names where ${name} already exists`);
                     }
                     else {
                         this.building[name] = 0;
@@ -61,7 +61,7 @@ class Housing {
         }
     }
     initBuildingOrder() {
-        for (let c of deed_1.colours) {
+        for (const c of deed_1.colours) {
             this.buildingOrder[c] = new stack_1.Stack(5);
         }
     }
@@ -76,7 +76,7 @@ class Housing {
     }
     buyHouseOrHotel(player, name, colourSet, setNames, housePrice) {
         // check that player is owner of all in set
-        let owner = this.ownership.getOwner(name);
+        const owner = this.ownership.getOwner(name);
         console.log(owner);
         if (!owner || !owner?.sameOwner || owner?.id != player) {
             return false;
@@ -85,12 +85,12 @@ class Housing {
             return false;
         }
         // check that hotels don't already exist on all 3 properties
-        let buildingStack = this.buildingOrder?.[colourSet];
+        const buildingStack = this.buildingOrder?.[colourSet];
         console.log(buildingStack);
         if (!buildingStack) {
             return false;
         }
-        let numHouses = buildingStack.size();
+        const numHouses = buildingStack.size();
         if (numHouses == 5) {
             if (buildingStack.peek()?.size == setNames.length) {
                 return false;
@@ -136,7 +136,7 @@ class Housing {
             const wealth = this.players.getWealth(player);
             console.log(wealth);
             if (wealth && wealth >= housePrice) {
-                let houseAdded = housesBuilt?.add(name);
+                const houseAdded = housesBuilt?.add(name);
                 console.log(houseAdded);
                 if (!houseAdded) {
                     return false;

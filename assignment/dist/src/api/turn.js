@@ -27,7 +27,7 @@ class ConcreteTurn {
         if (player != this.player) {
             return this;
         }
-        let roll = this.dice.next();
+        const roll = this.dice.next();
         if (roll.done == false) {
             if (roll.value) {
                 this.lastDiceRoll = roll.value[0];
@@ -57,7 +57,7 @@ class ConcreteTurn {
         if (player != this.player) {
             return this;
         }
-        let roll = this.dice.next();
+        const roll = this.dice.next();
         if (roll.done == false) {
             if (roll.value) {
                 this.lastDiceRoll = roll.value[0];
@@ -80,34 +80,34 @@ class ConcreteTurn {
     getDiceRoll() {
         return this.lastDiceRoll;
     }
-    buyHousing(player) {
-        if (player != this.player) {
-            if (this.stage == "OwnedProperty") {
-                return this;
-            }
-            else {
-                return this;
-            }
-        }
-        if (this.space.kind == "Deed") {
-            let setNames = this.board.getSet(this.space.colourSet);
-            if (setNames) {
-                this.housing.buyHouseOrHotel(player, this.space.name, this.space.colourSet, setNames, this.space.houseCost);
-            }
-        }
+    buyHousing(player, name) {
+        let currentStage;
         if (this.stage == "OwnedProperty") {
-            return this;
+            currentStage = this;
         }
         else {
-            return this;
+            currentStage = this;
         }
+        if (player != this.player) {
+            return currentStage;
+        }
+        const houseLocation = this.board.getLocation(name);
+        if (!houseLocation) {
+            return currentStage;
+        }
+        const houseSpace = this.board.getSpace(houseLocation);
+        if (houseSpace?.kind == "Deed") {
+            const setNames = this.board.getSet(houseSpace.colourSet);
+            if (setNames) {
+                this.housing.buyHouseOrHotel(player, houseSpace.name, houseSpace.colourSet, setNames, houseSpace.houseCost);
+            }
+        }
+        return currentStage;
     }
     buyProperty(player) {
         if (player != this.player) {
             return this;
         }
-        // cannot make a separate method isProperty as typescript cannot do type 
-        // inference
         if (this.space.kind == "Deed" || this.space.kind == "Utility" ||
             this.space.kind == "Train") {
             this.transfer.buyProperty(this.player, this.space);
@@ -153,15 +153,15 @@ class ConcreteTurn {
     updateLocation(rollResult) {
         let location = this.players.getLocation(this.player);
         if (location) {
-            let newLocation = this.board.movePiece(location, rollResult);
+            const newLocation = this.board.movePiece(location, rollResult);
             if (newLocation.street < location.street) {
                 this.players.addMoney(this.player, 200n);
             }
             this.players.setLocation(this.player, newLocation);
             location = newLocation;
         }
-        if (this.board.getSpace(location).kind == "Go To Jail") {
-            let jail = this.goToJail();
+        if (this.board.getSpace(location)?.kind == "Go To Jail") {
+            const jail = this.goToJail();
             if (jail) {
                 return jail;
             }
@@ -169,7 +169,10 @@ class ConcreteTurn {
         return location;
     }
     updateStage(location) {
-        this.space = this.board.getSpace(location);
+        const space = this.board.getSpace(location);
+        if (space) {
+            this.space = space;
+        }
         const owner = this.ownership.getOwner(this.space.name);
         // unowned
         if (owner == null) {
@@ -190,7 +193,7 @@ class ConcreteTurn {
         }
     }
     goToJail() {
-        const jail = this.board.getJailLocation();
+        const jail = this.board.getLocation("Jail");
         if (jail) {
             this.players.setLocation(this.player, jail);
             this.players.setInJail(this.player, true);

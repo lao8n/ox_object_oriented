@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataFactory = void 0;
 class DataFactory {
     static createTestBoard1() {
-        let testBoard = {
+        const testBoard = {
             1: {
                 1: this.createDeed("Old Kent Road", "Brown")
             }
@@ -11,7 +11,7 @@ class DataFactory {
         return testBoard;
     }
     static createTestBoard2() {
-        let testBoard = {
+        const testBoard = {
             1: {
                 1: this.createDeed("Old Kent Road", "Brown"),
                 2: this.createDeed("Whitechapel Road", "Brown"),
@@ -23,7 +23,7 @@ class DataFactory {
         return testBoard;
     }
     static createTestBoard3() {
-        let testBoard = {
+        const testBoard = {
             1: {
                 1: this.createDeed("Old Kent Road", "Brown"),
                 2: this.createDeed("Whitechapel Road", "Brown"),
@@ -35,7 +35,7 @@ class DataFactory {
         return testBoard;
     }
     static createMonopolyBoard() {
-        let monopolyBoard = {
+        const monopolyBoard = {
             1: {
                 1: this.createGo(),
                 2: this.createDeed("Old Kent Road", "Brown", 60n, 50n, 2n, 10n, 30n, 90n, 160n, 250n),

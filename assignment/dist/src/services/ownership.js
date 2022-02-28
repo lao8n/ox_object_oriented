@@ -24,7 +24,7 @@ const board = __importStar(require("../types/board"));
 class Ownership {
     constructor(monopolyboard) {
         this.monopolyboard = monopolyboard;
-        this.ownership = {};
+        this.ownership = new Map();
         this.initOwnership(this.monopolyboard);
     }
     /**
@@ -40,32 +40,32 @@ class Ownership {
         for (const bs of board.boardstreets) {
             for (const bn of board.boardnumbers) {
                 // reached end of board
-                let space = b?.[bs]?.[bn];
+                const space = b?.[bs]?.[bn];
                 if (!space) {
                     return;
                 }
                 // safe as already checked that these are defined and kind and 
                 // name must exist
-                let kind = space.kind;
-                let name = space.name;
+                const kind = space.kind;
+                const name = space.name;
                 const isDeed = kind == "Deed";
                 const isTrain = kind == "Train";
                 const isUtility = kind == "Utility";
                 const canBeOwned = isDeed || isTrain || isUtility;
-                if (canBeOwned && !this.ownership[name]) {
-                    if (this.ownership[name] === null) {
-                        throw new Error(`Inputted board has non-unique space ` +
-                            `names where ${name} already exists`);
+                if (canBeOwned) {
+                    if (this.ownership.get(name) === null) {
+                        throw new Error(`Inputted board has non-unique space` +
+                            ` names where ${name} already exists`);
                     }
                     else {
-                        this.ownership[name] = null;
+                        this.ownership.set(name, null);
                     }
                 }
             }
         }
     }
     getOwner(name) {
-        return this.ownership[name];
+        return this.ownership.get(name);
     }
     /**
      *
@@ -82,11 +82,11 @@ class Ownership {
             throw new Error(`Invalid setNames does not include ${name}`);
         }
         if (this.getOwner(name) === null) {
-            this.ownership[name] = { id: player, sameOwner: false };
-            let sameOwner = this.sameOwner(player, setNames);
+            this.ownership.set(name, { id: player, sameOwner: false });
+            const sameOwner = this.sameOwner(player, setNames);
             if (sameOwner) {
                 for (const sn of setNames) {
-                    this.ownership[sn] = { id: player, sameOwner: true };
+                    this.ownership.set(sn, { id: player, sameOwner: true });
                 }
             }
             return true;
@@ -105,22 +105,10 @@ class Ownership {
                 `and at most 4 entries`);
         }
         if (this.getOwner(name)?.id == player) {
-            if (this.ownership[name]?.sameOwner) {
-                for (const sn of setNames) {
-                    if (!this.ownership?.[sn]) { // undefined or null
-                        throw new Error(`${sn} does not exist`);
-                    }
-                    else {
-                        // check that sameOwner == true (and not undefined or 
-                        // null) though still need to assert that .sameOwner
-                        // exists
-                        if (this.ownership[sn]?.sameOwner) {
-                            this.ownership[sn].sameOwner = false;
-                        }
-                    }
-                }
+            for (const sn of setNames) {
+                this.ownership.set(sn, { id: player, sameOwner: false });
             }
-            this.ownership[name] = null;
+            this.ownership.set(name, null);
             return true;
         }
         // if property doesn't exist, not owned, or owned by another player
@@ -142,7 +130,7 @@ class Ownership {
                 `${setNames.length} but it must have at least 2 ` +
                 `and at most 4 entries`);
         }
-        return setNames.map(name => this.ownership[name]?.id == player)
+        return setNames.map(name => this.ownership.get(name)?.id == player)
             .reduce((acc, cv) => acc && cv, true);
     }
 }

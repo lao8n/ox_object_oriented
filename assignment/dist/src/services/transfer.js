@@ -28,7 +28,7 @@ class Transfer {
      * - .kind tag is used to discriminate union
      */
     payRent(player, property) {
-        let owner = this.ownership.getOwner(property.name);
+        const owner = this.ownership.getOwner(property.name);
         if (!owner) {
             return false;
         }
@@ -50,11 +50,11 @@ class Transfer {
         return this.transferMoney(player, owner.id, rent);
     }
     payUtilityRent(player, utility, diceRoll) {
-        let owner = this.ownership.getOwner(utility.name);
+        const owner = this.ownership.getOwner(utility.name);
         if (!owner) {
             return false;
         }
-        let rent = this.calculateUtilityRent(utility, owner.sameOwner, diceRoll);
+        const rent = this.calculateUtilityRent(utility, owner.sameOwner, diceRoll);
         return this.transferMoney(player, owner.id, rent);
     }
     buyProperty(player, property) {
@@ -75,9 +75,9 @@ class Transfer {
                     // type never so can't get here
                     throw new Error(`Invalid property with unknown kind`);
             }
-            let setNames = this.board.getSet(set);
+            const setNames = this.board.getSet(set);
             if (setNames && this.ownership.acquire(player, property.name, setNames)) {
-                let result = this.players.removeMoney(player, property.price);
+                const result = this.players.removeMoney(player, property.price);
                 // we check that player has enough money so this should
                 // never fail
                 if (!result) {
@@ -90,7 +90,7 @@ class Transfer {
         return false;
     }
     transferMoney(from, to, amount) {
-        let result = this.players.removeMoney(from, amount);
+        const result = this.players.removeMoney(from, amount);
         if (!result) {
             return false;
         }
