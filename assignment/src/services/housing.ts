@@ -60,15 +60,32 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         }
     }
 
+    public getNumberHouses(name : string){
+        return this.building[name]
+    }
+
+    public getBankRemainingHouses(){
+        return this.remainingHouses
+    }
+
+    public getBankRemainingHotels(){
+        return this.remainingHotels
+    }
+
     public buyHouseOrHotel(player: PlayerID, name: string, colourSet: Colour, 
         setNames: string[], housePrice: M){
         // check that player is owner of all in set
         let owner = this.ownership.getOwner(name)
+        console.log(owner)
         if(!owner || !owner?.sameOwner || owner?.id != player){
+            return false
+        }
+        if(!setNames.includes(name)){
             return false
         }
         // check that hotels don't already exist on all 3 properties
         let buildingStack = this.buildingOrder?.[colourSet]
+        console.log(buildingStack)
         if(!buildingStack){
             return false
         }
@@ -87,14 +104,20 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         }
         // check that not building unevenly
         let housesBuilt = buildingStack.peek()
+        if(!housesBuilt){
+            housesBuilt = new Set<string>()
+        }
+        console.log(housesBuilt)
         // all houses built at this level e.g. all properties have 3 houses
         if(housesBuilt?.size == setNames.length){ 
             const wealth = this.players.getWealth(player)
             if(wealth && wealth > housePrice){
                 this.players.removeMoney(player, housePrice)
-                buildingStack.push(new Set<string>(name))
-                if(numHouses == 5){
+                buildingStack.push(new Set<string>().add(name))
+                this.building[name]++
+                if(buildingStack.size() == 5){
                     this.remainingHotels--
+                    this.remainingHouses = this.remainingHouses + 4
                 } else {
                     this.remainingHouses--
                 }
@@ -106,19 +129,24 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         // haven't yet built a house 
         } else {
             const wealth = this.players.getWealth(player)
-            if(wealth && wealth > housePrice){
+            console.log(wealth)
+            if(wealth && wealth >= housePrice){
                 let houseAdded = housesBuilt?.add(name)
+                console.log(houseAdded)
                 if(!houseAdded){
                     return false
                 }
                 this.players.removeMoney(player, housePrice)
                 buildingStack.pop()
                 buildingStack.push(houseAdded)    
-                if(numHouses == 5){
+                this.buildingOrder[colourSet] = buildingStack
+                this.building[name]++
+                if(buildingStack.size() == 5){
                     this.remainingHotels--
+                    this.remainingHouses = this.remainingHouses + 4
                 } else {
                     this.remainingHouses--
-                }            
+                }         
                 return true
             }
         }
