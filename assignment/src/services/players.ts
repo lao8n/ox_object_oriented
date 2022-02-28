@@ -4,164 +4,164 @@ import { NumPlayers, Player, PlayerID } from "../types/player";
 import { BoardLocation } from "../types/board";
 
 export class Players<M extends Money> {
-    private _players : {
-        [P in PlayerID]?: Player<M>
-    } = {}
-
-    private _order : PlayerID[]
-    private _orderIndex : number
+    private _players : Map<PlayerID, Player<M>> = new Map<PlayerID, Player<M>>()
+    private _order : PlayerID[];
+    private _orderIndex : number;
 
     constructor(readonly numPlayers: NumPlayers){
-        this._order = new Array<PlayerID>(numPlayers)
+        this._order = new Array<PlayerID>(numPlayers);
         for(let i = 1; i <= numPlayers; i++){
-            this._players[i as PlayerID] = {
+            this._players.set(i as PlayerID, {
                 id: i as PlayerID,
                 wealth: DataFactory.createStartingMoney<M>(),
                 location: {street: 1 , num: 1} as BoardLocation,
                 inJail: false
-            }
+            });
             // default order
-            this._order[i - 1] = i as PlayerID
+            this._order[i - 1] = i as PlayerID;
         }
-        this._orderIndex = 0
+        this._orderIndex = 0;
     }
 
     getCurrentTurnPlayer(): PlayerID {
-        let player = this._order[this._orderIndex]
+        const player = this._order[this._orderIndex];
         if(!player){
-            throw new Error("Unable to find current turn player")
+            throw new Error("Unable to find current turn player");
         }    
-        return player
+        return player;
     }
 
     getNextTurnPlayer(): PlayerID{
-        this._orderIndex = (this._orderIndex + 1) % this.numPlayers
-        return this.getCurrentTurnPlayer()
+        this._orderIndex = (this._orderIndex + 1) % this.numPlayers;
+        return this.getCurrentTurnPlayer();
     }
 
     getCurrentTurnNotPlayer(): PlayerID {
-        let orderIndex =  (this._orderIndex + 1) % this.numPlayers
-        const player = this._order[orderIndex]
+        const orderIndex =  (this._orderIndex + 1) % this.numPlayers;
+        const player = this._order[orderIndex];
         if(!player){
-            throw new Error("Unable to find current turn player")
+            throw new Error("Unable to find current turn player");
         }
-        return player
+        return player;
     }
 
     getOrder(): PlayerID[]{
-        return this._order
+        return this._order;
     }
 
     setOrder(order : PlayerID[]){
         if(order.length != this.numPlayers){
             throw new Error(`Order has ${order.length} players not ` +
-                            `${this.numPlayers} as required`)
+                            `${this.numPlayers} as required`);
         }
-        let orderSet = new Set<PlayerID>();
-        let newOrder : PlayerID[] = []
+        const orderSet = new Set<PlayerID>();
+        const newOrder : PlayerID[] = [];
         for(let i = 0; i < this.numPlayers; i++){
-            let p = order[i]
+            const p = order[i];
             if(p){
-                this.validatePlayerID(p)
+                this.validatePlayerID(p);
                 if(orderSet.has(p)){
-                    throw new Error(`Repeated player ${p} in order`)
+                    throw new Error(`Repeated player ${p} in order`);
                 }
-                newOrder[i] = p
-                orderSet.add(p)
+                newOrder[i] = p;
+                orderSet.add(p);
             }
         }
         // only override order if it's valid
-        this._order = newOrder
-        this._orderIndex = 0
+        this._order = newOrder;
+        this._orderIndex = 0;
     }
 
     getLocation(id: PlayerID){
-        this.validatePlayerID(id)
-        const player = this._players?.[id]
+        this.validatePlayerID(id);
+        const player = this._players.get(id);
         if(player && player?.location){
-            return player.location
+            return player.location;
         }
-        throw new Error(`Player ${id} has null location`)
+        throw new Error(`Player ${id} has null location`);
     }
 
     setLocation(id: PlayerID, location: BoardLocation){
-        this.validatePlayerID(id)
-        // we check that its defined before asserting it is
-        if(this._players?.[id]?.location){
-            this._players[id]!.location = location
+        this.validatePlayerID(id);
+        // typescript doesn't keep type information about values at specific
+        // array indices
+        let currentPlayer = this._players.get(id)
+        if(currentPlayer){
+            currentPlayer.location = location
+            this._players.set(id, currentPlayer)
             return true
-        }
-        return false
+        }        
+        return false;
     }
 
     getInJail(id: PlayerID){
-        this.validatePlayerID(id)
-        const player = this._players?.[id]
+        this.validatePlayerID(id);
+        const player = this._players.get(id);
         if(player){
-            return player.inJail
+            return player.inJail;
         }
-        throw new Error(`Player ${id} doesn't exist`)
+        throw new Error(`Player ${id} doesn't exist`);
     }
 
     setInJail(id: PlayerID, inJail: boolean){
-        this.validatePlayerID(id)
+        this.validatePlayerID(id);
         // we check that its defined before asserting it is
-        if(this._players?.[id]){
-            this._players[id]!.inJail = inJail
+        let currentPlayer = this._players.get(id)
+        if(currentPlayer){
+            currentPlayer.inJail = inJail
+            this._players.set(id, currentPlayer)
             return true
-        }
-        return false
+        } 
+        return false;
     }
 
     getWealth(id: PlayerID){
-        this.validatePlayerID(id)
-        const player = this._players?.[id]
-        if(player && player?.wealth){
-            return player.wealth
+        this.validatePlayerID(id);
+        let currentPlayer = this._players.get(id)
+        if(currentPlayer){
+            return currentPlayer.wealth
         }
-        return null
+        return null;
     }
     
     addMoney(id: PlayerID, amount: M){
-        this.validatePlayerID(id)
-        this.validateAmount(amount)
-
-        // we check that wealth is not undefined, still need ! as typescript
-        // cannot handle multiple layers of nesting
-        if(this._players?.[id]?.wealth){
-            this._players[id]!.wealth = this._players[id]!.wealth + amount as M
+        this.validatePlayerID(id);
+        this.validateAmount(amount);
+        let currentPlayer = this._players.get(id)
+        if(currentPlayer){
+            currentPlayer.wealth = currentPlayer.wealth + amount as M
+            this._players.set(id, currentPlayer)
             return true
-        }
-        return false
+        } 
+        return false;
     }
 
     removeMoney(id: PlayerID, amount: M){
-        this.validatePlayerID(id)
-        this.validateAmount(amount)
-
-        // we check that wealth is not undefined, still need ! as typescript
-        // can handle multiple layers of nesting
-        if(this._players?.[id]?.wealth){
-            const r = BigInt(this._players[id]!.wealth - amount)
+        this.validatePlayerID(id);
+        this.validateAmount(amount);
+        let currentPlayer = this._players.get(id)
+        if(currentPlayer){
+            const r = BigInt(currentPlayer.wealth - amount);
             if(r < 0){
-                return false
+                return false;
             } 
-            this._players[id]!.wealth = r as M
+            currentPlayer.wealth = r as M;
+            this._players.set(id, currentPlayer)
             return true
         }
-        return false
+        return false;
     }
 
     private validatePlayerID(id: PlayerID){
         if(id > this.numPlayers){
             throw new Error(`Id ${id} is invalid as only ${this.numPlayers} ` +
-                            `players`)
+                            `players`);
         }
     }
 
     private validateAmount(amount: M){
         if(amount <= 0){
-            throw new Error(`Expected positive amount of money not ${amount}`)
+            throw new Error(`Expected positive amount of money not ${amount}`);
         }
     }
 }

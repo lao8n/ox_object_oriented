@@ -17,17 +17,17 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * - As discussed in class, typescript doesn't know that this is definitely
      *   assigned so need a default
      */
-    private _boardSize: number = 0 
+    private _boardSize = 0; 
     /**
      * Assignment notes
      * - Union of ownable property sets with optional mapped type
      */
     private _sets : {
         [S in Colour | "Train" | "Utility"]?: string[]
-    } = {}
+    } = {};
 
     private _nameLocations : Map<string, board.BoardLocation> = 
-        new Map<string, board.BoardLocation>()
+        new Map<string, board.BoardLocation>();
 
     /**
      * Assignment notes
@@ -35,44 +35,44 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      *   undefined
      */
     constructor(private readonly monopolyboard: B){
-        let numberSpaces = 0
+        let numberSpaces = 0;
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
                 // if space is undefined then that is the max board size
-                let space = monopolyboard?.[bs]?.[bn]
+                const space = monopolyboard?.[bs]?.[bn];
                 if(!space){ 
                     if(numberSpaces == 0){
                         throw new Error(`Inputted board has no spaces. Note
                             spaces must be filled from the first street, 
-                            and first number onwards`)
+                            and first number onwards`);
                     }
-                    this._boardSize = numberSpaces
-                    return
+                    this._boardSize = numberSpaces;
+                    return;
                 } 
-                numberSpaces++
+                numberSpaces++;
                 if(space?.kind){
-                    let kind = space.kind
+                    const kind = space.kind;
                     if(kind == "Train" || kind == "Utility"){
                         if(this._sets?.[kind]){
-                            this._sets[kind]?.push(space.name)
+                            this._sets[kind]?.push(space.name);
                         } else {
-                            this._sets[kind] = [space.name]
+                            this._sets[kind] = [space.name];
                         }
                     } else if(space.kind == "Deed"){
                         if(this._sets?.[space.colourSet]){
-                            this._sets[space.colourSet]?.push(space.name)
+                            this._sets[space.colourSet]?.push(space.name);
                         } else {
-                            this._sets[space.colourSet] = [space.name]
+                            this._sets[space.colourSet] = [space.name];
                         }
                     }
                     if(space?.name){
                         this._nameLocations.set(
-                            space.name, {street: bs, num: bn})
+                            space.name, {street: bs, num: bn});
                     }
                 }
             }
         }
-        this._boardSize = numberSpaces  
+        this._boardSize = numberSpaces;  
     }
 
     /**
@@ -80,7 +80,7 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * - getter give access to private value set in constructor
      */
     get size(): number{
-        return this._boardSize
+        return this._boardSize;
     }
 
     /**
@@ -93,31 +93,31 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         board.BoardLocation {
         // validate
         let currentLocationIndex = 
-            (currentLocation.street - 1) * 10 + currentLocation.num - 1
+            (currentLocation.street - 1) * 10 + currentLocation.num - 1;
         if(currentLocationIndex >= this._boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
-                only ${this._boardSize} on board`)
+                only ${this._boardSize} on board`);
         }
 
         // get new location
         currentLocationIndex = (currentLocationIndex + diceRoll) 
-            % this._boardSize 
+            % this._boardSize; 
 
         // convert to type Location
-        let streetIndex = 1
+        let streetIndex = 1;
         while(currentLocationIndex >= 10){
-            streetIndex++
-            currentLocationIndex = currentLocationIndex - 10
+            streetIndex++;
+            currentLocationIndex = currentLocationIndex - 10;
         }
-        let numberIndex = 1
+        let numberIndex = 1;
         while(currentLocationIndex >= 1){
-            numberIndex++
-            currentLocationIndex--
+            numberIndex++;
+            currentLocationIndex--;
         }
         return {
             street: streetIndex as board.BoardStreet,
             num: numberIndex as board.BoardNumber
-        }
+        };
     }
 
     /**
@@ -131,23 +131,23 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      */
     getSpace(currentLocation: board.BoardLocation): board.Space<M> {
         // validate
-        let currentLocationIndex = 
-            (currentLocation.street - 1) * 10 + currentLocation.num - 1
+        const currentLocationIndex = 
+            (currentLocation.street - 1) * 10 + currentLocation.num - 1;
         if(currentLocationIndex > this._boardSize){
             throw new Error(`Current location is invalid ${currentLocation} 
-                only ${this._boardSize} on board`)
+                only ${this._boardSize} on board`);
         }
         
         // we know that index is not undefined as we validated above
         return this.monopolyboard!
-            [currentLocation.street]![currentLocation.num]!
+            [currentLocation.street]![currentLocation.num]!;
     }
 
     getSet(set : Colour | "Train" | "Utility" ){ 
-        return this._sets[set]
+        return this._sets[set];
     }
 
     getLocation(name: string){
-        return this._nameLocations.get(name)
+        return this._nameLocations.get(name);
     }
 }

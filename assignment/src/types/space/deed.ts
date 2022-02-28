@@ -1,15 +1,16 @@
-import { Money } from "../money"
+import { Money } from "../money";
 
 export type Colour = "Brown" | "LightBlue" | "Pink" | "Orange" | "Red" | 
     "Yellow" | "Green" | "DarkBlue"
-export const colours: Colour[] = ["Brown", "LightBlue", "Pink", "Orange", "Red", "Yellow", "Green", "DarkBlue"]
+export const colours: Colour[] = ["Brown", "LightBlue", "Pink", "Orange", 
+    "Red", "Yellow", "Green", "DarkBlue"];
 
 /**
  * Lightweight, immutable type for Deed data
  * 
  * Assignment notes:
- * - Generic type bounds = constrain generic type parameter to a subtype forcing 
- *   all prices to the same currency
+ * - Generic type bounds = constrain generic type parameter to a subtype 
+ *   forcing all prices to the same currency
  * - Type = model underlying data with lightweight immutable type not a class 
  *   which can be exposed much like  */
 export type Deed<M extends Money> = {

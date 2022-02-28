@@ -1,4 +1,4 @@
-import * as board from '../src/types/board'
+import * as board from '../src/types/board';
 import { Card } from '../src/types/space/card';
 import { Colour, Deed } from '../src/types/space/deed';
 import { FreeParking } from '../src/types/space/free_parking';
@@ -12,16 +12,16 @@ import { Utility } from '../src/types/space/utility';
 
 export class DataFactory {
     static createTestBoard1<M extends money.Money>(): board.GenericBoard<M> {
-        let testBoard : board.GenericBoard<M> = {
+        const testBoard : board.GenericBoard<M> = {
             1: {
                 1: this.createDeed<M>("Old Kent Road", "Brown")
             }
-        }
-        return testBoard
+        };
+        return testBoard;
     }
 
     static createTestBoard2<M extends money.Money>(): board.GenericBoard<M> {
-        let testBoard : board.GenericBoard<M> = {
+        const testBoard : board.GenericBoard<M> = {
             1: {
                 1: this.createDeed<M>("Old Kent Road", "Brown"),
                 2: this.createDeed<M>("Whitechapel Road", "Brown"),
@@ -29,12 +29,12 @@ export class DataFactory {
                 // 4 missing
                 5: this.createDeed<M>("Pentonville Road", "LightBlue"),
             }
-        }
-        return testBoard
+        };
+        return testBoard;
     }
 
     static createTestBoard3<M extends money.Money>(): board.GenericBoard<M> {
-        let testBoard : board.GenericBoard<M> = {
+        const testBoard : board.GenericBoard<M> = {
             1: {
                 1: this.createDeed<M>("Old Kent Road", "Brown"),
                 2: this.createDeed<M>("Whitechapel Road", "Brown"),
@@ -42,12 +42,12 @@ export class DataFactory {
                 4: this.createDeed<M>("Euston Road", "LightBlue"),
                 5: this.createDeed<M>("Pentonville Road", "LightBlue"),
             }
-        }
-        return testBoard
+        };
+        return testBoard;
     }
 
     static createMonopolyBoard<M extends money.Money>(): board.MonopolyBoard<M> {
-        let monopolyBoard : board.MonopolyBoard<M> = {
+        const monopolyBoard : board.MonopolyBoard<M> = {
             1: {
                 1: this.createGo<M>(),
                 2: this.createDeed<M>("Old Kent Road", "Brown", 60n, 50n, 2n, 10n, 30n, 90n, 160n, 250n),
@@ -96,12 +96,12 @@ export class DataFactory {
                 9: this.createTax<M>(),
                 10: this.createDeed<M>("Mayfair", "DarkBlue", 400n, 200n, 50n, 200n, 600n, 1400n, 1700n, 2000n),
             },
-        }
-        return monopolyBoard
+        };
+        return monopolyBoard;
     }
 
     static createStartingMoney<M extends money.Money>(): M {
-        return BigInt(1500) as M
+        return BigInt(1500) as M;
     }
 
     static createGo<M extends money.Money>(): Go<M> {
@@ -109,41 +109,41 @@ export class DataFactory {
             kind: "Go",
             name: "Go",
             amount: 13n as M,
-        }
+        };
     }
 
     static createJail<M extends money.Money>(): Jail {
         return { 
             kind: "Jail",
             name: "Jail",
-        }
+        };
     }
 
     static createFreeParking<M extends money.Money>(): FreeParking {
         return { 
             kind: "Free Parking",
             name: "Free Parking",
-        }
+        };
     }
 
     static createGoToJail<M extends money.Money>(): GoToJail {
         return { 
             kind: "Go To Jail",
             name: "Go To Jail",
-        }
+        };
     }
 
     static createDeed<M extends money.Money>(
         name: string, 
         colourSet: Colour, 
-        price : bigint = 10n, 
-        houseCost: bigint = 10n,
-        rentNoHouse : bigint = 10n,
-        rentOneHouse: bigint = 10n,
-        rentTwoHouse: bigint = 10n,
-        rentThreeHouse: bigint = 10n,
-        rentFourHouse: bigint = 10n,
-        rentHotel: bigint = 10n,
+        price  = 10n, 
+        houseCost = 10n,
+        rentNoHouse  = 10n,
+        rentOneHouse = 10n,
+        rentTwoHouse = 10n,
+        rentThreeHouse = 10n,
+        rentFourHouse = 10n,
+        rentHotel = 10n,
     ): Deed<M> {
         return { 
             kind: "Deed",
@@ -157,7 +157,7 @@ export class DataFactory {
             rentThreeHouse: rentThreeHouse as M,
             rentFourHouse: rentFourHouse as M,
             rentHotel: rentHotel as M,
-        }
+        };
     }
 
     static createTrain<M extends money.Money>(name : string): Train<M> {
@@ -166,7 +166,7 @@ export class DataFactory {
             name: name,
             price: 100n as M,
             amount: 13n as M,
-        }
+        };
     }
 
     static createUtility<M extends money.Money>(name : string): Utility<M> {
@@ -174,7 +174,7 @@ export class DataFactory {
             kind: "Utility",
             name: name,
             price: 150n as M,
-        }
+        };
     }
     
     static createCard<M extends money.Money>(): Card<M> {
@@ -182,7 +182,7 @@ export class DataFactory {
             kind: "Card",
             name: "Mayfair",
             amount: 13n as M,
-        }
+        };
     }
 
     static createTax<M extends money.Money>(): Tax<M> {
@@ -190,6 +190,6 @@ export class DataFactory {
             kind: "Tax",
             name: "Mayfair",
             amount: 13n as M,
-        }
+        };
     }
 }

@@ -1,5 +1,5 @@
 import { Money } from '../types/money';
-import * as board from '../types/board'
+import * as board from '../types/board';
 import { Colour, colours } from "../types/space/deed";
 import { Stack } from '../adt/stack';
 import { Owner, Ownership } from "./ownership";
@@ -12,42 +12,42 @@ export type NumHouses = 0 | 1 | 2 | 3 | 4 | 5 // 5 represents hotel
 export class Housing<M extends Money, B extends board.GenericBoard<M>>{
     private building: {
         [name: string]: NumHouses
-    } = {}
+    } = {};
 
     private buildingOrder: {
         [C in Colour]?: Stack<Set<string>>;
-    } = {}
+    } = {};
 
     // as defined by monopoly rules
-    private remainingHouses = 32
-    private remainingHotels = 12
+    private remainingHouses = 32;
+    private remainingHotels = 12;
 
     constructor(
         private readonly monopolyboard: B,
         private readonly players: Players<M>,
         private readonly ownership : Ownership<M, B>){
-        this.initBuilding(this.monopolyboard)
-        this.initBuildingOrder()
+        this.initBuilding(this.monopolyboard);
+        this.initBuildingOrder();
     }
 
     private initBuilding(b: B){
         for(const bs of board.boardstreets){
             for(const bn of board.boardnumbers){
                 // reached end of board
-                let space = b?.[bs]?.[bn]
+                const space = b?.[bs]?.[bn];
                 if(!space){ 
-                    return
+                    return;
                 }
                 // safe as already checked that these are defined and kind and 
                 // name must exist
-                let kind = space.kind
-                let name = space.name
+                const kind = space.kind;
+                const name = space.name;
                 if(kind == "Deed" && !this.building[name]){
                     if(this.building[name] == 0){
                         throw new Error(`Inputted board has non-unique space ` + 
-                        `names where ${name} already exists`)
+                        `names where ${name} already exists`);
                     } else {
-                        this.building[name] = 0
+                        this.building[name] = 0;
                     }
                 }
             }
@@ -55,101 +55,101 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
     }
 
     private initBuildingOrder(){
-        for(let c of colours){
-            this.buildingOrder[c] = new Stack<Set<string>>(5)
+        for(const c of colours){
+            this.buildingOrder[c] = new Stack<Set<string>>(5);
         }
     }
 
     public getNumberHouses(name : string){
-        return this.building[name]
+        return this.building[name];
     }
 
     public getBankRemainingHouses(){
-        return this.remainingHouses
+        return this.remainingHouses;
     }
 
     public getBankRemainingHotels(){
-        return this.remainingHotels
+        return this.remainingHotels;
     }
 
     public buyHouseOrHotel(player: PlayerID, name: string, colourSet: Colour, 
         setNames: string[], housePrice: M){
         // check that player is owner of all in set
-        let owner = this.ownership.getOwner(name)
-        console.log(owner)
+        const owner = this.ownership.getOwner(name);
+        console.log(owner);
         if(!owner || !owner?.sameOwner || owner?.id != player){
-            return false
+            return false;
         }
         if(!setNames.includes(name)){
-            return false
+            return false;
         }
         // check that hotels don't already exist on all 3 properties
-        let buildingStack = this.buildingOrder?.[colourSet]
-        console.log(buildingStack)
+        const buildingStack = this.buildingOrder?.[colourSet];
+        console.log(buildingStack);
         if(!buildingStack){
-            return false
+            return false;
         }
-        let numHouses = buildingStack.size()
+        const numHouses = buildingStack.size();
         if(numHouses == 5){
             if(buildingStack.peek()?.size == setNames.length){
-                return false
+                return false;
             }
             if(this.remainingHotels == 0){
-                return false
+                return false;
             }
         } else {
             if(this.remainingHouses == 0){
-                return false
+                return false;
             }
         }
         // check that not building unevenly
-        let housesBuilt = buildingStack.peek()
+        let housesBuilt = buildingStack.peek();
         if(!housesBuilt){
-            housesBuilt = new Set<string>()
+            housesBuilt = new Set<string>();
         }
-        console.log(housesBuilt)
+        console.log(housesBuilt);
         // all houses built at this level e.g. all properties have 3 houses
         if(housesBuilt?.size == setNames.length){ 
-            const wealth = this.players.getWealth(player)
+            const wealth = this.players.getWealth(player);
             if(wealth && wealth > housePrice){
-                this.players.removeMoney(player, housePrice)
-                buildingStack.push(new Set<string>().add(name))
-                this.building[name]++
+                this.players.removeMoney(player, housePrice);
+                buildingStack.push(new Set<string>().add(name));
+                this.building[name]++;
                 if(buildingStack.size() == 5){
-                    this.remainingHotels--
-                    this.remainingHouses = this.remainingHouses + 4
+                    this.remainingHotels--;
+                    this.remainingHouses = this.remainingHouses + 4;
                 } else {
-                    this.remainingHouses--
+                    this.remainingHouses--;
                 }
-                return true
+                return true;
             }
         // we have already built a house on this property
         } else if(housesBuilt?.has(name)){
-            return false
+            return false;
         // haven't yet built a house 
         } else {
-            const wealth = this.players.getWealth(player)
-            console.log(wealth)
+            const wealth = this.players.getWealth(player);
+            console.log(wealth);
             if(wealth && wealth >= housePrice){
-                let houseAdded = housesBuilt?.add(name)
-                console.log(houseAdded)
+                const houseAdded = housesBuilt?.add(name);
+                console.log(houseAdded);
                 if(!houseAdded){
-                    return false
+                    return false;
                 }
-                this.players.removeMoney(player, housePrice)
-                buildingStack.pop()
-                buildingStack.push(houseAdded)    
-                this.buildingOrder[colourSet] = buildingStack
-                this.building[name]++
+                this.players.removeMoney(player, housePrice);
+                buildingStack.pop();
+                buildingStack.push(houseAdded);    
+                this.buildingOrder[colourSet] = buildingStack;
+                this.building[name]++;
                 if(buildingStack.size() == 5){
-                    this.remainingHotels--
-                    this.remainingHouses = this.remainingHouses + 4
+                    this.remainingHotels--;
+                    this.remainingHouses = this.remainingHouses + 4;
                 } else {
-                    this.remainingHouses--
+                    this.remainingHouses--;
                 }         
-                return true
+                return true;
             }
         }
-        return false
+        return false;
     }
 }

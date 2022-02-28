@@ -21,7 +21,7 @@ export class Stack<T> implements Stack<T> {
 
     push(item: T): void {
         if(this.size() === this.maxSize){
-            throw new Error("Cannot push, stack is already full")
+            throw new Error("Cannot push, stack is already full");
         }
         this.stack.push(item);
     }
