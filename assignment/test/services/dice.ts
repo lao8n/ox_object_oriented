@@ -1,5 +1,6 @@
 import * as _chai from 'chai';
 import * as dice from '../../src/services/dice';
+import { DiceValue } from '../../src/types/dice';
 import 'mocha';
 
 describe('service dice', () => {
@@ -32,7 +33,7 @@ describe('service dice', () => {
             diceRoll = diceOneTurn.next();
         }
         if(diceRoll.done){
-            const doubles: [dice.DiceValue, dice.DiceValue, dice.DiceValue] = 
+            const doubles: [DiceValue, DiceValue, DiceValue] = 
                 diceRoll.value;
             for (let i = 0; i < 3; i++){
                 const dv = doubles[i];

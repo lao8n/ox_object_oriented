@@ -2,7 +2,7 @@ import * as _chai from 'chai';
 import * as board from '../../src/types/board';
 import * as money from '../../src/types/money';
 import * as bs from '../../src/services/board';
-import { PairDiceValue } from '../../src/services/dice';
+import { PairDiceValue } from '../../src/types/dice';
 import { DataFactory } from '../../data/uk';
 import 'mocha';
 

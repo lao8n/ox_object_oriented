@@ -1,6 +1,6 @@
 import { DataFactory } from '../../data/uk';
 import { Board } from '../services/board';
-import { Owner, Ownership } from '../services/ownership';
+import { Ownership } from '../services/ownership';
 import { Players } from "../services/players";
 import { Transfer } from '../services/transfer';
 import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, 
@@ -8,10 +8,11 @@ import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll,
 import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } 
     from '../types/board';
 import { GBP, Money } from "../types/money";
+import { Owner } from "../types/ownership";
 import { NumPlayers, PlayerID } from '../types/player';
-import { Housing, NumHouses } from '../../src/services/housing';
+import { Housing } from '../../src/services/housing';
 
-type MonopolyEdition = "British" | "Test"
+export type MonopolyEdition = "British" | "Test"
 
 /**
  * Game class directly exposes the turn interfaces through which all turn 
@@ -22,7 +23,7 @@ type MonopolyEdition = "British" | "Test"
  * Assignment notes
  * - 
  */
-class Game {
+export class Game {
     readonly turn : TurnRoll | TurnFinish | TurnInJail | TurnOwnedProperty |
         TurnUnownedProperty;
 
@@ -69,7 +70,7 @@ class Game {
         return this.players.getWealth(id);
     }
 
-    getNumberHouses(name: string): NumHouses | undefined {
+    getNumberHouses(name: string): number | undefined {
         return this.housing.getNumberHouses(name);
     }
 

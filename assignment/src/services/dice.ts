@@ -1,6 +1,4 @@
-export type DiceValue = 1 | 2 | 3 | 4 | 5 | 6
-export type PairDiceValue = DiceValue | 7 | 8 | 9 | 10 | 11 | 12
-
+import { PairDiceValue, DiceValue } from '../types/dice'
 /**
  * Generator function for rolling a pair of dice for one turn. Yield value is
  * the PairDiceValue thrown and a flag for whether a double was thrown

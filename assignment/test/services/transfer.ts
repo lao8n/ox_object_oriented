@@ -1,7 +1,8 @@
 import * as _chai from 'chai';
 import { DataFactory } from '../../data/uk';
 import { Board } from '../../src/services/board';
-import { Owner, Ownership } from '../../src/services/ownership';
+import { Ownership } from '../../src/services/ownership';
+import { Owner } from "../../src/types/ownership";
 import { Players } from "../../src/services/players";
 import { Transfer } from '../../src/services/transfer';
 import { MonopolyBoard } from '../../src/types/board';

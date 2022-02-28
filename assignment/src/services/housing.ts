@@ -75,7 +75,6 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         setNames: string[], housePrice: M){
         // check that player is owner of all in set
         const owner = this.ownership.getOwner(name);
-        console.log(owner);
         if(!owner || !owner?.sameOwner || owner?.id != player){
             return false;
         }
@@ -84,7 +83,6 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         }
         // check that hotels don't already exist on all 3 properties
         const buildingStack = this.buildingOrder?.[colourSet];
-        console.log(buildingStack);
         if(!buildingStack){
             return false;
         }
@@ -106,7 +104,6 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         if(!housesBuilt){
             housesBuilt = new Set<string>();
         }
-        console.log(housesBuilt);
         // all houses built at this level e.g. all properties have 3 houses
         if(housesBuilt?.size == setNames.length){ 
             const wealth = this.players.getWealth(player);
@@ -128,10 +125,8 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
         // haven't yet built a house 
         } else {
             const wealth = this.players.getWealth(player);
-            console.log(wealth);
             if(wealth && wealth >= housePrice){
                 const houseAdded = housesBuilt?.add(name);
-                console.log(houseAdded);
                 if(!houseAdded){
                     return false;
                 }

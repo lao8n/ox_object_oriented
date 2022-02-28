@@ -77,7 +77,6 @@ class Housing {
     buyHouseOrHotel(player, name, colourSet, setNames, housePrice) {
         // check that player is owner of all in set
         const owner = this.ownership.getOwner(name);
-        console.log(owner);
         if (!owner || !owner?.sameOwner || owner?.id != player) {
             return false;
         }
@@ -86,7 +85,6 @@ class Housing {
         }
         // check that hotels don't already exist on all 3 properties
         const buildingStack = this.buildingOrder?.[colourSet];
-        console.log(buildingStack);
         if (!buildingStack) {
             return false;
         }
@@ -109,7 +107,6 @@ class Housing {
         if (!housesBuilt) {
             housesBuilt = new Set();
         }
-        console.log(housesBuilt);
         // all houses built at this level e.g. all properties have 3 houses
         if (housesBuilt?.size == setNames.length) {
             const wealth = this.players.getWealth(player);
@@ -134,10 +131,8 @@ class Housing {
         }
         else {
             const wealth = this.players.getWealth(player);
-            console.log(wealth);
             if (wealth && wealth >= housePrice) {
                 const houseAdded = housesBuilt?.add(name);
-                console.log(houseAdded);
                 if (!houseAdded) {
                     return false;
                 }

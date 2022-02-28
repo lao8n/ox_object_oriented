@@ -1,5 +1,5 @@
 import { Board } from "./board";
-import { PairDiceValue } from "./dice";
+import { PairDiceValue } from "../types/dice";
 import { Ownership } from "./ownership";
 import { Players } from "./players";
 import { GenericBoard, Property } from "../types/board";

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GameServer = void 0;
+exports.GameServer = exports.Game = void 0;
 const uk_1 = require("../../data/uk");
 const board_1 = require("../services/board");
 const ownership_1 = require("../services/ownership");
@@ -64,6 +64,7 @@ class Game {
         return this.ownership.getOwner(name);
     }
 }
+exports.Game = Game;
 /**
  * Assignment notes
  * - Facade pattern

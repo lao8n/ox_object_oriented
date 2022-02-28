@@ -1,6 +1,7 @@
 import { DataFactory } from "../../data/uk";
 import { Board } from "../services/board";
-import { diceGenerator, PairDiceValue } from "../services/dice";
+import { diceGenerator } from "../services/dice";
+import { PairDiceValue } from "../types/dice";
 import { Ownership } from "../services/ownership";
 import { Players } from "../services/players";
 import { BoardLocation, GenericBoard, Space } from "../types/board";
@@ -8,8 +9,6 @@ import { Money } from "../types/money";
 import { PlayerID } from "../types/player";
 import { Transfer } from "../services/transfer";
 import { Housing } from "../services/housing";
-
-export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
 export interface TurnBase {
     readonly player: PlayerID
