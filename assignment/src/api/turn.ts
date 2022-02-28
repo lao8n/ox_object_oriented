@@ -31,13 +31,13 @@ export interface TurnInJail extends TurnBase {
 export interface TurnUnownedProperty extends TurnBase {
     readonly stage: "UnownedProperty"
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty
-    buyHousing(player: PlayerID): TurnUnownedProperty
+    buyHousing(player: PlayerID, name: string): TurnUnownedProperty
     finishTurn(player : PlayerID): TurnRoll | TurnUnownedProperty
 }
 export interface TurnOwnedProperty extends TurnBase{
     readonly stage: "OwnedProperty"
     payRent(player : PlayerID): TurnFinish | TurnOwnedProperty
-    buyHousing(player: PlayerID): TurnOwnedProperty
+    buyHousing(player: PlayerID, name: string): TurnOwnedProperty
 }
 export interface TurnFinish extends TurnBase {
     readonly stage: "Finish"
@@ -130,31 +130,34 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this.lastDiceRoll
     }
 
-    buyHousing(player: PlayerID): TurnOwnedProperty | TurnUnownedProperty {
-        if(player != this.player){
-            if(this.stage == "OwnedProperty"){
-                return this as TurnOwnedProperty
-            } else {
-                return this as TurnUnownedProperty
-            }
+    buyHousing(player: PlayerID, name: string): TurnOwnedProperty | TurnUnownedProperty {
+        let currentStage : TurnOwnedProperty | TurnUnownedProperty
+        if(this.stage == "OwnedProperty"){
+            currentStage = this as TurnOwnedProperty
+        } else {
+            currentStage = this as TurnUnownedProperty
         }
-        if(this.space.kind == "Deed"){
-            let setNames = this.board.getSet(this.space.colourSet)
+        if(player != this.player){
+            return currentStage
+        }
+        let houseLocation = this.board.getLocation(name)
+        if(!houseLocation){
+            return currentStage
+        }
+        let houseSpace = this.board.getSpace(houseLocation)
+        if(houseSpace.kind == "Deed"){
+            let setNames = this.board.getSet(houseSpace.colourSet)
             if(setNames){
                 this.housing.buyHouseOrHotel(
                     player, 
-                    this.space.name, 
-                    this.space.colourSet, 
+                    houseSpace.name, 
+                    houseSpace.colourSet, 
                     setNames,
-                    this.space.houseCost,
+                    houseSpace.houseCost,
                 )
             }
         }
-        if(this.stage == "OwnedProperty"){
-            return this as TurnOwnedProperty
-        } else {
-            return this as TurnUnownedProperty
-        }
+        return currentStage
     }
 
     buyProperty(player : PlayerID): TurnFinish | TurnUnownedProperty {
@@ -250,7 +253,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     }
 
     private goToJail(){
-        const jail = this.board.getJailLocation()
+        const jail = this.board.getLocation("Jail")
         if(jail){
             this.players.setLocation(this.player, jail)
             this.players.setInJail(this.player, true)

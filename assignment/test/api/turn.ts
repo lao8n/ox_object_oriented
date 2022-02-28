@@ -289,6 +289,36 @@ describe('api turn payRent', () => {
     });
 });
 
+describe('api turn buyHousing', () => {
+    it('buy housing returns same stage but with house bought', 
+    () => {
+        let m = DataFactory.createTestBoard3<money.GBP>()
+        let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
+        let p = new Players<money.GBP>(2)
+        let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
+        let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
+            b, p, o, h, t)
+        let tr : TurnRoll
+        let tu : TurnUnownedProperty
+        tr = c.start()
+        let trResult = tr.roll(tr.player)
+        while(trResult.stage != "UnownedProperty"){
+            trResult = tr.roll(tr.player)
+        }
+        let acquired = o.acquire(tr.player, "Old Kent Road", ["Old Kent Road", "Whitechapel Road"])
+        _chai.assert.isTrue(acquired)
+        o.acquire(tr.player, "Whitechapel Road", ["Old Kent Road", "Whitechapel Road"])
+        _chai.assert.isTrue(acquired)
+        tu = trResult
+        let tuResult = tu.buyHousing(tr.player, "Whitechapel Road")
+        _chai.assert.equal(tuResult.player, tr.player)
+        _chai.assert.equal(tuResult.stage, "UnownedProperty")
+        _chai.assert.equal(h.getNumberHouses("Whitechapel Road"), 1)
+    });
+});
+
 describe('api finishTurn', () => {
     it('finish returns roll', 
     () => {
@@ -372,7 +402,7 @@ describe('api turn rollJail', () => {
         let tj : TurnInJail
 
         // set in jail
-        const jail = b.getJailLocation()
+        const jail = b.getLocation("Jail")
         if(jail){
             p.setLocation(1, jail)
             p.setInJail(1, true)

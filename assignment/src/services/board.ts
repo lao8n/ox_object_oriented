@@ -26,7 +26,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         [S in Colour | "Train" | "Utility"]?: string[]
     } = {}
 
-    private _jail : board.BoardLocation | null = null
+    private _nameLocations : Map<string, board.BoardLocation> = 
+        new Map<string, board.BoardLocation>()
 
     /**
      * Assignment notes
@@ -63,8 +64,10 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
                         } else {
                             this._sets[space.colourSet] = [space.name]
                         }
-                    } else if (space.kind == "Jail"){
-                        this._jail = {street: bs, num: bn} as board.BoardLocation
+                    }
+                    if(space?.name){
+                        this._nameLocations.set(
+                            space.name, {street: bs, num: bn})
                     }
                 }
             }
@@ -144,7 +147,7 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         return this._sets[set]
     }
 
-    getJailLocation(){
-        return this._jail
+    getLocation(name: string){
+        return this._nameLocations.get(name)
     }
 }
