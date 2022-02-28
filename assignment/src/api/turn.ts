@@ -94,14 +94,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             }
         // threw 3 doubles
         } else {
-            const jail = this.board.getJailLocation()
-            if(jail){
-                this.players.setLocation(this.player, jail)
-                this.players.setInJail(this.player, true)
-            // if jail doesn't exist go to first location on board
-            } else {
-                this.players.setLocation(this.player, {street: 1, num: 1})
-            } 
+            this.goToJail()
             this.dice = diceGenerator()
             this.stage = "Finish"
             return this as TurnFinish
@@ -225,6 +218,12 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             this.players.setLocation(this.player, newLocation)
             location = newLocation
         }
+        if(this.board.getSpace(location).kind == "Go To Jail"){
+            let jail = this.goToJail()
+            if(jail){
+                return jail
+            }
+        }
         return location
     }
 
@@ -241,10 +240,24 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             this.stage = "OwnedProperty"
             return this as TurnOwnedProperty
         }
-        // undefined i.e. not an ownable property  
         else {
+            if(this.space.kind == "Card" || this.space.kind == "Tax"){
+                this.players.removeMoney(this.player, 100n as M)
+            }
             this.stage = "Finish"
             return this as TurnFinish
         }
+    }
+
+    private goToJail(){
+        const jail = this.board.getJailLocation()
+        if(jail){
+            this.players.setLocation(this.player, jail)
+            this.players.setInJail(this.player, true)
+        // if jail doesn't exist go to first location on board
+        } else {
+            this.players.setLocation(this.player, {street: 1, num: 1})
+        } 
+        return jail
     }
 }
