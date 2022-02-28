@@ -7,6 +7,7 @@ import { Transfer } from '../../src/services/transfer';
 import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from '../../src/api/turn';
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
+import { Housing } from '../../src/services/housing'
 
 describe('api turn constructor', () => {
     it('can construct turn with GBP currency', 
@@ -15,9 +16,10 @@ describe('api turn constructor', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, MonopolyBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         _chai.assert.instanceOf(c, ConcreteTurn);
     });
 });
@@ -29,9 +31,10 @@ describe('api turn start', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, MonopolyBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         tr = c.start()
         _chai.assert.typeOf(tr.roll, "function")
@@ -47,9 +50,10 @@ describe('api turn roll', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         tr = c.start()
         let trResult = tr.roll(tr.player)
@@ -63,9 +67,10 @@ describe('api turn roll', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         tr = c.start()       
         let trResult = tr.roll(2)
@@ -81,9 +86,10 @@ describe('api turn roll', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         tr = c.start()
         tr.roll(tr.player)
@@ -103,9 +109,10 @@ describe('api turn buyProperty', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -136,9 +143,10 @@ describe('api turn buyProperty', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -171,9 +179,10 @@ describe('api turn payRent', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -227,9 +236,10 @@ describe('api turn payRent', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -286,9 +296,10 @@ describe('api finishTurn', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -317,9 +328,10 @@ describe('api finishTurn', () => {
         let b = new Board<money.GBP, GenericBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, GenericBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, GenericBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, GenericBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, GenericBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tr : TurnRoll
         let tu : TurnUnownedProperty
         let tf : TurnFinish
@@ -352,9 +364,10 @@ describe('api turn rollJail', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(2)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let c = new ConcreteTurn<money.GBP, MonopolyBoard<money.GBP>>(
-            b, p, o, t)
+            b, p, o, h, t)
         let tp : TurnUnownedProperty |TurnOwnedProperty
         let tj : TurnInJail
 

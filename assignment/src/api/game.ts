@@ -7,6 +7,7 @@ import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedPrope
 import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } from '../types/board';
 import { GBP, Money } from "../types/money";
 import { NumPlayers, Player, PlayerID } from '../types/player';
+import { Housing, NumHouses } from '../../src/services/housing'
 
 type MonopolyEdition = "British" | "Test"
 
@@ -28,6 +29,7 @@ class Game {
         private board: Board<Money, BoardEditions<Money>>,
         private players: Players<Money>,
         private ownership: Ownership<Money, BoardEditions<Money>>,
+        private housing: Housing<Money, BoardEditions<Money>>,
         private concreteTurn: ConcreteTurn<Money, BoardEditions<Money>>
     ){
         this.turn = this.concreteTurn.start()
@@ -65,6 +67,18 @@ class Game {
         return this.players.getWealth(id)
     }
 
+    getNumberHouses(name: string): NumHouses | undefined {
+        return this.housing.getNumberHouses(name)
+    }
+
+    getBankNumberRemainingHouses(): number {
+        return this.housing.getBankRemainingHouses()
+    }
+
+    getBankNumberRemainingHotels(): number {
+        return this.housing.getBankRemainingHotels()
+    }
+
     getOwner(name: string): Owner | null | undefined {
         return this.ownership.getOwner(name)
     }
@@ -94,7 +108,7 @@ export class GameServer {
      */
     startGame(edition : MonopolyEdition, numberPlayers: NumPlayers): Game {
         const id = this.games.length
-        // components
+        // housing
         let money : Money
         if(edition == "British" || edition == "Test"){
             money = 0n as GBP
@@ -113,10 +127,11 @@ export class GameServer {
         const b = new Board<typeof money, typeof m>(m)
         const p = new Players<typeof money>(numberPlayers)
         const o = new Ownership<typeof money, typeof m>(m)
-        // services
-        const t = new Transfer<typeof money, typeof m>(b, p, o)
-        const c = new ConcreteTurn<typeof money, typeof m>(b, p, o, t)
-        const g = new Game(id, b, p, o, c)
+        const h = new Housing<typeof money, typeof m>(m, p, o)
+        const t = new Transfer<typeof money, typeof m>(b, p, o, h)
+        // api
+        const c = new ConcreteTurn<typeof money, typeof m>(b, p, o, h, t)
+        const g = new Game(id, b, p, o, h, c)
         this.games.push(g)
         return g
     }

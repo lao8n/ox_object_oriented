@@ -6,6 +6,7 @@ import { Players } from "../../src/services/players";
 import { Transfer } from '../../src/services/transfer';
 import { GenericBoard, MonopolyBoard } from '../../src/types/board';
 import * as money from "../../src/types/money";
+import { Housing } from '../../src/services/housing'
 
 describe('service transfer constructor', () => {
     it('can construct transfer with GBP currency', 
@@ -14,7 +15,8 @@ describe('service transfer constructor', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         _chai.assert.instanceOf(t, Transfer);
     });
 });
@@ -26,7 +28,8 @@ describe('service transfer pay rent', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let deed = m[1][2]
         t.buyProperty(2, deed)
         let result = t.payRent(1, deed)
@@ -40,7 +43,8 @@ describe('service transfer pay rent', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let deed1 = m[1][2]
         t.buyProperty(2, deed1)
         let deed2 = m[1][4]
@@ -63,7 +67,8 @@ describe('service transfer buy property', () => {
         let b = new Board<money.GBP, MonopolyBoard<money.GBP>>(m)
         let p = new Players<money.GBP>(4)
         let o = new Ownership<money.GBP, MonopolyBoard<money.GBP>>(m)
-        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o)
+        let h = new Housing<money.GBP, MonopolyBoard<money.GBP>>(m, p, o) 
+        let t = new Transfer<money.GBP, MonopolyBoard<money.GBP>>(b, p, o, h)
         let deed = m[1][2]
         let result = t.buyProperty(1, deed)
         _chai.assert.isTrue(result)

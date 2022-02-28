@@ -8,6 +8,7 @@ import { Player, PlayerID } from "../types/player";
 import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
+import { Housing } from './housing'
 
 export class Transfer<M extends Money, B extends GenericBoard<M>>{
 
@@ -25,6 +26,7 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         private readonly board: Board<M, B>,
         private readonly players : Players<M>,
         private readonly ownership : Ownership<M, B>,
+        private readonly housing: Housing<M, B>
     ){}
 
     /**
@@ -112,9 +114,29 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
 
     private calculateDeedRent(deed: Deed<M>, sameOwner: boolean){
         let rent = deed.rentNoHouse
-        // TODO add call to housing component
-        if(sameOwner){
-            rent = rent * 2n as M
+        switch(this.housing.getNumberHouses(deed.name)){
+            case 0:
+                if(sameOwner){
+                    rent = rent * 2n as M
+                }
+                break;
+            case 1: 
+                rent = deed.rentOneHouse
+                break;
+            case 2:
+                rent = deed.rentTwoHouse
+                break;
+            case 3: 
+                rent = deed.rentThreeHouse
+                break;
+            case 4: 
+                rent = deed.rentFourHouse
+                break;
+            case 5:
+                rent = deed.rentHotel
+                break;
+            default:
+                throw new Error(`Undefined number of houses for ${deed.name}`)
         }
         return rent
     }

@@ -7,6 +7,7 @@ import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/boar
 import { Money } from "../types/money"
 import { PlayerID } from "../types/player"
 import { Transfer } from "../services/transfer"
+import { Housing } from "../services/housing"
 
 export type Turn = TurnRoll | TurnUnownedProperty | TurnOwnedProperty 
 
@@ -58,6 +59,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         private readonly board: Board<M, B>,
         private readonly players : Players<M>,
         private readonly ownership: Ownership<M, B>,
+        private readonly housing: Housing<M, B>,
         private readonly transfer: Transfer<M, B>,
     ){
         this.player = this.players.getCurrentTurnPlayer()
