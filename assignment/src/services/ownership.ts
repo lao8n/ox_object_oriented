@@ -1,7 +1,8 @@
+// types imports
 import { Money } from '../types/money';
 import { PlayerID } from '../types/player';
 import * as board from '../types/board';
-import { Owner } from '../types/ownership'
+import { Owner } from '../types/ownership';
 
 export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
     private ownership: Map<string, Owner | null> = 

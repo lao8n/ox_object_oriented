@@ -1,10 +1,13 @@
+// adt imports
+import { Stack } from '../adt/stack';
+// services imports
+import { Players } from "./players";
+import { Ownership } from "./ownership";
+// types imports
 import { Money } from '../types/money';
 import * as board from '../types/board';
 import { Colour, colours } from "../types/space/deed";
-import { Stack } from '../adt/stack';
-import { Ownership } from "./ownership";
 import { PlayerID } from '../types/player';
-import { Players } from "./players";
 
 export type NumHouses = 0 | 1 | 2 | 3 | 4 | 5 // 5 represents hotel
 

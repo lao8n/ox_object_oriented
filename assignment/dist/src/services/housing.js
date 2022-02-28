@@ -20,9 +20,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Housing = void 0;
+// adt imports
+const stack_1 = require("../adt/stack");
 const board = __importStar(require("../types/board"));
 const deed_1 = require("../types/space/deed");
-const stack_1 = require("../adt/stack");
 class Housing {
     constructor(monopolyboard, players, ownership) {
         this.monopolyboard = monopolyboard;

@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GameServer = exports.Game = void 0;
+// api imports
+const turn_1 = require("./turn");
+// data imports
 const uk_1 = require("../../data/uk");
+// services imports
 const board_1 = require("../services/board");
 const ownership_1 = require("../services/ownership");
 const players_1 = require("../services/players");
 const transfer_1 = require("../services/transfer");
-const turn_1 = require("./turn");
 const housing_1 = require("../../src/services/housing");
 /**
  * Game class directly exposes the turn interfaces through which all turn

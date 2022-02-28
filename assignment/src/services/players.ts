@@ -1,4 +1,6 @@
+// data imports
 import { DataFactory } from "../../data/uk";
+// types imports
 import { Money } from "../types/money";
 import { NumPlayers, Player, PlayerID } from "../types/player";
 import { BoardLocation } from "../types/board";

@@ -1,4 +1,5 @@
-import { PairDiceValue, DiceValue } from '../types/dice'
+// types imports
+import { PairDiceValue, DiceValue } from '../types/dice';
 /**
  * Generator function for rolling a pair of dice for one turn. Yield value is
  * the PairDiceValue thrown and a flag for whether a double was thrown

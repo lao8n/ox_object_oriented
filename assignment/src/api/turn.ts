@@ -1,14 +1,18 @@
+// data imports
 import { DataFactory } from "../../data/uk";
+// services imports
 import { Board } from "../services/board";
 import { diceGenerator } from "../services/dice";
-import { PairDiceValue } from "../types/dice";
+import { Transfer } from "../services/transfer";
+import { Housing } from "../services/housing";
 import { Ownership } from "../services/ownership";
 import { Players } from "../services/players";
+// types imports
 import { BoardLocation, GenericBoard, Space } from "../types/board";
 import { Money } from "../types/money";
 import { PlayerID } from "../types/player";
-import { Transfer } from "../services/transfer";
-import { Housing } from "../services/housing";
+import { PairDiceValue } from "../types/dice";
+
 
 export interface TurnBase {
     readonly player: PlayerID

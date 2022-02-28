@@ -1,16 +1,20 @@
+// api imports
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, 
+    TurnUnownedProperty, TurnInJail } from './turn';
+// data imports
 import { DataFactory } from '../../data/uk';
+// services imports
 import { Board } from '../services/board';
 import { Ownership } from '../services/ownership';
 import { Players } from "../services/players";
 import { Transfer } from '../services/transfer';
-import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, 
-    TurnUnownedProperty, TurnInJail } from './turn';
+import { Housing } from '../../src/services/housing';
+// types imports
 import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } 
     from '../types/board';
 import { GBP, Money } from "../types/money";
 import { Owner } from "../types/ownership";
 import { NumPlayers, PlayerID } from '../types/player';
-import { Housing } from '../../src/services/housing';
 
 export type MonopolyEdition = "British" | "Test"
 

@@ -1,3 +1,4 @@
+// types imports
 import { Money } from '../types/money';
 import * as board from '../types/board';
 import { Colour } from '../types/space/deed';

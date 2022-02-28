@@ -1,14 +1,16 @@
+// services imports
 import { Board } from "./board";
-import { PairDiceValue } from "../types/dice";
 import { Ownership } from "./ownership";
 import { Players } from "./players";
+import { Housing } from './housing';
+// types imports
+import { PairDiceValue } from "../types/dice";
 import { GenericBoard, Property } from "../types/board";
 import { Money } from "../types/money";
 import { PlayerID } from "../types/player";
 import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
-import { Housing } from './housing';
 
 export class Transfer<M extends Money, B extends GenericBoard<M>>{
 
