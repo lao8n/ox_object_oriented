@@ -129,7 +129,8 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * - Returning board.Space we have the kind field to discriminate which of 
      *   the Space union we have.
      */
-    getSpace(currentLocation: board.BoardLocation): board.Space<M> {
+    getSpace(currentLocation: board.BoardLocation): board.Space<M> | undefined
+        {
         // validate
         const currentLocationIndex = 
             (currentLocation.street - 1) * 10 + currentLocation.num - 1;
@@ -139,8 +140,9 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         }
         
         // we know that index is not undefined as we validated above
-        return this.monopolyboard!
-            [currentLocation.street]![currentLocation.num]!;
+        let result = 
+            this.monopolyboard[currentLocation.street]?.[currentLocation.num]
+        return result
     }
 
     getSet(set : Colour | "Train" | "Utility" ){ 

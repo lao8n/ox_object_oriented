@@ -3,9 +3,9 @@ import { Board } from "../services/board";
 import { diceGenerator, PairDiceValue } from "../services/dice";
 import { Ownership } from "../services/ownership";
 import { Players } from "../services/players";
-import { BoardLocation, GenericBoard, MonopolyBoard, Space } from "../types/board";
+import { BoardLocation, GenericBoard, Space } from "../types/board";
 import { Money } from "../types/money";
-import { Player, PlayerID } from "../types/player";
+import { PlayerID } from "../types/player";
 import { Transfer } from "../services/transfer";
 import { Housing } from "../services/housing";
 
@@ -130,7 +130,8 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         return this.lastDiceRoll;
     }
 
-    buyHousing(player: PlayerID, name: string): TurnOwnedProperty | TurnUnownedProperty {
+    buyHousing(player: PlayerID, name: string): TurnOwnedProperty | 
+        TurnUnownedProperty {
         let currentStage : TurnOwnedProperty | TurnUnownedProperty;
         if(this.stage == "OwnedProperty"){
             currentStage = this as TurnOwnedProperty;
@@ -145,7 +146,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             return currentStage;
         }
         const houseSpace = this.board.getSpace(houseLocation);
-        if(houseSpace.kind == "Deed"){
+        if(houseSpace?.kind == "Deed"){
             const setNames = this.board.getSet(houseSpace.colourSet);
             if(setNames){
                 this.housing.buyHouseOrHotel(
@@ -164,8 +165,6 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         if(player != this.player){
             return this as TurnUnownedProperty;
         }
-        // cannot make a separate method isProperty as typescript cannot do type 
-        // inference
         if(this.space.kind == "Deed" || this.space.kind == "Utility" || 
            this.space.kind == "Train") {
             this.transfer.buyProperty(this.player, this.space);
@@ -221,7 +220,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
             this.players.setLocation(this.player, newLocation);
             location = newLocation;
         }
-        if(this.board.getSpace(location).kind == "Go To Jail"){
+        if(this.board.getSpace(location)?.kind == "Go To Jail"){
             const jail = this.goToJail();
             if(jail){
                 return jail;
@@ -231,7 +230,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
     }
 
     private updateStage(location: BoardLocation){
-        this.space = this.board.getSpace(location);
+        const space = this.board.getSpace(location);
+        if(space){
+            this.space = space;
+        }
         const owner = this.ownership.getOwner(this.space.name);
         // unowned
         if(owner == null){

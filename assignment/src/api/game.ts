@@ -35,7 +35,7 @@ class Game {
         this.turn = this.concreteTurn.start();
     }
 
-    getSpace(location: BoardLocation): Space<Money> { 
+    getSpace(location: BoardLocation): Space<Money> | undefined { 
         return this.board.getSpace(location);
     }
 

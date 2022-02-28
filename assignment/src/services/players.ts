@@ -4,7 +4,8 @@ import { NumPlayers, Player, PlayerID } from "../types/player";
 import { BoardLocation } from "../types/board";
 
 export class Players<M extends Money> {
-    private _players : Map<PlayerID, Player<M>> = new Map<PlayerID, Player<M>>()
+    private _players : Map<PlayerID, Player<M>> = new Map<PlayerID, 
+        Player<M>>();
     private _order : PlayerID[];
     private _orderIndex : number;
 
@@ -85,11 +86,11 @@ export class Players<M extends Money> {
         this.validatePlayerID(id);
         // typescript doesn't keep type information about values at specific
         // array indices
-        let currentPlayer = this._players.get(id)
+        const currentPlayer = this._players.get(id);
         if(currentPlayer){
-            currentPlayer.location = location
-            this._players.set(id, currentPlayer)
-            return true
+            currentPlayer.location = location;
+            this._players.set(id, currentPlayer);
+            return true;
         }        
         return false;
     }
@@ -106,20 +107,20 @@ export class Players<M extends Money> {
     setInJail(id: PlayerID, inJail: boolean){
         this.validatePlayerID(id);
         // we check that its defined before asserting it is
-        let currentPlayer = this._players.get(id)
+        const currentPlayer = this._players.get(id);
         if(currentPlayer){
-            currentPlayer.inJail = inJail
-            this._players.set(id, currentPlayer)
-            return true
+            currentPlayer.inJail = inJail;
+            this._players.set(id, currentPlayer);
+            return true;
         } 
         return false;
     }
 
     getWealth(id: PlayerID){
         this.validatePlayerID(id);
-        let currentPlayer = this._players.get(id)
+        const currentPlayer = this._players.get(id);
         if(currentPlayer){
-            return currentPlayer.wealth
+            return currentPlayer.wealth;
         }
         return null;
     }
@@ -127,11 +128,11 @@ export class Players<M extends Money> {
     addMoney(id: PlayerID, amount: M){
         this.validatePlayerID(id);
         this.validateAmount(amount);
-        let currentPlayer = this._players.get(id)
+        const currentPlayer = this._players.get(id);
         if(currentPlayer){
-            currentPlayer.wealth = currentPlayer.wealth + amount as M
-            this._players.set(id, currentPlayer)
-            return true
+            currentPlayer.wealth = currentPlayer.wealth + amount as M;
+            this._players.set(id, currentPlayer);
+            return true;
         } 
         return false;
     }
@@ -139,15 +140,15 @@ export class Players<M extends Money> {
     removeMoney(id: PlayerID, amount: M){
         this.validatePlayerID(id);
         this.validateAmount(amount);
-        let currentPlayer = this._players.get(id)
+        const currentPlayer = this._players.get(id);
         if(currentPlayer){
             const r = BigInt(currentPlayer.wealth - amount);
             if(r < 0){
                 return false;
             } 
             currentPlayer.wealth = r as M;
-            this._players.set(id, currentPlayer)
-            return true
+            this._players.set(id, currentPlayer);
+            return true;
         }
         return false;
     }

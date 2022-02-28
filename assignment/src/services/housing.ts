@@ -2,10 +2,9 @@ import { Money } from '../types/money';
 import * as board from '../types/board';
 import { Colour, colours } from "../types/space/deed";
 import { Stack } from '../adt/stack';
-import { Owner, Ownership } from "./ownership";
+import { Ownership } from "./ownership";
 import { PlayerID } from '../types/player';
 import { Players } from "./players";
-import { Board } from "./board";
 
 export type NumHouses = 0 | 1 | 2 | 3 | 4 | 5 // 5 represents hotel
 
@@ -44,8 +43,8 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
                 const name = space.name;
                 if(kind == "Deed" && !this.building[name]){
                     if(this.building[name] == 0){
-                        throw new Error(`Inputted board has non-unique space ` + 
-                        `names where ${name} already exists`);
+                        throw new Error(`Inputted board has non-unique space` + 
+                        ` names where ${name} already exists`);
                     } else {
                         this.building[name] = 0;
                     }
