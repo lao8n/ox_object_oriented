@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GameServer = void 0;
 const uk_1 = require("../../data/uk");
-const board_1 = require("../components/board");
-const ownership_1 = require("../components/ownership");
-const players_1 = require("../components/players");
+const board_1 = require("../services/board");
+const ownership_1 = require("../services/ownership");
+const players_1 = require("../services/players");
 const transfer_1 = require("../services/transfer");
-const turn_1 = require("../services/turn");
+const turn_1 = require("./turn");
+const housing_1 = require("../../src/services/housing");
 /**
  * Game class directly exposes the turn interfaces through which all turn
  * actions are managed
@@ -17,11 +18,12 @@ const turn_1 = require("../services/turn");
  * -
  */
 class Game {
-    constructor(id, board, players, ownership, concreteTurn) {
+    constructor(id, board, players, ownership, housing, concreteTurn) {
         this.id = id;
         this.board = board;
         this.players = players;
         this.ownership = ownership;
+        this.housing = housing;
         this.concreteTurn = concreteTurn;
         this.turn = this.concreteTurn.start();
     }
@@ -49,6 +51,15 @@ class Game {
     getPlayerWealth(id) {
         return this.players.getWealth(id);
     }
+    getNumberHouses(name) {
+        return this.housing.getNumberHouses(name);
+    }
+    getBankNumberRemainingHouses() {
+        return this.housing.getBankRemainingHouses();
+    }
+    getBankNumberRemainingHotels() {
+        return this.housing.getBankRemainingHotels();
+    }
     getOwner(name) {
         return this.ownership.getOwner(name);
     }
@@ -73,7 +84,7 @@ class GameServer {
      */
     startGame(edition, numberPlayers) {
         const id = this.games.length;
-        // components
+        // housing
         let money;
         if (edition == "British" || edition == "Test") {
             money = 0n;
@@ -92,10 +103,11 @@ class GameServer {
         const b = new board_1.Board(m);
         const p = new players_1.Players(numberPlayers);
         const o = new ownership_1.Ownership(m);
-        // services
-        const t = new transfer_1.Transfer(b, p, o);
-        const c = new turn_1.ConcreteTurn(b, p, o, t);
-        const g = new Game(id, b, p, o, c);
+        const h = new housing_1.Housing(m, p, o);
+        const t = new transfer_1.Transfer(b, p, o, h);
+        // api
+        const c = new turn_1.ConcreteTurn(b, p, o, h, t);
+        const g = new Game(id, b, p, o, h, c);
         this.games.push(g);
         return g;
     }

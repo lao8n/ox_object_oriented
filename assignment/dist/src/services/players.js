@@ -73,6 +73,7 @@ class Players {
     }
     setLocation(id, location) {
         this.validatePlayerID(id);
+        // we check that its defined before asserting it is
         if (this._players?.[id]?.location) {
             this._players[id].location = location;
             return true;
@@ -89,6 +90,7 @@ class Players {
     }
     setInJail(id, inJail) {
         this.validatePlayerID(id);
+        // we check that its defined before asserting it is
         if (this._players?.[id]) {
             this._players[id].inJail = inJail;
             return true;

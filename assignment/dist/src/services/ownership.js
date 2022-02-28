@@ -25,7 +25,7 @@ class Ownership {
     constructor(monopolyboard) {
         this.monopolyboard = monopolyboard;
         this.ownership = {};
-        this.initOwnership(monopolyboard);
+        this.initOwnership(this.monopolyboard);
     }
     /**
      * Assignment notes

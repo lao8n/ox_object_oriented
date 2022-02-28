@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConcreteTurn = void 0;
 const uk_1 = require("../../data/uk");
-const dice_1 = require("../components/dice");
+const dice_1 = require("../services/dice");
 class ConcreteTurn {
-    constructor(board, players, ownership, transfer) {
+    constructor(board, players, ownership, housing, transfer) {
         this.board = board;
         this.players = players;
         this.ownership = ownership;
+        this.housing = housing;
         this.transfer = transfer;
         // these fields are not exposed through the interfaces so do not need to be
         // private
@@ -46,15 +47,7 @@ class ConcreteTurn {
             // threw 3 doubles
         }
         else {
-            const jail = this.board.getJailLocation();
-            if (jail) {
-                this.players.setLocation(this.player, jail);
-                this.players.setInJail(this.player, true);
-                // if jail doesn't exist go to first location on board
-            }
-            else {
-                this.players.setLocation(this.player, { street: 1, num: 1 });
-            }
+            this.goToJail();
             this.dice = (0, dice_1.diceGenerator)();
             this.stage = "Finish";
             return this;
@@ -87,6 +80,28 @@ class ConcreteTurn {
     getDiceRoll() {
         return this.lastDiceRoll;
     }
+    buyHousing(player) {
+        if (player != this.player) {
+            if (this.stage == "OwnedProperty") {
+                return this;
+            }
+            else {
+                return this;
+            }
+        }
+        if (this.space.kind == "Deed") {
+            let setNames = this.board.getSet(this.space.colourSet);
+            if (setNames) {
+                this.housing.buyHouseOrHotel(player, this.space.name, this.space.colourSet, setNames, this.space.houseCost);
+            }
+        }
+        if (this.stage == "OwnedProperty") {
+            return this;
+        }
+        else {
+            return this;
+        }
+    }
     buyProperty(player) {
         if (player != this.player) {
             return this;
@@ -104,9 +119,13 @@ class ConcreteTurn {
         if (player != this.player) {
             return this;
         }
-        if (this.space.kind == "Deed" || this.space.kind == "Utility" ||
-            this.space.kind == "Train") {
+        if (this.space.kind == "Deed" || this.space.kind == "Train") {
             this.transfer.payRent(this.player, this.space);
+        }
+        else if (this.space.kind == "Utility") {
+            if (this.lastDiceRoll) {
+                this.transfer.payUtilityRent(this.player, this.space, this.lastDiceRoll);
+            }
         }
         this.stage = "Finish";
         return this;
@@ -124,11 +143,28 @@ class ConcreteTurn {
         this.stage = "Roll";
         return this;
     }
+    /**
+     * This method not only updates the user's position but also adds 200
+     * if the user passes Go
+     *
+     * @param rollResult
+     * @returns
+     */
     updateLocation(rollResult) {
         let location = this.players.getLocation(this.player);
         if (location) {
-            location = this.board.movePiece(location, rollResult);
-            this.players.setLocation(this.player, location);
+            let newLocation = this.board.movePiece(location, rollResult);
+            if (newLocation.street < location.street) {
+                this.players.addMoney(this.player, 200n);
+            }
+            this.players.setLocation(this.player, newLocation);
+            location = newLocation;
+        }
+        if (this.board.getSpace(location).kind == "Go To Jail") {
+            let jail = this.goToJail();
+            if (jail) {
+                return jail;
+            }
         }
         return location;
     }
@@ -145,11 +181,25 @@ class ConcreteTurn {
             this.stage = "OwnedProperty";
             return this;
         }
-        // undefined i.e. not an ownable property  
         else {
+            if (this.space.kind == "Card" || this.space.kind == "Tax") {
+                this.players.removeMoney(this.player, 100n);
+            }
             this.stage = "Finish";
             return this;
         }
+    }
+    goToJail() {
+        const jail = this.board.getJailLocation();
+        if (jail) {
+            this.players.setLocation(this.player, jail);
+            this.players.setInJail(this.player, true);
+            // if jail doesn't exist go to first location on board
+        }
+        else {
+            this.players.setLocation(this.player, { street: 1, num: 1 });
+        }
+        return jail;
     }
 }
 exports.ConcreteTurn = ConcreteTurn;
