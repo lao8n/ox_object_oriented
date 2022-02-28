@@ -3,10 +3,12 @@ import { Board } from '../services/board';
 import { Owner, Ownership } from '../services/ownership';
 import { Players } from "../services/players";
 import { Transfer } from '../services/transfer';
-import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, TurnUnownedProperty, TurnInJail } from './turn';
-import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } from '../types/board';
+import { ConcreteTurn, TurnFinish, TurnOwnedProperty, TurnRoll, 
+    TurnUnownedProperty, TurnInJail } from './turn';
+import { GenericBoard, MonopolyBoard, BoardEditions, BoardLocation, Space } 
+    from '../types/board';
 import { GBP, Money } from "../types/money";
-import { NumPlayers, Player, PlayerID } from '../types/player';
+import { NumPlayers, PlayerID } from '../types/player';
 import { Housing, NumHouses } from '../../src/services/housing';
 
 type MonopolyEdition = "British" | "Test"
@@ -91,10 +93,6 @@ class Game {
 export class GameServer {
 
     private games: Game[] = [];
-
-    constructor(){
-
-    }
 
     /**
      * 

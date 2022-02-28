@@ -140,9 +140,9 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
         }
         
         // we know that index is not undefined as we validated above
-        let result = 
-            this.monopolyboard[currentLocation.street]?.[currentLocation.num]
-        return result
+        const result = 
+            this.monopolyboard[currentLocation.street]?.[currentLocation.num];
+        return result;
     }
 
     getSet(set : Colour | "Train" | "Utility" ){ 
