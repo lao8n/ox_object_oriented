@@ -1,16 +1,15 @@
 *Instructions*
 ```
 cd assignment
-tsc // compile
+tsc // compiles
 npm run test // run tests -> 122 passing
 npm run lint // passes
 ```
 
 *Exposed API*
-* `GameServer` to start games
-* `Game` to access `Turn` interfaces where FSM `TurnRoll`, `TurnInJail`, `TurnUnownedProperty`, `TurnOwnedProperty`, `TurnFinish` enforce ordering of moves and players
-* `Game` exposes game information with exposing underlying services
-* `types` exposes light-weight objects like `PlayerID`, `BoardLocation` etc. to capture game data without exposing implementation
+* `GameServer` to start and get games
+* `Game` to access Turn interfaces where FSM `TurnRoll`, `TurnInJail`, `TurnUnownedProperty`, `TurnOwnedProperty`, `TurnFinish` enforce ordering of moves and players
+* `Game` exposes game information without exposing underlying services through light-weight objects like `PlayerID` and `BoardLocation` in `types`
 
 *Monopoly features checklist*
 | Game feature             | Implemented | Note                                                                                                                                                             |
@@ -19,7 +18,7 @@ npm run lint // passes
 | Money                    | Yes         | With different currencies, enforced to be the same for the whole board                                                                                           |
 | Banker                   | Yes         | Automated - see below                                                                                                                                            |
 | Title Deed Cards         | Yes         | All British Monopoly board locations, easy to add alternative boards                                                                                             |
-| Starting Money           | Yes         | 1500                                                                                                                                                             |
+| Starting Money           | Yes         |                                                                                                                                                                  |
 | Number of players        | Yes         | 2 to 8                                                                                                                                                           |
 | Highest dice to start    | No          | Player order can be customised however                                                                                                                           |
 | Roll dice                | Yes         | Including repeated moves with doubles, and going to jail if 3 doubles in a row                                                                                   |
@@ -35,4 +34,4 @@ npm run lint // passes
 | Free Parking             | Yes         |                                                                                                                                                                  |
 | Houses                   | Yes         | Requirement to own set to buy, with different costs for houses, and stack to enforce ordering of building. Limit on number of available houses/hotels.           |
 | Mortgage                 | No          | Can release properties though not exposed through API                                                                                                            |
-| Bankruptcy               | No          | First player loses the game is over.                                                                                                                             |
+| Bankruptcy               | No          | First player unable to pay and the game is over.                                                                                                                 |
