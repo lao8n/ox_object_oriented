@@ -272,6 +272,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
      * 
      * Assignment notes
      * - Uses the fluent interface pattern to return this for method chaining
+     * - Use optional chaining in case houseSpace is undefined
      */
     buyHousing(player: PlayerID, name: string): TurnOwnedProperty | 
         TurnUnownedProperty {
