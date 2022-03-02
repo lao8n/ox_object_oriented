@@ -37,6 +37,7 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
      *   yet defined for new spaces and null which means an absence of a value
      *   which is what we initialize to
      * - Partial discrimination to distinguish ownable spaces from non-ownable
+     * - for...of loops
      */
     private initOwnership(b: B){
         for(const bs of board.boardstreets){
@@ -85,6 +86,9 @@ export class Ownership<M extends Money, B extends board.GenericBoard<M>>{
      * all properties owned faster
      * 
      * @throws Error if {@link name} not in {@link setNames}
+     * 
+     * Assignment notes
+     * - for...of loops
      */
     public acquire(player: PlayerID, name: string, setNames : string[]){
         // validate

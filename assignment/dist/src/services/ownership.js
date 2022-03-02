@@ -21,13 +21,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Ownership = void 0;
 const board = __importStar(require("../types/board"));
+/**
+ * Ownership service to manage which properties are owned by which players.
+ */
 class Ownership {
+    /**
+     * @param monopolyboard {@link GenericBoard} which is used to build the
+     * map of space names to owners in {@link ownership}
+     */
     constructor(monopolyboard) {
         this.monopolyboard = monopolyboard;
+        /**
+         * We use a {@link Map} data structure to efficiently store the name of a
+         * space as a key and the {@link Owner} as a value.
+         */
         this.ownership = new Map();
         this.initOwnership(this.monopolyboard);
     }
     /**
+     * Initialise the ownership map, where if an empty {@link Space} is found
+     * on the {@link GenericBoard} (for example as with
+     * {@link createTestBoard2}) we do not incorrectly add that
+     * {@link Space.name} to the {@link ownership} map as it is inaccessible
+     *
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be
      *   undefined
@@ -35,6 +51,7 @@ class Ownership {
      *   yet defined for new spaces and null which means an absence of a value
      *   which is what we initialize to
      * - Partial discrimination to distinguish ownable spaces from non-ownable
+     * - for...of loops
      */
     initOwnership(b) {
         for (const bs of board.boardstreets) {
@@ -64,17 +81,27 @@ class Ownership {
             }
         }
     }
+    /**
+     * @param name The name of the {@link Space}
+     * @returns Whether there is an {@link Owner} or not.
+     */
     getOwner(name) {
         return this.ownership.get(name);
     }
     /**
+     * Method to buy properties. It only looks after change in ownership and
+     * not change in {@link Player.wealth} which is done by {@link Transfer}
+     * @param player Player who wishes to buy
+     * @param name Name of property they wish to buy
+     * @param setNames Names of properties in that colour set, this is added
+     * as an argument so {@link Owner} can be updated with {@link sameOwner}
+     * if that is true, making queries for {@link payRent} which doubles if
+     * all properties owned faster
      *
-     * @param player
-     * @param name
-     * @param setNames
+     * @throws Error if {@link name} not in {@link setNames}
      *
      * Assignment notes
-     * -
+     * - for...of loops
      */
     acquire(player, name, setNames) {
         // validate
@@ -94,6 +121,18 @@ class Ownership {
         // if name doesn't exist or is already owned
         return false;
     }
+    /**
+     * Method to release a property from ownership of a player. Although this
+     * works and this is tested, this is not currently exposed by the
+     * {@link Turn} API, but it could be added in the future
+     *
+     * @param player PlayerID who wishes to release a property
+     * @param name Name of the property
+     * @param setNames Names of properties in that set e.g. trains
+     * @returns Boolean indicating whether release was successful or not
+     *
+     * @throws Error if {@link setNames} is invalid
+     */
     release(player, name, setNames) {
         // validate
         if (!setNames.includes(name)) {
@@ -115,13 +154,19 @@ class Ownership {
         return false;
     }
     /**
+     * Private method to determine whether all properties in a set have the
+     * same owner, with implications for {@link payRent} and
+     * {@link buyHouseOrHotel}
      *
-     * @param player
-     * @param setNames
-     * @returns
+     * @param player Player to check
+     * @param setNames Names of properties to check
+     * @returns Boolean flag for whether all have the {@link sameOwner}
+     *
+     * @throws Error if {@link setNames} is invalid
      *
      * Assignment notes
-     * - use functional methods map and reduce to replicate fold logic
+     * - use functional methods {@link map} and {@link reduce} to replicate
+     *   fold logic
      */
     sameOwner(player, setNames) {
         // validate

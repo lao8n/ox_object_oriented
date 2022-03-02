@@ -22,16 +22,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Board = void 0;
 const board = __importStar(require("../types/board"));
 /**
- * Full monopoly board with 40 spaces
- *
- * Assignment notes
- * -
+ * Monopoly board service which stores instance of {@link GenericBoard}
+ * mapping from a {@link BoardLocation} to a {@link Space}. It also manages
+ * other board specific services like mapping names of a space to their
+ * location, and moving pieces across the board with {@link movePiece}.
+ * It supports theoretically any board size up to 40 spaces of a full
+ * monopoly board
  */
 class Board {
     /**
+     * When we process a monopoly board we loop through each
+     * {@link BoardStreet} and {@link BoardNumber}. As we support
+     * {@link GenericBoard} which can have less than 40 locations we
+     * determine the size of the board dynamically by checking for the first
+     * {@link Space} that is undefined
+     *
+     * @throws Error if number of spaces on inputted {@link GenericBoard}
+     * is 0.
+     *
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be
      *   undefined
+     * - for...of loops
      */
     constructor(monopolyboard) {
         this.monopolyboard = monopolyboard;
@@ -42,10 +54,25 @@ class Board {
          */
         this._boardSize = 0;
         /**
+         * Mapping from {@link Colour} or "Train" or "Utility" to list of names
+         * of properties in that type. E.g. for Brown return Old Kent Road, and
+         * Whitechapel Road.
+         *
          * Assignment notes
-         * - Union of ownable property sets with optional mapped type
+         * - Union of ownable property sets with optional mapped type to allow
+         *   for absence of sets types on {@link GenericBoard}
          */
         this._sets = {};
+        /**
+         * Map of space name to {@link BoardLocation}.
+         *
+         * Assignment notes
+         * - We use a map here rather than a mapped type as with {@link _sets} as
+         *   Typescript does not support type guards on array access, so even if
+         *   we type-guard on a const defined for the value at that array this only
+         *   works for getting values, not for assigning to values
+         *   See {@link https://github.com/Microsoft/TypeScript/issues/11483}
+         */
         this._nameLocations = new Map();
         let numberSpaces = 0;
         for (const bs of board.boardstreets) {
@@ -89,6 +116,9 @@ class Board {
         this._boardSize = numberSpaces;
     }
     /**
+     * Get size of monopoly board, which is dynamically determined in the
+     * constructor
+     *
      * Assignment notes
      * - getter give access to private value set in constructor
      */
@@ -97,9 +127,11 @@ class Board {
     }
     /**
      * In order to use modulus we convert to current location index which is
-     * between 0 and boardSize (inclusive)
-     * Assignment notes
-     * - getter give access to private value set in constructor
+     * between 0 and boardSize (inclusive). This means that {@link movePiece}
+     * works with any board size
+     *
+     * @throw Error if {@link BoardLocation} is invalid because it is larger
+     * than the board size.
      */
     movePiece(currentLocation, diceRoll) {
         // validate
@@ -128,9 +160,15 @@ class Board {
         };
     }
     /**
+     * Primary {@link Board} service method, returning the {@link Space} at a
+     * given {@link BoardLocation}
      *
-     * @param currentLocation
-     * @returns
+     * @param currentLocation {@link BoardLocation} requested
+     * @returns Space at that {@link BoardLocation} or otherwise
+     * undefined
+     *
+     * @throws Error if the current location is invalid because the location
+     * is not on the board
      *
      * Assignment notes
      * - Returning board.Space we have the kind field to discriminate which of
@@ -139,7 +177,8 @@ class Board {
     getSpace(currentLocation) {
         // validate
         const currentLocationIndex = (currentLocation.street - 1) * 10 + currentLocation.num - 1;
-        if (currentLocationIndex > this._boardSize) {
+        if (currentLocationIndex > this._boardSize ||
+            currentLocationIndex < 0) {
             throw new Error(`Current location is invalid ${currentLocation} 
                 only ${this._boardSize} on board`);
         }
@@ -147,9 +186,18 @@ class Board {
         const result = this.monopolyboard[currentLocation.street]?.[currentLocation.num];
         return result;
     }
+    /**
+     * @param set Requested {@link Colour}, "Train" or "Utility" set
+     * @returns Slice of names of properties e.g. for 'Brown' return
+     * Old Kent Road and Whitechapel Road
+     */
     getSet(set) {
         return this._sets[set];
     }
+    /**
+     * @param name Name of property or space
+     * @returns The {@link BoardLocation} with that name.
+     */
     getLocation(name) {
         return this._nameLocations.get(name);
     }

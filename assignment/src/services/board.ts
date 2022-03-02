@@ -59,6 +59,7 @@ export class Board<M extends Money, B extends board.GenericBoard<M>>{
      * Assignment notes
      * - Optional chaining ?. to get nested access when reference might be 
      *   undefined
+     * - for...of loops
      */
     constructor(private readonly monopolyboard: B){
         let numberSpaces = 0;

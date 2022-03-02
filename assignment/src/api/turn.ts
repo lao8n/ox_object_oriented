@@ -188,6 +188,10 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
      * - We have multiple checks for whether values are undefined e.g. 
      *   {@link roll.value} so that TypeScript knows that they are defined.
      * - Uses the fluent interface pattern to return this for method chaining
+     * - Use destructuring to access {@link roll.value} elements
+     * - Generator returns an {@link IteratorResult} which is then determined
+     *   to be either an {@link IteratorYieldResult} or an 
+     *   {@link IteratorReturnResult}
      */
     roll(player : PlayerID): TurnUnownedProperty | TurnOwnedProperty | 
         TurnFinish | TurnRoll {
@@ -197,10 +201,12 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
         const roll = this.dice.next();
         if(roll.done == false){
             if(roll.value){
-                this.lastDiceRoll = roll.value[0];
-                const location = this.updateLocation(roll.value[0]);  
+                // destructuring
+                const [diceValue, threwDouble] = roll.value;
+                this.lastDiceRoll = diceValue;
+                const location = this.updateLocation(diceValue);  
                 // didn't throw a double           
-                if(roll.value[1]){
+                if(threwDouble){
                     return this.updateStage(location);
                 // threw a double
                 } else {

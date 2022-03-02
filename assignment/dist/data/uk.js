@@ -94,7 +94,7 @@ class DataFactory {
         return {
             kind: "Go",
             name: "Go",
-            amount: 13n,
+            amount: 0n,
         };
     }
     static createJail() {
@@ -134,8 +134,8 @@ class DataFactory {
         return {
             kind: "Train",
             name: name,
-            price: 100n,
-            amount: 13n,
+            price: 200n,
+            amount: 100n,
         };
     }
     static createUtility(name) {
@@ -148,15 +148,15 @@ class DataFactory {
     static createCard() {
         return {
             kind: "Card",
-            name: "Mayfair",
-            amount: 13n,
+            name: "Card",
+            amount: 100n,
         };
     }
     static createTax() {
         return {
             kind: "Tax",
-            name: "Mayfair",
-            amount: 13n,
+            name: "Tax",
+            amount: 100n,
         };
     }
 }

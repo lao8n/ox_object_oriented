@@ -61,6 +61,9 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
      * @returns void
      * @throws Error if same space name is duplicated on the provided
      * {@link GenericBoard}
+     * 
+     * Assignment notes
+     * - for...of loops
      */
     private initBuilding(b: B): void{
         for(const bs of board.boardstreets){
@@ -88,6 +91,9 @@ export class Housing<M extends Money, B extends board.GenericBoard<M>>{
 
     /**
      * Initialise stack for each {@link Colour}
+     * 
+     * Assignment notes
+     * - for...of loops
      */
     private initBuildingOrder(){
         for(const c of colours){

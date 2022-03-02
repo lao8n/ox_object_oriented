@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stack = void 0;
 /**
+ * Stack implementation where an array is used (a slice) under the hood,
+ * although this is abstracted via the interface
+ *
  * Assignment notes
  * - Although we also use a stack, unlike Stefano's mini-project we implement
  *   with an array rather than a linked list
