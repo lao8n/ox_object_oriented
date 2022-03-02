@@ -148,6 +148,7 @@ export class ConcreteTurn<M extends Money, B extends GenericBoard<M>>{
      * - Although this constructor is public it isn't exposed in the api, and 
      *   instead is instantiated inside {@link GameServer} and the first
      *   {@link TurnRoll} interface exposed through {@link start}
+     * - We use composition over inheritance for the services
      */
     constructor(
         private readonly board: Board<M, B>,

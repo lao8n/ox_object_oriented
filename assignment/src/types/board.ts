@@ -34,8 +34,6 @@ export type MonopolyBoard<M extends Money> = {
 }
 
 /**
- * 
- * 
  * Assignment notes
  * - All board locations a Space rather than a specific type and optional
  */
@@ -60,10 +58,7 @@ export type Space<M extends Money> =
 
 /**
  * Every location on the board has a specific type of Space that must occupy it
- * giving us type-safety.
- *
- * Assignment notes
- * - 
+ * giving us type-safety
  */
 type ConcreteBoard<M extends Money>  = {
     1: {
