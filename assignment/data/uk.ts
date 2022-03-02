@@ -131,7 +131,7 @@ export class DataFactory {
         return { 
             kind: "Go",
             name: "Go",
-            amount: 13n as M,
+            amount: 0n as M,
         };
     }
 
@@ -187,8 +187,8 @@ export class DataFactory {
         return { 
             kind: "Train",
             name: name,
-            price: 100n as M,
-            amount: 13n as M,
+            price: 200n as M,
+            amount: 100n as M,
         };
     }
 
@@ -203,16 +203,16 @@ export class DataFactory {
     static createCard<M extends money.Money>(): Card<M> {
         return { 
             kind: "Card",
-            name: "Mayfair",
-            amount: 13n as M,
+            name: "Card",
+            amount: 100n as M,
         };
     }
 
     static createTax<M extends money.Money>(): Tax<M> {
         return { 
             kind: "Tax",
-            name: "Mayfair",
-            amount: 13n as M,
+            name: "Tax",
+            amount: 100n as M,
         };
     }
 }
