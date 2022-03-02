@@ -310,6 +310,6 @@ export class GameServer {
      * @returns Game instance if available
      */
     getGame(id: number): Game | undefined {
-        return this.games[id] as Game
+        return this.games[id] as Game;
     }
 }

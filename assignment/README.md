@@ -7,9 +7,20 @@ npm run lint // passes
 ```
 
 *Exposed API*
+* `index` All exported interfaces, types and classes
 * `GameServer` to start and get games
-* `Game` to access Turn interfaces where FSM `TurnRoll`, `TurnInJail`, `TurnUnownedProperty`, `TurnOwnedProperty`, `TurnFinish` enforce ordering of moves and players
-* `Game` exposes game information without exposing underlying services through light-weight objects like `PlayerID` and `BoardLocation` in `types`
+* `Game` to access Turn interfaces where FSM `TurnRoll`, `TurnInJail`, 
+`TurnUnownedProperty`, `TurnOwnedProperty`, `TurnFinish` enforce ordering of 
+moves and players
+* `Game` exposes game information without exposing underlying services 
+* `types` exposes light-weight objects like `PlayerID` and `BoardLocation` 
+without exposing implementation details that are held in `services`
+* `data` has Monopoly board data for both test sets and a full working board
+
+*Internal*
+* `services` houses core game implementation features
+* `adt` has a generic data structure
+* `test` comprehensive testing of all components
 
 *Monopoly features checklist*
 | Game feature             | Implemented | Note                                                                                                                                                             |

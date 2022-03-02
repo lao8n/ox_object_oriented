@@ -12,12 +12,23 @@ import { Colour, Deed } from "../types/space/deed";
 import { Train } from "../types/space/train";
 import { Utility } from "../types/space/utility";
 
+/**
+ * Class to manage the transfer of money to pay for rent and buying of property
+ * As this involves multiple services including {@link Ownership} and 
+ * {@link Players}.
+ * 
+ * Assignment notes
+ * - We use composition over inheritance to manage the services and coordinate
+ *   them
+ */
 export class Transfer<M extends Money, B extends GenericBoard<M>>{
 
+
     /**
-     * 
-     * @param ownership 
-     * @param players 
+     * @param board Input board
+     * @param players Players service
+     * @param ownership Ownership service
+     * @param housing Housing service
      * 
      * Assignment notes
      * - Typescript objects are passed by reference, and only primitives are 
@@ -32,10 +43,10 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
     ){}
 
     /**
-     * 
-     * @param player 
-     * @param owner 
-     * @param property 
+     * @param player PlayerID of person who needs to pay rent
+     * @param property Property which is either a {@link Deed}, {@link Utility} 
+     * or a {@link Train}
+     * @throws Error if a new property kind is defined and not handled
      * 
      * Assignment notes
      * - .kind tag is used to discriminate union
@@ -63,6 +74,12 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return this.transferMoney(player, owner.id, rent);
     }
 
+    /**
+     * @param player Player to pay utility rent
+     * @param utility Utility card
+     * @param diceRoll Diceroll to get to utility which affects the rent due
+     * @returns Boolean for whether function was as a success or failure
+     */
     payUtilityRent(player: PlayerID, utility: Utility<M>, 
         diceRoll: PairDiceValue){
         const owner = this.ownership.getOwner(utility.name);
@@ -74,6 +91,18 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return this.transferMoney(player, owner.id, rent);
     }
 
+    /**
+     * @param player Player who wants to buy a property
+     * @param property Property to be purchased
+     * @returns Boolean flag indicating whether the function was a success. 
+     * Includes a check of whether the player has enough wealth to purchase
+     * the property
+     * 
+     * Assignment notes
+     * - {@link Property} offers type safety that only certain Monopoly board
+     *   spaces can be purchased
+     * - Do not add @throws because should never throw these errors
+     */
     buyProperty(player: PlayerID, property: Property<M>){
         const wealth = this.players.getWealth(player);
         if(wealth && wealth > property.price){
@@ -108,6 +137,17 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return false;
     }
 
+    /**
+     * @param from Player to transfer money from
+     * @param to Player to transfer money to
+     * @param amount Amount to transfer
+     * @returns Boolean indicating whether the function was a success or not
+     * 
+     * Assignment notes 
+     * - With a real database we'd want to make these a transaction so that
+     *   if the transfer fails we do not fail half-way. For the purposes of a 
+     *   game this is okay.
+     */
     private transferMoney(from: PlayerID, to: PlayerID, amount: M){
         const result = this.players.removeMoney(from, amount);
         if(!result){
@@ -116,6 +156,13 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return this.players.addMoney(to, amount);
     }
 
+    /**
+     * @param deed Property deed to calculate rent for 
+     * @param sameOwner Flag whether all properties in a set have the same 
+     * owner
+     * @returns The amount of money due, this is based upon the number of
+     * houses or hotels on the site 
+     */
     private calculateDeedRent(deed: Deed<M>, sameOwner: boolean){
         let rent = deed.rentNoHouse;
         switch(this.housing.getNumberHouses(deed.name)){
@@ -145,6 +192,14 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return rent;
     }
 
+    /**
+     * @param train Train property to calculate rent for
+     * @param sameOwner Flag whether all properties have the same owner
+     * @returns Amount of money due, note this does not properly implement
+     * the Monopoly train requirement for different amounts based upon 
+     * number of train stations owned. Instead it borrows the Deed logic of 
+     * doubling if all have {@link sameOwner}
+     */
     private calculateTrainRent(train: Train<M>, sameOwner: boolean){
         let rent = train.amount;
         if(sameOwner){
@@ -153,6 +208,12 @@ export class Transfer<M extends Money, B extends GenericBoard<M>>{
         return rent;
     }
 
+    /**
+     * @param utility Utiilty to calculate rent for
+     * @param sameOwner Flag whether all have the same owner
+     * @param diceRoll Dice roll amount from which rent due is calculated
+     * @returns Rent due
+     */
     private calculateUtilityRent(utility: Utility<M>, sameOwner: boolean, 
         diceRoll: PairDiceValue){
         if(sameOwner){

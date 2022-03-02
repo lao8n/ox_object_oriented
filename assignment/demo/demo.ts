@@ -1,4 +1,4 @@
-import * as game from '../src/index'
+import * as game from '../src/index';
 
-const gs = new game.GameServer()
-const g = gs.startGame("British", 4)
+const gs = new game.GameServer();
+const g = gs.startGame("British", 4);
